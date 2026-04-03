@@ -5,6 +5,7 @@ from pathlib import Path
 
 ROOT = Path(r"C:\Users\user\Documents\Playground")
 OWCSTATS = ROOT / "OWCStats"
+BANCALC = ROOT / "BanCalculatorOW"
 
 
 def extract_json_block(path: Path):
@@ -45,8 +46,11 @@ def build_reference():
 
 
 def write_outputs(reference):
-    json_path = OWCSTATS / "shared_owcs_reference.json"
-    js_path = OWCSTATS / "shared_owcs_reference.js"
+    data_dir = BANCALC / "data"
+    data_dir.mkdir(parents=True, exist_ok=True)
+
+    json_path = data_dir / "shared_owcs_reference.json"
+    js_path = data_dir / "shared_owcs_reference.js"
 
     json_payload = json.dumps(reference, ensure_ascii=False, indent=2)
     json_path.write_text(json_payload + "\n", encoding="utf-8")
@@ -58,4 +62,4 @@ def write_outputs(reference):
 if __name__ == "__main__":
     reference = build_reference()
     write_outputs(reference)
-    print("Shared OWCS reference files generated.")
+    print("BanCalculatorOW shared reference files generated.")

@@ -9,13 +9,6 @@ BanCalculatorOW is a separate web project for building an Overwatch ban calculat
 - Provide a clean web UI
 - Prepare for public deployment later
 
-## Workspace
-
-This project lives alongside OWCStats:
-
-- `C:\Users\user\Documents\Playground\OWCStats`
-- `C:\Users\user\Documents\Playground\BanCalculatorOW`
-
 ## Next Step Ideas
 
 - Define the exact ban rules and calculator logic
