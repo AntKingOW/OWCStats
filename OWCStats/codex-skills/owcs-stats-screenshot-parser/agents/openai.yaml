@@ -1,0 +1,7 @@
+interface:
+  display_name: "OWCS Stats Screenshot Parser"
+  short_description: "Parse OWCS stat screenshots into review files."
+  default_prompt: "Use $owcs-stats-screenshot-parser to turn these OWCS screenshots into a cross-checked match review file."
+
+policy:
+  allow_implicit_invocation: true
