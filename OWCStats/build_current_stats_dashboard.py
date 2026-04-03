@@ -21,6 +21,7 @@ SCOPE_FILES = {
     ],
     "Week 2": [
         BASE / "OWCS_KOREA_2026_WEEK2_DAY1_MATCH1_STATS_REVIEW.md",
+        BASE / "OWCS_KOREA_2026_WEEK2_DAY1_MATCH2_STATS_REVIEW.md",
     ],
 }
 
