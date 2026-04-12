@@ -1,102 +1,33 @@
-# OWCS Korea 2026 Current Role Top 5 Rankings
+# OWCS Korea 2026 Current Role Top 5
 
-This file ranks the current season leaders by role using all saved screenshots so far.
+Minimum minutes: 60
 
-Ranking eligibility:
-- players must have at least `60` total minutes played
+## DPS-DMG/10
 
-## Tank
+| Team | Player | Role | Appearances | Minutes | E | A | D | E/D | DMG | H | MIT | E/10 | A/10 | D/10 | DMG/10 | H/10 | MIT/10 |
+| --- | --- | --- | ---: | ---: | ---: | ---: | ---: | ---: | ---: | ---: | ---: | ---: | ---: | ---: | ---: | ---: | ---: |
+| ZAN Esports | probe | DPS | 6 | 63.10 | 105 | 0 | 37 | 2.76 | 66,479 | 4,215 | 0 | 16.64 | 0.00 | 5.86 | 10535.50 | 667.99 | 0.00 |
+| Team Falcons | MER1T | DPS | 11 | 115.05 | 250 | 23 | 65 | 3.79 | 118,299 | 3,734 | 21,628 | 21.73 | 2.00 | 5.65 | 10282.40 | 324.55 | 1879.88 |
+| T1 | PROUD | DPS | 8 | 78.03 | 139 | 0 | 35 | 3.86 | 79,174 | 1,491 | 643 | 17.81 | 0.00 | 4.49 | 10146.18 | 191.07 | 82.40 |
+| ZAN Esports | A1IEN | DPS | 9 | 114.40 | 198 | 1 | 67 | 2.91 | 114,267 | 137 | 326 | 17.31 | 0.09 | 5.86 | 9988.37 | 11.98 | 28.50 |
+| ONSIDE GAMING | Kilo | DPS | 18 | 200.88 | 312 | 10 | 116 | 2.67 | 196,871 | 5,929 | 10,632 | 15.53 | 0.50 | 5.77 | 9800.27 | 295.15 | 529.26 |
 
-### DMG/10 Top 5
+## Support-H/10
 
-| Rank | Player | Team | Minutes | Value |
-| ---: | --- | --- | ---: | ---: |
-| 1 | Bernar | ZETA DIVISION | 118.15 | 9398.56 |
-| 2 | MAX | Crazy Raccoon | 94.35 | 9279.39 |
-| 3 | Attack | ONSIDE GAMING | 117.15 | 9231.75 |
-| 4 | HEISER | ZAN Esports | 140.42 | 9195.99 |
-| 5 | JASM1NE | T1 | 78.03 | 9044.34 |
+| Team | Player | Role | Appearances | Minutes | E | A | D | E/D | DMG | H | MIT | E/10 | A/10 | D/10 | DMG/10 | H/10 | MIT/10 |
+| --- | --- | --- | ---: | ---: | ---: | ---: | ---: | ---: | ---: | ---: | ---: | ---: | ---: | ---: | ---: | ---: | ---: |
+| T1 | SKEWED | Support | 8 | 78.03 | 68 | 135 | 25 | 2.62 | 38,834 | 93,221 | 1,007 | 8.71 | 17.30 | 3.20 | 4976.59 | 11946.30 | 129.05 |
+| Team Falcons | Fielder | Support | 11 | 115.05 | 143 | 251 | 56 | 2.51 | 50,659 | 131,370 | 1,888 | 12.43 | 21.82 | 4.87 | 4403.22 | 11418.51 | 164.10 |
+| Crazy Raccoon | vigilante | Support | 16 | 197.77 | 227 | 321 | 97 | 2.32 | 78,276 | 210,176 | 4,613 | 11.48 | 16.23 | 4.90 | 3958.00 | 10627.47 | 233.25 |
+| ONSIDE GAMING | IRONY | Support | 18 | 200.88 | 164 | 295 | 91 | 1.78 | 87,857 | 213,337 | 3,724 | 8.16 | 14.69 | 4.53 | 4373.53 | 10619.95 | 185.38 |
+| ZAN Esports | KIVIS | Support | 15 | 177.50 | 209 | 276 | 90 | 2.30 | 86,746 | 174,631 | 1,491 | 11.77 | 15.55 | 5.07 | 4887.10 | 9838.37 | 84.00 |
 
-### H/10 Top 5
+## Tank-MIT/10
 
-| Rank | Player | Team | Minutes | Value |
-| ---: | --- | --- | ---: | ---: |
-| 1 | JASM1NE | T1 | 78.03 | 2162.02 |
-| 2 | Hanbin | Team Falcons | 89.93 | 2107.78 |
-| 3 | Attack | ONSIDE GAMING | 117.15 | 1989.16 |
-| 4 | MAX | Crazy Raccoon | 94.35 | 1847.91 |
-| 5 | Bernar | ZETA DIVISION | 118.15 | 1407.02 |
-
-### MIT/10 Top 5
-
-| Rank | Player | Team | Minutes | Value |
-| ---: | --- | --- | ---: | ---: |
-| 1 | JASM1NE | T1 | 78.03 | 15340.37 |
-| 2 | Attack | ONSIDE GAMING | 117.15 | 14153.56 |
-| 3 | MAX | Crazy Raccoon | 94.35 | 13202.97 |
-| 4 | Hanbin | Team Falcons | 89.93 | 12670.94 |
-| 5 | Bernar | ZETA DIVISION | 118.15 | 11619.97 |
-
-## DPS
-
-### DMG/10 Top 5
-
-| Rank | Player | Team | Minutes | Value |
-| ---: | --- | --- | ---: | ---: |
-| 1 | PROUD | T1 | 78.03 | 10146.18 |
-| 2 | A1IEN | ZAN Esports | 114.40 | 9988.37 |
-| 3 | MER1T | Team Falcons | 89.93 | 9635.14 |
-| 4 | Stalk3r | Crazy Raccoon | 104.75 | 9578.42 |
-| 5 | M1NUT2 | Poker Face | 89.90 | 9330.03 |
-
-### H/10 Top 5
-
-| Rank | Player | Team | Minutes | Value |
-| ---: | --- | --- | ---: | ---: |
-| 1 | knife | ZETA DIVISION | 150.13 | 422.76 |
-| 2 | SP1NT | ONSIDE GAMING | 117.15 | 366.79 |
-| 3 | M1NUT2 | Poker Face | 89.90 | 349.61 |
-| 4 | Checkmate | Team Falcons | 89.93 | 337.25 |
-| 5 | Becky | ZAN Esports | 140.42 | 315.92 |
-
-### MIT/10 Top 5
-
-| Rank | Player | Team | Minutes | Value |
-| ---: | --- | --- | ---: | ---: |
-| 1 | MER1T | Team Falcons | 89.93 | 2401.78 |
-| 2 | HeeSang | Crazy Raccoon | 92.48 | 2294.68 |
-| 3 | knife | ZETA DIVISION | 150.13 | 2293.83 |
-| 4 | Checkmate | Team Falcons | 89.93 | 1965.68 |
-| 5 | ZEST | T1 | 78.03 | 1525.89 |
-
-## Support
-
-### DMG/10 Top 5
-
-| Rank | Player | Team | Minutes | Value |
-| ---: | --- | --- | ---: | ---: |
-| 1 | Viol2t | ZETA DIVISION | 150.13 | 5731.51 |
-| 2 | shu | ZETA DIVISION | 150.13 | 5204.91 |
-| 3 | ChiYo | Team Falcons | 89.93 | 5163.49 |
-| 4 | KIVIS | ZAN Esports | 140.42 | 4984.02 |
-| 5 | SKEWED | T1 | 78.03 | 4976.59 |
-
-### H/10 Top 5
-
-| Rank | Player | Team | Minutes | Value |
-| ---: | --- | --- | ---: | ---: |
-| 1 | SKEWED | T1 | 78.03 | 11946.30 |
-| 2 | Fielder | Team Falcons | 89.93 | 11340.07 |
-| 3 | vigilante | Crazy Raccoon | 104.75 | 10877.71 |
-| 4 | IRONY | ONSIDE GAMING | 117.15 | 10523.86 |
-| 5 | KIVIS | ZAN Esports | 140.42 | 9842.28 |
-
-### MIT/10 Top 5
-
-| Rank | Player | Team | Minutes | Value |
-| ---: | --- | --- | ---: | ---: |
-| 1 | ChiYo | Team Falcons | 89.93 | 2558.56 |
-| 2 | BLISS | T1 | 78.03 | 2545.96 |
-| 3 | Faith | Cheeseburger | 78.07 | 2285.99 |
-| 4 | OPENER | ONSIDE GAMING | 117.15 | 2281.86 |
-| 5 | CH0R0NG | Crazy Raccoon | 104.75 | 2230.36 |
+| Team | Player | Role | Appearances | Minutes | E | A | D | E/D | DMG | H | MIT | E/10 | A/10 | D/10 | DMG/10 | H/10 | MIT/10 |
+| --- | --- | --- | ---: | ---: | ---: | ---: | ---: | ---: | ---: | ---: | ---: | ---: | ---: | ---: | ---: | ---: | ---: |
+| T1 | JASM1NE | Tank | 8 | 78.03 | 149 | 76 | 27 | 5.32 | 70,576 | 16,871 | 119,706 | 19.09 | 9.74 | 3.46 | 9044.34 | 2162.02 | 15340.37 |
+| New Era | SoLA | Tank | 12 | 106.17 | 68 | 27 | 71 | 0.94 | 70,440 | 21,067 | 153,377 | 6.41 | 2.54 | 6.69 | 6634.85 | 1984.33 | 14446.81 |
+| Team Falcons | Hanbin | Tank | 11 | 115.05 | 287 | 139 | 37 | 7.55 | 91,249 | 22,575 | 154,636 | 24.95 | 12.08 | 3.22 | 7931.25 | 1962.19 | 13440.76 |
+| Crazy Raccoon | MAX | Tank | 15 | 187.37 | 369 | 181 | 79 | 4.61 | 169,803 | 29,781 | 245,118 | 19.69 | 9.66 | 4.22 | 9062.60 | 1589.45 | 13082.26 |
+| ONSIDE GAMING | Attack | Tank | 18 | 200.88 | 340 | 129 | 95 | 3.54 | 191,301 | 37,679 | 250,569 | 16.93 | 6.42 | 4.73 | 9522.99 | 1875.67 | 12473.36 |

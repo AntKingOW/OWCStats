@@ -28,6 +28,11 @@ The project already uses one review file per match:
 - Use roster names exactly as stored in the roster file unless the screenshot shows a clearly corrected spelling and the user wants that standardized.
 - Use role names in English in the tables: `Tank`, `DPS`, `Support`.
 - Keep the existing markdown table structure so the aggregate scripts can parse it later.
+- After each screenshot-driven stats update, rebuild `C:\Users\user\Documents\Playground\OWCStats\owcstats_current_dashboard.html` with:
+  - `python C:\Users\user\Documents\Playground\OWCStats\build_current_stats_dashboard.py`
+- The dashboard build computes period aggregates, `/10` metrics, and `E/D` where:
+  - `E/D = E / (D + 1)`
+- Dashboard localization may translate metric labels, but player names and team names stay in English.
 
 ## Common Cross-Check Outcomes
 

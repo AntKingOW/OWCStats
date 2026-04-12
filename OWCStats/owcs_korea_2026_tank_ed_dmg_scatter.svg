@@ -1,0 +1,81 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1400" height="900" viewBox="0 0 1400 900">
+<rect width="100%" height="100%" fill="#fafafa" />
+<rect x="110" y="90" width="1010" height="700" fill="#ffffff" stroke="#d0d7de" />
+<text x="110" y="42" font-family="Arial" font-size="28" font-weight="700" fill="#111827">OWCS Korea 2026 Tank DMG/10 vs E/D</text>
+<text x="110" y="68" font-family="Arial" font-size="15" fill="#4b5563">Each point is a tank player aggregated from owcstats_current_dashboard.html covering Weeks 1-3.</text>
+<line x1="110.00" y1="90" x2="110.00" y2="790" stroke="#eef2f7" />
+<line x1="110" y1="790.00" x2="1120" y2="790.00" stroke="#eef2f7" />
+<text x="110.00" y="822" text-anchor="middle" font-family="Arial" font-size="13" font-weight="700" fill="#4b5563">5500</text>
+<text x="94" y="795.00" text-anchor="end" font-family="Arial" font-size="13" font-weight="700" fill="#4b5563">0.5</text>
+<line x1="312.00" y1="90" x2="312.00" y2="790" stroke="#eef2f7" />
+<line x1="110" y1="650.00" x2="1120" y2="650.00" stroke="#eef2f7" />
+<text x="312.00" y="822" text-anchor="middle" font-family="Arial" font-size="13" font-weight="700" fill="#4b5563">6700</text>
+<text x="94" y="655.00" text-anchor="end" font-family="Arial" font-size="13" font-weight="700" fill="#4b5563">2</text>
+<line x1="514.00" y1="90" x2="514.00" y2="790" stroke="#eef2f7" />
+<line x1="110" y1="510.00" x2="1120" y2="510.00" stroke="#eef2f7" />
+<text x="514.00" y="822" text-anchor="middle" font-family="Arial" font-size="13" font-weight="700" fill="#4b5563">7900</text>
+<text x="94" y="515.00" text-anchor="end" font-family="Arial" font-size="13" font-weight="700" fill="#4b5563">3.5</text>
+<line x1="716.00" y1="90" x2="716.00" y2="790" stroke="#eef2f7" />
+<line x1="110" y1="370.00" x2="1120" y2="370.00" stroke="#eef2f7" />
+<text x="716.00" y="822" text-anchor="middle" font-family="Arial" font-size="13" font-weight="700" fill="#4b5563">9100</text>
+<text x="94" y="375.00" text-anchor="end" font-family="Arial" font-size="13" font-weight="700" fill="#4b5563">5</text>
+<line x1="918.00" y1="90" x2="918.00" y2="790" stroke="#eef2f7" />
+<line x1="110" y1="230.00" x2="1120" y2="230.00" stroke="#eef2f7" />
+<text x="918.00" y="822" text-anchor="middle" font-family="Arial" font-size="13" font-weight="700" fill="#4b5563">10300</text>
+<text x="94" y="235.00" text-anchor="end" font-family="Arial" font-size="13" font-weight="700" fill="#4b5563">6.5</text>
+<line x1="1120.00" y1="90" x2="1120.00" y2="790" stroke="#eef2f7" />
+<line x1="110" y1="90.00" x2="1120" y2="90.00" stroke="#eef2f7" />
+<text x="1120.00" y="822" text-anchor="middle" font-family="Arial" font-size="13" font-weight="700" fill="#4b5563">11500</text>
+<text x="94" y="95.00" text-anchor="end" font-family="Arial" font-size="13" font-weight="700" fill="#4b5563">8</text>
+<text x="615.00" y="866" text-anchor="middle" font-family="Arial" font-size="18" font-weight="700" fill="#111827">DAMAGE per 10 min.</text>
+<text x="38" y="440.00" text-anchor="middle" transform="rotate(-90 38 440.00)" font-family="Arial" font-size="18" font-weight="700" fill="#111827">KILLS per LIFE</text>
+<circle cx="614.89" cy="710.67" r="7" fill="#FFBE17" fill-opacity="0.88" stroke="#ffffff" stroke-width="1.5"><title>FARMER: (8499.37, 1.35)</title></circle>
+<text x="624.89" y="700.67" font-family="Arial" font-size="12" fill="#1f2937">FARMER</text>
+<circle cx="347.13" cy="743.33" r="7" fill="#FFBE17" fill-opacity="0.88" stroke="#ffffff" stroke-width="1.5"><title>SeungAn: (6908.71, 1.00)</title></circle>
+<text x="357.13" y="733.33" font-family="Arial" font-size="12" fill="#1f2937">SeungAn</text>
+<circle cx="486.88" cy="660.27" r="7" fill="#E11919" fill-opacity="0.88" stroke="#ffffff" stroke-width="1.5"><title>JunBin: (7738.89, 1.89)</title></circle>
+<text x="496.88" y="650.27" font-family="Arial" font-size="12" fill="#1f2937">JunBin</text>
+<circle cx="751.30" cy="423.20" r="7" fill="#E11919" fill-opacity="0.88" stroke="#ffffff" stroke-width="1.5"><title>MAX: (9309.72, 4.43)</title></circle>
+<text x="761.30" y="413.20" font-family="Arial" font-size="12" fill="#1f2937">MAX</text>
+<circle cx="653.21" cy="711.60" r="7" fill="#1A1662" fill-opacity="0.88" stroke="#ffffff" stroke-width="1.5"><title>MCD: (8727.00, 1.34)</title></circle>
+<text x="663.21" y="701.60" font-family="Arial" font-size="12" fill="#1f2937">MCD</text>
+<circle cx="301.03" cy="747.07" r="7" fill="#1A1662" fill-opacity="0.88" stroke="#ffffff" stroke-width="1.5"><title>SoLA: (6634.85, 0.96)</title></circle>
+<text x="311.03" y="737.07" font-family="Arial" font-size="12" fill="#1f2937">SoLA</text>
+<circle cx="832.38" cy="506.27" r="7" fill="#E2E319" fill-opacity="0.88" stroke="#ffffff" stroke-width="1.5"><title>Attack: (9791.34, 3.54)</title></circle>
+<text x="842.38" y="496.27" font-family="Arial" font-size="12" fill="#1f2937">Attack</text>
+<circle cx="559.06" cy="626.67" r="7" fill="#501F64" fill-opacity="0.88" stroke="#ffffff" stroke-width="1.5"><title>Gur3um: (8167.66, 2.25)</title></circle>
+<text x="569.06" y="616.67" font-family="Arial" font-size="12" fill="#1f2937">Gur3um</text>
+<circle cx="581.24" cy="216.00" r="7" fill="#E2012D" fill-opacity="0.88" stroke="#ffffff" stroke-width="1.5"><title>DONGHAK: (8299.42, 6.65)</title></circle>
+<text x="591.24" y="206.00" font-family="Arial" font-size="12" fill="#1f2937">DONGHAK</text>
+<circle cx="677.80" cy="410.13" r="7" fill="#E2012D" fill-opacity="0.88" stroke="#ffffff" stroke-width="1.5"><title>Jasm1ne: (8873.06, 4.57)</title></circle>
+<text x="687.80" y="400.13" font-family="Arial" font-size="12" fill="#1f2937">Jasm1ne</text>
+<circle cx="519.26" cy="112.40" r="7" fill="#02BD70" fill-opacity="0.88" stroke="#ffffff" stroke-width="1.5"><title>Hanbin: (7931.25, 7.76)</title></circle>
+<text x="529.26" y="102.40" font-family="Arial" font-size="12" fill="#1f2937">Hanbin</text>
+<circle cx="486.74" cy="234.67" r="7" fill="#02BD70" fill-opacity="0.88" stroke="#ffffff" stroke-width="1.5"><title>SOMEONE: (7738.07, 6.45)</title></circle>
+<text x="496.74" y="224.67" font-family="Arial" font-size="12" fill="#1f2937">SOMEONE</text>
+<circle cx="721.92" cy="555.73" r="7" fill="#828493" fill-opacity="0.88" stroke="#ffffff" stroke-width="1.5"><title>HEISER: (9135.15, 3.01)</title></circle>
+<text x="731.92" y="545.73" font-family="Arial" font-size="12" fill="#1f2937">HEISER</text>
+<circle cx="799.73" cy="475.47" r="7" fill="#CEFF00" fill-opacity="0.88" stroke="#ffffff" stroke-width="1.5"><title>Bernar: (9597.38, 3.87)</title></circle>
+<text x="809.73" y="465.47" font-family="Arial" font-size="12" fill="#1f2937">Bernar</text>
+<circle cx="910.99" cy="283.20" r="7" fill="#CEFF00" fill-opacity="0.88" stroke="#ffffff" stroke-width="1.5"><title>Mealgaru: (10258.33, 5.93)</title></circle>
+<text x="920.99" y="273.20" font-family="Arial" font-size="12" fill="#1f2937">Mealgaru</text>
+<text x="1144" y="102" font-family="Arial" font-size="18" font-weight="700" fill="#111827">Teams</text>
+<circle cx="1152" cy="125" r="6" fill="#FFBE17" />
+<text x="1166" y="130" font-family="Arial" font-size="13" fill="#374151">Cheeseburger (2)</text>
+<circle cx="1152" cy="151" r="6" fill="#E11919" />
+<text x="1166" y="156" font-family="Arial" font-size="13" fill="#374151">Crazy Raccoon (2)</text>
+<circle cx="1152" cy="177" r="6" fill="#1A1662" />
+<text x="1166" y="182" font-family="Arial" font-size="13" fill="#374151">New Era (2)</text>
+<circle cx="1152" cy="203" r="6" fill="#E2E319" />
+<text x="1166" y="208" font-family="Arial" font-size="13" fill="#374151">ONSIDE GAMING (1)</text>
+<circle cx="1152" cy="229" r="6" fill="#501F64" />
+<text x="1166" y="234" font-family="Arial" font-size="13" fill="#374151">Poker Face (1)</text>
+<circle cx="1152" cy="255" r="6" fill="#E2012D" />
+<text x="1166" y="260" font-family="Arial" font-size="13" fill="#374151">T1 (2)</text>
+<circle cx="1152" cy="281" r="6" fill="#02BD70" />
+<text x="1166" y="286" font-family="Arial" font-size="13" fill="#374151">Team Falcons (2)</text>
+<circle cx="1152" cy="307" r="6" fill="#828493" />
+<text x="1166" y="312" font-family="Arial" font-size="13" fill="#374151">ZAN Esports (1)</text>
+<circle cx="1152" cy="333" r="6" fill="#CEFF00" />
+<text x="1166" y="338" font-family="Arial" font-size="13" fill="#374151">ZETA DIVISION (2)</text>
+</svg>

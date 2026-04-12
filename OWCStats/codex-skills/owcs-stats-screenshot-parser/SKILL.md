@@ -22,7 +22,21 @@ Use this skill when the user provides OWCS scoreboard screenshots that show the 
    - gun icon = `DPS`
    - cross icon = `Support`
 5. Write or update a review file in the established format used by the existing Week 1 review files.
-6. If the screenshot overlay conflicts with saved match info, call that out explicitly in an `Overlay alignment` note instead of silently rewriting history.
+6. If the supplied material includes result popups, MVP, bans, or map outcomes, update the matching saved result file in the same turn.
+7. Every time new stat-table screenshots or result popups are provided, update `C:\Users\user\Documents\Playground\OWCStats\owcstats_current_dashboard.html` in the same turn.
+8. Treat the dashboard as required output, not an optional follow-up. If no separate dashboard builder exists, patch the embedded dashboard data directly.
+9. If the screenshot overlay conflicts with saved match info, call that out explicitly in an `Overlay alignment` note instead of silently rewriting history.
+10. Before any dashboard refresh, canonicalize player names against `TEAM_ROSTERS_2026.md` and merge case-only duplicates such as `BLISS/Bliss`, `SKEWED/skewed`, or `shu/Shu` into the roster-approved spelling.
+11. Treat case-only name differences as the same player everywhere in downstream views, charts, and aggregates unless the roster file explicitly distinguishes them.
+
+## Definition Of Done
+
+A screenshot/result turn is complete only when all applicable outputs are updated:
+
+- review markdown file
+- saved week result file
+- `owcstats_current_dashboard.html`
+- canonical player dedupe behavior remains intact
 
 ## Project Files To Read
 
@@ -61,11 +75,15 @@ Each player table must use these columns only:
 
 Keep numbers as integers with comma separators where appropriate.
 
+The downstream dashboard builder will compute per-10 stats and `E/D` automatically.
+
 ## Decision Rules
 
 - Prefer the screenshot for player stat values.
 - Prefer the saved schedule/results files for expected match order and matchup naming.
 - Prefer the roster file for stable team naming and player spelling.
+- If the same player appears with different capitalization across screenshots, always keep the roster spelling and merge the stats into one player record.
+- Keep player names and team names in English; dashboard localization only changes metric labels.
 - If the screenshot uses a longer broadcast team name such as `RODE ONSIDE GAMING`, keep the stored canonical team name in the review file and mention the broadcast variant in the alignment note only if it matters.
 - If a player substitution appears between games, record the players exactly as shown and mention the rotation in the roster alignment section.
 - Do not invent hidden stats or hero-playtime summaries from the visible hero icon. Treat the shown hero only as a visible-at-capture hint unless the user explicitly asks for hero tracking.

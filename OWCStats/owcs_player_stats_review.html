@@ -1,0 +1,630 @@
+﻿<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>OWCS Player Stats Review</title>
+  <style>
+    :root {
+      --bg: #08111d;
+      --panel: #101b29;
+      --panel-2: #142335;
+      --line: #23364f;
+      --text: #eef5ff;
+      --muted: #9ab0c9;
+      --accent: #4cb7ff;
+      --accent-2: #7ee787;
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      font-family: "Segoe UI", system-ui, sans-serif;
+      background: linear-gradient(180deg, #07101b 0%, #0c1522 100%);
+      color: var(--text);
+    }
+    .wrap {
+      width: min(1440px, calc(100% - 32px));
+      margin: 0 auto;
+      padding: 24px 0 48px;
+    }
+    .hero, .panel {
+      background: var(--panel);
+      border: 1px solid var(--line);
+      border-radius: 22px;
+      padding: 20px;
+      box-shadow: 0 18px 40px rgba(0,0,0,.22);
+    }
+    .hero {
+      background: linear-gradient(135deg, rgba(76,183,255,.16), rgba(126,231,135,.08));
+      margin-bottom: 18px;
+    }
+    h1,h2,h3 { margin: 0; }
+    p {
+      margin: 10px 0 0;
+      color: var(--muted);
+      line-height: 1.6;
+    }
+    .toolbar {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 12px;
+      margin-bottom: 16px;
+    }
+    .control {
+      background: var(--panel);
+      border: 1px solid var(--line);
+      border-radius: 16px;
+      padding: 12px 14px;
+    }
+    .control label {
+      display: block;
+      font-size: 12px;
+      text-transform: uppercase;
+      letter-spacing: .04em;
+      color: var(--muted);
+      margin-bottom: 8px;
+    }
+    .control select {
+      width: 100%;
+      background: var(--panel-2);
+      color: var(--text);
+      border: 1px solid var(--line);
+      border-radius: 12px;
+      padding: 10px 12px;
+      font-size: 14px;
+    }
+    .stats-grid {
+      display: grid;
+      grid-template-columns: 1.2fr 1fr;
+      gap: 16px;
+      margin-top: 16px;
+    }
+    .table-wrap {
+      overflow: auto;
+      border: 1px solid var(--line);
+      border-radius: 16px;
+      margin-top: 12px;
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      min-width: 780px;
+      background: var(--panel);
+    }
+    th, td {
+      padding: 10px 12px;
+      border-bottom: 1px solid rgba(255,255,255,.05);
+      text-align: left;
+      font-size: 14px;
+    }
+    th {
+      background: #162437;
+      color: #cfe4ff;
+      position: sticky;
+      top: 0;
+      z-index: 1;
+    }
+    .meta-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+      gap: 12px;
+      margin-top: 14px;
+    }
+    .metric {
+      background: rgba(255,255,255,.03);
+      border: 1px solid rgba(255,255,255,.06);
+      border-radius: 14px;
+      padding: 12px;
+    }
+    .metric .label {
+      font-size: 12px;
+      color: var(--muted);
+      text-transform: uppercase;
+      letter-spacing: .04em;
+      margin-bottom: 8px;
+    }
+    .metric .value {
+      font-size: 22px;
+      font-weight: 700;
+    }
+    .empty {
+      padding: 18px;
+      border: 1px dashed var(--line);
+      border-radius: 16px;
+      color: var(--muted);
+      margin-top: 12px;
+    }
+    @media (max-width: 980px) {
+      .stats-grid { grid-template-columns: 1fr; }
+    }
+    @media (max-width: 640px) {
+      .wrap { width: min(100% - 20px, 1440px); }
+      .hero, .panel { padding: 16px; }
+    }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <section class="hero">
+      <h1 id="pageTitle">OWCS Korea 2026 Player Stats Review</h1>
+      <p id="pageIntro">Review player stat trends across selectable periods. Player names and team names stay in English, while UI labels can switch between Korean and English.</p>
+    </section>
+
+    <section class="toolbar">
+      <div class="control">
+        <label for="languageSelect" id="languageLabel">Language</label>
+        <select id="languageSelect">
+          <option value="ko">한국어</option>
+          <option value="en">English</option>
+        </select>
+      </div>
+      <div class="control">
+        <label for="periodStartSelect" id="startPeriodLabel">Start Period</label>
+        <select id="periodStartSelect">
+          <option value="week1">Week 1</option>
+          <option value="week2">Week 2</option>
+          <option value="week3">Week 3</option>
+          <option value="week4">Week 4</option>
+          <option value="playoff">Playoff</option>
+        </select>
+      </div>
+      <div class="control">
+        <label for="periodEndSelect" id="endPeriodLabel">End Period</label>
+        <select id="periodEndSelect">
+          <option value="week1">Week 1</option>
+          <option value="week2">Week 2</option>
+          <option value="week3">Week 3</option>
+          <option value="week4">Week 4</option>
+          <option value="playoff">Playoff</option>
+        </select>
+      </div>
+      <div class="control">
+        <label for="playerSelect" id="playerTrendLabel">Player Trend</label>
+        <select id="playerSelect"></select>
+      </div>
+    </section>
+
+    <section class="panel">
+      <h2 id="periodTitle">Week 1 - Week 1 Summary</h2>
+      <div id="periodMeta" class="meta-grid"></div>
+    </section>
+
+    <section class="stats-grid">
+      <section class="panel">
+        <h3 id="weekTableTitle">Week 1 - Week 1 /10 Table</h3>
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th id="thPlayerMain">Player</th>
+                <th id="thTeamMain">Team</th>
+                <th id="thRoleMain">Role</th>
+                <th id="thMinutesMain">Minutes</th>
+                <th id="thKillsMain">Kills/10</th>
+                <th id="thAssistsMain">Assists/10</th>
+                <th id="thDeathsMain">Deaths/10</th>
+                <th id="thDamageMain">Damage/10</th>
+                <th id="thHealingMain">Healing/10</th>
+                <th id="thMitigationMain">Mitigation/10</th>
+              </tr>
+            </thead>
+            <tbody id="weekStatsBody"></tbody>
+          </table>
+        </div>
+      </section>
+
+      <section class="panel">
+        <h3 id="trendTitle">Player Weekly Trend</h3>
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th id="thPeriodTrend">Period</th>
+                <th id="thTeamTrend">Team</th>
+                <th id="thRoleTrend">Role</th>
+                <th id="thMinutesTrend">Minutes</th>
+                <th id="thKillsTrend">Kills/10</th>
+                <th id="thAssistsTrend">Assists/10</th>
+                <th id="thDeathsTrend">Deaths/10</th>
+                <th id="thDamageTrend">Damage/10</th>
+                <th id="thHealingTrend">Healing/10</th>
+                <th id="thMitigationTrend">Mitigation/10</th>
+              </tr>
+            </thead>
+            <tbody id="trendBody"></tbody>
+          </table>
+        </div>
+      </section>
+    </section>
+  </div>
+
+  <script>
+    const reviewMeta = {
+      week1: { label: "Week 1", noteKey: "week1", matches: 10, days: 3 },
+      week2: { label: "Week 2", noteKey: "week2", matches: 6, days: 2 },
+      week3: { label: "Week 3", noteKey: "empty", matches: 0, days: 0 },
+      week4: { label: "Week 4", noteKey: "empty", matches: 0, days: 0 },
+      playoff: { label: "Playoff", noteKey: "empty", matches: 0, days: 0 }
+    };
+
+    const statsData = {
+      week1: [
+        { player: "A1IEN", team: "ZAN Esports", role: "DPS", minutes: 114.40, e10: 17.31, a10: 0.09, d10: 5.86, dmg10: 9988.37, h10: 11.98, mit10: 28.50 },
+        { player: "Argon", team: "Cheeseburger", role: "DPS", minutes: 52.05, e10: 7.11, a10: 0.19, d10: 8.26, dmg10: 7325.07, h10: 159.27, mit10: 650.91 },
+        { player: "Attack", team: "ONSIDE GAMING", role: "Tank", minutes: 117.15, e10: 17.24, a10: 7.68, d10: 5.29, dmg10: 9231.75, h10: 1989.16, mit10: 14153.56 },
+        { player: "BLISS", team: "T1", role: "Support", minutes: 78.03, e10: 11.92, a10: 14.87, d10: 3.33, dmg10: 4310.08, h10: 8372.45, mit10: 2545.96 },
+        { player: "Becky", team: "ZAN Esports", role: "DPS", minutes: 114.40, e10: 14.69, a10: 1.05, d10: 6.03, dmg10: 7357.69, h10: 362.94, mit10: 1231.82 },
+        { player: "Bernar", team: "ZETA DIVISION", role: "Tank", minutes: 96.33, e10: 18.69, a10: 8.93, d10: 6.02, dmg10: 9650.76, h10: 1367.13, mit10: 12108.06 },
+        { player: "CARU", team: "Poker Face", role: "Support", minutes: 60.57, e10: 9.58, a10: 19.48, d10: 3.30, dmg10: 3476.17, h10: 9216.79, mit10: 95.93 },
+        { player: "CH0R0NG", team: "Crazy Raccoon", role: "Support", minutes: 104.75, e10: 12.98, a10: 13.84, d10: 5.44, dmg10: 4780.72, h10: 9400.00, mit10: 2230.36 },
+        { player: "Checkmate", team: "Team Falcons", role: "DPS", minutes: 89.93, e10: 19.57, a10: 2.56, d10: 6.34, dmg10: 9037.36, h10: 337.25, mit10: 1965.68 },
+        { player: "ChiYo", team: "Team Falcons", role: "Support", minutes: 89.93, e10: 15.12, a10: 18.79, d10: 5.45, dmg10: 5163.49, h10: 9469.24, mit10: 2558.56 },
+        { player: "D0D0", team: "New Era", role: "DPS", minutes: 55.12, e10: 8.16, a10: 0.73, d10: 7.44, dmg10: 5722.04, h10: 165.10, mit10: 953.79 },
+        { player: "D4RT", team: "Poker Face", role: "DPS", minutes: 60.57, e10: 20.80, a10: 1.65, d10: 4.46, dmg10: 8606.55, h10: 367.86, mit10: 810.68 },
+        { player: "Faith", team: "Cheeseburger", role: "Support", minutes: 52.05, e10: 5.96, a10: 5.96, d10: 5.57, dmg10: 3358.89, h10: 6779.25, mit10: 1947.17 },
+        { player: "Fielder", team: "Team Falcons", role: "Support", minutes: 89.93, e10: 13.23, a10: 22.68, d10: 5.67, dmg10: 4733.40, h10: 11340.07, mit10: 149.78 },
+        { player: "Gur3um", team: "Poker Face", role: "Tank", minutes: 60.57, e10: 21.30, a10: 9.74, d10: 2.81, dmg10: 8538.36, h10: 1581.40, mit10: 12105.01 },
+        { player: "HEISER", team: "ZAN Esports", role: "Tank", minutes: 114.40, e10: 17.31, a10: 7.34, d10: 5.77, dmg10: 9431.38, h10: 693.88, mit10: 9356.91 },
+        { player: "Hanbin", team: "Team Falcons", role: "Tank", minutes: 89.93, e10: 26.13, a10: 12.56, d10: 3.89, dmg10: 8152.26, h10: 2107.78, mit10: 12670.94 },
+        { player: "HeeSang", team: "Crazy Raccoon", role: "DPS", minutes: 92.48, e10: 15.57, a10: 1.73, d10: 4.54, dmg10: 7977.98, h10: 311.95, mit10: 2294.68 },
+        { player: "IRONY", team: "ONSIDE GAMING", role: "Support", minutes: 117.15, e10: 8.11, a10: 14.43, d10: 4.78, dmg10: 4453.18, h10: 10523.86, mit10: 166.97 },
+        { player: "JASM1NE", team: "T1", role: "Tank", minutes: 78.03, e10: 19.09, a10: 9.74, d10: 3.46, dmg10: 9044.34, h10: 2162.02, mit10: 15340.37 },
+        { player: "JunBin", team: "Crazy Raccoon", role: "Tank", minutes: 10.40, e10: 7.69, a10: 2.88, d10: 6.73, dmg10: 5900.96, h10: 2321.15, mit10: 14015.38 },
+        { player: "KIVIS", team: "ZAN Esports", role: "Support", minutes: 114.40, e10: 11.45, a10: 16.17, d10: 4.90, dmg10: 5187.85, h10: 9961.80, mit10: 0.00 },
+        { player: "Kilo", team: "ONSIDE GAMING", role: "DPS", minutes: 117.15, e10: 14.43, a10: 0.60, d10: 6.15, dmg10: 8901.24, h10: 132.57, mit10: 823.39 },
+        { player: "LIP", team: "Crazy Raccoon", role: "DPS", minutes: 12.27, e10: 13.04, a10: 1.63, d10: 8.15, dmg10: 10579.08, h10: 0.00, mit10: 184.24 },
+        { player: "M1NUT2", team: "Poker Face", role: "DPS", minutes: 60.57, e10: 18.66, a10: 1.82, d10: 4.46, dmg10: 9643.26, h10: 407.32, mit10: 823.06 },
+        { player: "MAX", team: "Crazy Raccoon", role: "Tank", minutes: 94.35, e10: 19.71, a10: 9.75, d10: 4.13, dmg10: 9279.39, h10: 1847.91, mit10: 13202.97 },
+        { player: "MCD", team: "New Era", role: "Support", minutes: 55.12, e10: 6.53, a10: 9.07, d10: 6.53, dmg10: 5165.77, h10: 8566.19, mit10: 2082.67 },
+        { player: "MER1T", team: "Team Falcons", role: "DPS", minutes: 89.93, e10: 21.13, a10: 2.56, d10: 6.56, dmg10: 9635.14, h10: 283.99, mit10: 2401.78 },
+        { player: "OPENER", team: "ONSIDE GAMING", role: "Support", minutes: 117.15, e10: 9.99, a10: 12.97, d10: 4.95, dmg10: 3666.67, h10: 8020.66, mit10: 2281.86 },
+        { player: "PERR", team: "New Era", role: "DPS", minutes: 55.12, e10: 8.35, a10: 0.00, d10: 6.53, dmg10: 7942.61, h10: 166.37, mit10: 79.29 },
+        { player: "PROUD", team: "T1", role: "DPS", minutes: 78.03, e10: 17.81, a10: 0.00, d10: 4.49, dmg10: 10146.18, h10: 191.07, mit10: 82.40 },
+        { player: "Proper", team: "ZETA DIVISION", role: "DPS", minutes: 120.80, e10: 18.71, a10: 1.74, d10: 5.38, dmg10: 9022.27, h10: 284.27, mit10: 1006.71 },
+        { player: "SECRET", team: "New Era", role: "Support", minutes: 55.12, e10: 4.35, a10: 6.53, d10: 6.71, dmg10: 3412.40, h10: 8792.80, mit10: 87.27 },
+        { player: "SKEWED", team: "T1", role: "Support", minutes: 78.03, e10: 8.71, a10: 17.30, d10: 3.20, dmg10: 4976.59, h10: 11946.30, mit10: 129.05 },
+        { player: "SP1NT", team: "ONSIDE GAMING", role: "DPS", minutes: 117.15, e10: 13.32, a10: 2.99, d10: 6.32, dmg10: 8021.94, h10: 366.79, mit10: 1437.99 },
+        { player: "SoLA", team: "New Era", role: "Tank", minutes: 55.12, e10: 8.16, a10: 3.63, d10: 6.17, dmg10: 7051.04, h10: 2267.74, mit10: 14754.52 },
+        { player: "Stalk3r", team: "Crazy Raccoon", role: "DPS", minutes: 104.75, e10: 17.85, a10: 0.95, d10: 5.25, dmg10: 9578.42, h10: 122.48, mit10: 558.47 },
+        { player: "TenTen", team: "Poker Face", role: "Support", minutes: 50.50, e10: 15.05, a10: 17.82, d10: 3.37, dmg10: 4753.27, h10: 6273.27, mit10: 945.54 },
+        { player: "Viol2t", team: "ZETA DIVISION", role: "Support", minutes: 120.80, e10: 13.99, a10: 16.39, d10: 6.54, dmg10: 6352.07, h10: 8871.44, mit10: 2667.38 },
+        { player: "WoochaN", team: "Cheeseburger", role: "Support", minutes: 52.05, e10: 6.15, a10: 7.68, d10: 6.15, dmg10: 5054.18, h10: 7906.44, mit10: 0.00 },
+        { player: "YangJun", team: "ZAN Esports", role: "Support", minutes: 114.40, e10: 10.49, a10: 11.54, d10: 5.24, dmg10: 3612.85, h10: 8359.18, mit10: 1782.17 },
+        { player: "ZEST", team: "T1", role: "DPS", minutes: 78.03, e10: 17.04, a10: 3.08, d10: 5.00, dmg10: 8064.12, h10: 205.94, mit10: 1525.89 },
+        { player: "knife", team: "ZETA DIVISION", role: "DPS", minutes: 120.80, e10: 19.62, a10: 3.39, d10: 5.63, dmg10: 9410.76, h10: 446.69, mit10: 2742.96 },
+        { player: "shu", team: "ZETA DIVISION", role: "Support", minutes: 120.80, e10: 12.00, a10: 16.14, d10: 5.79, dmg10: 5194.29, h10: 9590.31, mit10: 521.69 },
+        { player: "vigilante", team: "Crazy Raccoon", role: "Support", minutes: 104.75, e10: 11.07, a10: 16.23, d10: 5.82, dmg10: 3791.03, h10: 10877.71, mit10: 237.04 }
+      ],
+      week2: [
+        { player: "Argon", team: "Cheeseburger", role: "DPS", minutes: 26.02, e10: 8.07, a10: 0.00, d10: 5.77, dmg10: 6780.27, h10: 158.74, mit10: 0.00 },
+        { player: "Attack", team: "ONSIDE GAMING", role: "Tank", minutes: 57.80, e10: 14.01, a10: 4.50, d10: 5.19, dmg10: 9573.70, h10: 1288.58, mit10: 9196.71 },
+        { player: "Becky", team: "ZAN Esports", role: "DPS", minutes: 26.02, e10: 24.60, a10: 0.77, d10: 2.69, dmg10: 7773.48, h10: 109.16, mit10: 293.66 },
+        { player: "Bernar", team: "ZETA DIVISION", role: "Tank", minutes: 21.82, e10: 25.21, a10: 12.38, d10: 3.21, dmg10: 8284.95, h10: 1583.19, mit10: 9464.78 },
+        { player: "CARU", team: "Poker Face", role: "Support", minutes: 29.33, e10: 4.09, a10: 8.86, d10: 7.84, dmg10: 2786.59, h10: 7438.64, mit10: 0.00 },
+        { player: "CH0R0NG", team: "Crazy Raccoon", role: "Support", minutes: 57.80, e10: 15.92, a10: 12.98, d10: 5.02, dmg10: 4961.59, h10: 7212.63, mit10: 2003.46 },
+        { player: "D4RT", team: "Poker Face", role: "DPS", minutes: 29.33, e10: 13.30, a10: 0.68, d10: 6.82, dmg10: 4749.55, h10: 76.36, mit10: 626.93 },
+        { player: "FARMER", team: "Cheeseburger", role: "Tank", minutes: 26.02, e10: 8.07, a10: 1.15, d10: 8.84, dmg10: 6910.95, h10: 1168.10, mit10: 7437.92 },
+        { player: "Faith", team: "Cheeseburger", role: "Support", minutes: 26.02, e10: 6.15, a10: 6.53, d10: 6.53, dmg10: 3171.43, h10: 7276.49, mit10: 2963.87 },
+        { player: "Gur3um", team: "Poker Face", role: "Tank", minutes: 29.33, e10: 9.55, a10: 3.07, d10: 6.82, dmg10: 6942.95, h10: 805.23, mit10: 9571.02 },
+        { player: "HEISER", team: "ZAN Esports", role: "Tank", minutes: 26.02, e10: 23.06, a10: 8.84, d10: 2.31, dmg10: 8160.92, h10: 1712.36, mit10: 11387.70 },
+        { player: "HeeSang", team: "Crazy Raccoon", role: "DPS", minutes: 57.80, e10: 16.78, a10: 1.90, d10: 4.84, dmg10: 7942.04, h10: 232.35, mit10: 544.46 },
+        { player: "IRONY", team: "ONSIDE GAMING", role: "Support", minutes: 57.80, e10: 6.75, a10: 12.80, d10: 5.36, dmg10: 4160.90, h10: 10806.75, mit10: 90.31 },
+        { player: "KIVIS", team: "ZAN Esports", role: "Support", minutes: 26.02, e10: 15.37, a10: 19.99, d10: 3.84, dmg10: 4087.76, h10: 9316.72, mit10: 0.00 },
+        { player: "Kilo", team: "ONSIDE GAMING", role: "DPS", minutes: 57.80, e10: 16.26, a10: 0.52, d10: 6.23, dmg10: 11064.71, h10: 506.40, mit10: 170.59 },
+        { player: "M1NUT2", team: "Poker Face", role: "DPS", minutes: 29.33, e10: 12.27, a10: 0.68, d10: 10.91, dmg10: 8683.30, h10: 230.45, mit10: 45.00 },
+        { player: "MAX", team: "Crazy Raccoon", role: "Tank", minutes: 57.80, e10: 19.90, a10: 9.69, d10: 4.67, dmg10: 8882.53, h10: 1410.21, mit10: 13295.16 },
+        { player: "Proper", team: "ZETA DIVISION", role: "DPS", minutes: 29.33, e10: 20.45, a10: 2.05, d10: 3.75, dmg10: 7965.68, h10: 21.48, mit10: 21.14 },
+        { player: "SP1NT", team: "ONSIDE GAMING", role: "DPS", minutes: 57.80, e10: 11.94, a10: 0.52, d10: 5.71, dmg10: 6651.73, h10: 139.10, mit10: 638.41 },
+        { player: "Stalk3r", team: "Crazy Raccoon", role: "DPS", minutes: 57.80, e10: 17.13, a10: 1.04, d10: 4.84, dmg10: 8432.70, h10: 203.11, mit10: 607.79 },
+        { player: "TenTen", team: "Poker Face", role: "Support", minutes: 29.33, e10: 6.14, a10: 7.84, d10: 7.84, dmg10: 3838.98, h10: 6672.27, mit10: 672.27 },
+        { player: "Viol2t", team: "ZETA DIVISION", role: "Support", minutes: 29.33, e10: 16.36, a10: 14.66, d10: 4.09, dmg10: 3175.91, h10: 7057.16, mit10: 0.00 },
+        { player: "WoochaN", team: "Cheeseburger", role: "Support", minutes: 26.02, e10: 4.61, a10: 8.46, d10: 5.77, dmg10: 4137.35, h10: 8952.34, mit10: 0.00 },
+        { player: "YangJun", team: "ZAN Esports", role: "Support", minutes: 26.02, e10: 17.30, a10: 18.07, d10: 2.69, dmg10: 4292.25, h10: 7110.44, mit10: 907.11 },
+        { player: "Zesin", team: "Cheeseburger", role: "DPS", minutes: 26.02, e10: 8.07, a10: 0.77, d10: 9.61, dmg10: 6867.52, h10: 196.03, mit10: 164.89 },
+        { player: "knife", team: "ZETA DIVISION", role: "DPS", minutes: 29.33, e10: 20.80, a10: 3.07, d10: 6.14, dmg10: 8657.05, h10: 324.20, mit10: 444.20 },
+        { player: "probe", team: "ZAN Esports", role: "DPS", minutes: 26.02, e10: 22.68, a10: 0.00, d10: 4.23, dmg10: 11065.21, h10: 505.83, mit10: 0.00 },
+        { player: "shu", team: "ZETA DIVISION", role: "Support", minutes: 29.33, e10: 9.89, a10: 11.93, d10: 5.80, dmg10: 5248.64, h10: 5095.57, mit10: 603.75 },
+        { player: "vigilante", team: "Crazy Raccoon", role: "Support", minutes: 57.80, e10: 12.11, a10: 16.61, d10: 4.50, dmg10: 4155.54, h10: 10832.70, mit10: 215.57 }
+      ],
+      week3: [],
+      week4: [],
+      playoff: []
+    };
+
+    const periodOrder = ["week1", "week2", "week3", "week4", "playoff"];
+    const languageSelect = document.getElementById("languageSelect");
+    const periodStartSelect = document.getElementById("periodStartSelect");
+    const periodEndSelect = document.getElementById("periodEndSelect");
+    const playerSelect = document.getElementById("playerSelect");
+    const periodTitle = document.getElementById("periodTitle");
+    const periodMeta = document.getElementById("periodMeta");
+    const weekTableTitle = document.getElementById("weekTableTitle");
+    const weekStatsBody = document.getElementById("weekStatsBody");
+    const trendTitle = document.getElementById("trendTitle");
+    const trendBody = document.getElementById("trendBody");
+
+    const copy = {
+      ko: {
+        pageTitle: "OWCS Korea 2026 선수 스탯 리뷰",
+        pageIntro: "선수 스탯을 기간별로 비교할 수 있는 리뷰 페이지입니다. 선수 이름과 팀 이름은 영문으로 유지하고, 지표와 안내 문구만 한국어로 전환합니다.",
+        language: "언어",
+        startPeriod: "시작 기간",
+        endPeriod: "종료 기간",
+        playerTrend: "선수 추이",
+        summary: "집계",
+        table: "/10 테이블",
+        trend: "기간별 추이",
+        matches: "경기 수",
+        days: "일 수",
+        players: "선수 수",
+        avgMinutes: "평균 출전 시간",
+        note: "노트",
+        noStats: "선택한 기간 범위에 선수 스탯 데이터가 없습니다.",
+        player: "선수",
+        team: "팀",
+        role: "역할",
+        minutes: "출전 시간",
+        period: "기간",
+        kills10: "킬/10",
+        assists10: "어시/10",
+        deaths10: "데스/10",
+        damage10: "딜/10",
+        healing10: "힐/10",
+        mitigation10: "경감/10",
+        week1Note: "Week 1 전체 집계 기준",
+        week2Note: "Week 2 현재까지 입력된 집계 기준",
+        emptyNote: "아직 스탯 데이터가 없습니다."
+      },
+      en: {
+        pageTitle: "OWCS Korea 2026 Player Stats Review",
+        pageIntro: "Review player stat trends across selectable periods. Player names and team names stay in English, while UI labels can switch between Korean and English.",
+        language: "Language",
+        startPeriod: "Start Period",
+        endPeriod: "End Period",
+        playerTrend: "Player Trend",
+        summary: "Summary",
+        table: "/10 Table",
+        trend: "Period Trend",
+        matches: "Matches",
+        days: "Days",
+        players: "Players",
+        avgMinutes: "Avg Minutes",
+        note: "Note",
+        noStats: "No player stats are available for the selected period range.",
+        player: "Player",
+        team: "Team",
+        role: "Role",
+        minutes: "Minutes",
+        period: "Period",
+        kills10: "Kills/10",
+        assists10: "Assists/10",
+        deaths10: "Deaths/10",
+        damage10: "Damage/10",
+        healing10: "Healing/10",
+        mitigation10: "Mitigation/10",
+        week1Note: "Based on full Week 1 aggregate data",
+        week2Note: "Based on currently entered Week 2 aggregate data",
+        emptyNote: "No stat data has been entered yet."
+      }
+    };
+
+    const allPlayers = Array.from(new Set(periodOrder.flatMap((key) => (statsData[key] || []).map((row) => row.player)))).sort((a, b) => a.localeCompare(b));
+
+    function getLang() {
+      return languageSelect.value || "ko";
+    }
+
+    function t(key) {
+      return copy[getLang()][key];
+    }
+
+    function metricCard(label, value) {
+      return `<div class="metric"><div class="label">${label}</div><div class="value">${value}</div></div>`;
+    }
+
+    function getSelectedRange() {
+      const startIndex = periodOrder.indexOf(periodStartSelect.value);
+      const endIndex = periodOrder.indexOf(periodEndSelect.value);
+      if (startIndex <= endIndex) {
+        return periodOrder.slice(startIndex, endIndex + 1);
+      }
+      return periodOrder.slice(endIndex, startIndex + 1);
+    }
+
+    function getRangeLabel(rangeKeys) {
+      const startLabel = reviewMeta[rangeKeys[0]].label;
+      const endLabel = reviewMeta[rangeKeys[rangeKeys.length - 1]].label;
+      return `${startLabel} - ${endLabel}`;
+    }
+
+    function aggregateRangeRows(rangeKeys) {
+      const grouped = new Map();
+
+      rangeKeys.forEach((periodKey) => {
+        (statsData[periodKey] || []).forEach((row) => {
+          if (!grouped.has(row.player)) {
+            grouped.set(row.player, {
+              player: row.player,
+              team: row.team,
+              role: row.role,
+              minutes: 0,
+              e: 0,
+              a: 0,
+              d: 0,
+              dmg: 0,
+              h: 0,
+              mit: 0
+            });
+          }
+
+          const acc = grouped.get(row.player);
+          acc.team = row.team;
+          acc.role = row.role;
+          acc.minutes += row.minutes;
+          acc.e += (row.e10 * row.minutes) / 10;
+          acc.a += (row.a10 * row.minutes) / 10;
+          acc.d += (row.d10 * row.minutes) / 10;
+          acc.dmg += (row.dmg10 * row.minutes) / 10;
+          acc.h += (row.h10 * row.minutes) / 10;
+          acc.mit += (row.mit10 * row.minutes) / 10;
+        });
+      });
+
+      return Array.from(grouped.values()).map((row) => ({
+        player: row.player,
+        team: row.team,
+        role: row.role,
+        minutes: row.minutes,
+        e10: row.minutes ? (row.e / row.minutes) * 10 : 0,
+        a10: row.minutes ? (row.a / row.minutes) * 10 : 0,
+        d10: row.minutes ? (row.d / row.minutes) * 10 : 0,
+        dmg10: row.minutes ? (row.dmg / row.minutes) * 10 : 0,
+        h10: row.minutes ? (row.h / row.minutes) * 10 : 0,
+        mit10: row.minutes ? (row.mit / row.minutes) * 10 : 0
+      }));
+    }
+
+    function renderPeriodMeta(rangeKeys) {
+      const rows = aggregateRangeRows(rangeKeys);
+      const rangeLabel = getRangeLabel(rangeKeys);
+      const matches = rangeKeys.reduce((sum, key) => sum + reviewMeta[key].matches, 0);
+      const days = rangeKeys.reduce((sum, key) => sum + reviewMeta[key].days, 0);
+      const notes = rangeKeys
+        .map((key) => t(`${reviewMeta[key].noteKey}Note`))
+        .filter((note, index, arr) => note && arr.indexOf(note) === index);
+      const avgMinutes = rows.length ? (rows.reduce((sum, row) => sum + row.minutes, 0) / rows.length).toFixed(2) : "-";
+      periodTitle.textContent = `${rangeLabel} ${t("summary")}`;
+      periodMeta.innerHTML = [
+        metricCard(t("matches"), matches),
+        metricCard(t("days"), days),
+        metricCard(t("players"), rows.length),
+        metricCard(t("avgMinutes"), avgMinutes),
+        metricCard(t("note"), notes.join(" / ") || "-")
+      ].join("");
+    }
+
+    function renderWeekTable(rangeKeys) {
+      const rangeLabel = getRangeLabel(rangeKeys);
+      const rows = aggregateRangeRows(rangeKeys).sort((a, b) => b.dmg10 - a.dmg10);
+      weekTableTitle.textContent = `${rangeLabel} ${t("table")}`;
+      weekStatsBody.innerHTML = "";
+
+      if (!rows.length) {
+        weekStatsBody.innerHTML = `<tr><td colspan="10" class="muted">${t("noStats")}</td></tr>`;
+        return;
+      }
+
+      rows.forEach((row) => {
+        const tr = document.createElement("tr");
+        tr.innerHTML = `
+          <td>${row.player}</td>
+          <td>${row.team}</td>
+          <td>${row.role}</td>
+          <td>${row.minutes.toFixed(2)}</td>
+          <td>${row.e10.toFixed(2)}</td>
+          <td>${row.a10.toFixed(2)}</td>
+          <td>${row.d10.toFixed(2)}</td>
+          <td>${row.dmg10.toFixed(2)}</td>
+          <td>${row.h10.toFixed(2)}</td>
+          <td>${row.mit10.toFixed(2)}</td>
+        `;
+        weekStatsBody.appendChild(tr);
+      });
+    }
+
+    function renderPlayerTrend(player, rangeKeys) {
+      trendTitle.textContent = `${player} ${t("trend")}`;
+      trendBody.innerHTML = "";
+
+      rangeKeys.forEach((periodKey) => {
+        const label = reviewMeta[periodKey].label;
+        const row = (statsData[periodKey] || []).find((item) => item.player === player);
+        const tr = document.createElement("tr");
+        if (!row) {
+          tr.innerHTML = `<td>${label}</td><td class="muted">-</td><td class="muted">-</td><td class="muted">-</td><td class="muted">-</td><td class="muted">-</td><td class="muted">-</td><td class="muted">-</td><td class="muted">-</td><td class="muted">-</td>`;
+        } else {
+          tr.innerHTML = `
+            <td>${label}</td>
+            <td>${row.team}</td>
+            <td>${row.role}</td>
+            <td>${row.minutes.toFixed(2)}</td>
+            <td>${row.e10.toFixed(2)}</td>
+            <td>${row.a10.toFixed(2)}</td>
+            <td>${row.d10.toFixed(2)}</td>
+            <td>${row.dmg10.toFixed(2)}</td>
+            <td>${row.h10.toFixed(2)}</td>
+            <td>${row.mit10.toFixed(2)}</td>
+          `;
+        }
+        trendBody.appendChild(tr);
+      });
+    }
+
+    allPlayers.forEach((player) => {
+      const option = document.createElement("option");
+      option.value = player;
+      option.textContent = player;
+      playerSelect.appendChild(option);
+    });
+
+    function updateStaticText() {
+      document.documentElement.lang = getLang();
+      document.title = t("pageTitle");
+      document.getElementById("pageTitle").textContent = t("pageTitle");
+      document.getElementById("pageIntro").textContent = t("pageIntro");
+      document.getElementById("languageLabel").textContent = t("language");
+      document.getElementById("startPeriodLabel").textContent = t("startPeriod");
+      document.getElementById("endPeriodLabel").textContent = t("endPeriod");
+      document.getElementById("playerTrendLabel").textContent = t("playerTrend");
+      document.getElementById("thPlayerMain").textContent = t("player");
+      document.getElementById("thTeamMain").textContent = t("team");
+      document.getElementById("thRoleMain").textContent = t("role");
+      document.getElementById("thMinutesMain").textContent = t("minutes");
+      document.getElementById("thKillsMain").textContent = t("kills10");
+      document.getElementById("thAssistsMain").textContent = t("assists10");
+      document.getElementById("thDeathsMain").textContent = t("deaths10");
+      document.getElementById("thDamageMain").textContent = t("damage10");
+      document.getElementById("thHealingMain").textContent = t("healing10");
+      document.getElementById("thMitigationMain").textContent = t("mitigation10");
+      document.getElementById("thPeriodTrend").textContent = t("period");
+      document.getElementById("thTeamTrend").textContent = t("team");
+      document.getElementById("thRoleTrend").textContent = t("role");
+      document.getElementById("thMinutesTrend").textContent = t("minutes");
+      document.getElementById("thKillsTrend").textContent = t("kills10");
+      document.getElementById("thAssistsTrend").textContent = t("assists10");
+      document.getElementById("thDeathsTrend").textContent = t("deaths10");
+      document.getElementById("thDamageTrend").textContent = t("damage10");
+      document.getElementById("thHealingTrend").textContent = t("healing10");
+      document.getElementById("thMitigationTrend").textContent = t("mitigation10");
+    }
+
+    function renderAll() {
+      if (periodOrder.indexOf(periodStartSelect.value) > periodOrder.indexOf(periodEndSelect.value)) {
+        periodEndSelect.value = periodStartSelect.value;
+      }
+      updateStaticText();
+      const rangeKeys = getSelectedRange();
+      renderPeriodMeta(rangeKeys);
+      renderWeekTable(rangeKeys);
+      renderPlayerTrend(playerSelect.value, rangeKeys);
+    }
+
+    languageSelect.addEventListener("change", renderAll);
+    periodStartSelect.addEventListener("change", renderAll);
+    periodEndSelect.addEventListener("change", renderAll);
+    playerSelect.addEventListener("change", renderAll);
+
+    if (allPlayers.length) {
+      playerSelect.value = allPlayers[0];
+    }
+
+    languageSelect.value = "ko";
+    periodStartSelect.value = "week1";
+    periodEndSelect.value = "week1";
+
+    renderAll();
+  </script>
+</body>
+</html>
+
+

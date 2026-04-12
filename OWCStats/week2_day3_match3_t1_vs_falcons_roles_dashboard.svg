@@ -1,0 +1,114 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1890" height="738" viewBox="0 0 1890 738">
+<rect width="100%" height="100%" fill="#f5f7fb" />
+<text x="32" y="43" font-family="Arial" font-size="29" font-weight="700" fill="#111827">OWCS Korea 2026 Match Role Scatter Dashboard</text>
+<text x="32" y="74" font-family="Arial" font-size="16" fill="#4b5563">Week 2 Day 3 Match 3 | Result: Team Falcons 3:1 T1 | Winner: Team Falcons</text>
+<rect x="32" y="126" width="576" height="558" rx="10" fill="#ffffff" stroke="#d0d7de" />
+<text x="122" y="160" font-family="Arial" font-size="22" font-weight="700" fill="#111827">Support DMG/10 vs H/10</text>
+<line x1="122.00" y1="186" x2="122.00" y2="594" stroke="#eef2f7" />
+<line x1="122" y1="594.00" x2="578" y2="594.00" stroke="#eef2f7" />
+<text x="122.00" y="626" text-anchor="middle" font-family="Arial" font-size="13" font-weight="700" fill="#4b5563">2500</text>
+<text x="108" y="599.00" text-anchor="end" font-family="Arial" font-size="13" font-weight="700" fill="#4b5563">5000</text>
+<line x1="213.20" y1="186" x2="213.20" y2="594" stroke="#eef2f7" />
+<line x1="122" y1="512.40" x2="578" y2="512.40" stroke="#eef2f7" />
+<text x="213.20" y="626" text-anchor="middle" font-family="Arial" font-size="13" font-weight="700" fill="#4b5563">3200</text>
+<text x="108" y="517.40" text-anchor="end" font-family="Arial" font-size="13" font-weight="700" fill="#4b5563">6600</text>
+<line x1="304.40" y1="186" x2="304.40" y2="594" stroke="#eef2f7" />
+<line x1="122" y1="430.80" x2="578" y2="430.80" stroke="#eef2f7" />
+<text x="304.40" y="626" text-anchor="middle" font-family="Arial" font-size="13" font-weight="700" fill="#4b5563">3900</text>
+<text x="108" y="435.80" text-anchor="end" font-family="Arial" font-size="13" font-weight="700" fill="#4b5563">8200</text>
+<line x1="395.60" y1="186" x2="395.60" y2="594" stroke="#eef2f7" />
+<line x1="122" y1="349.20" x2="578" y2="349.20" stroke="#eef2f7" />
+<text x="395.60" y="626" text-anchor="middle" font-family="Arial" font-size="13" font-weight="700" fill="#4b5563">4600</text>
+<text x="108" y="354.20" text-anchor="end" font-family="Arial" font-size="13" font-weight="700" fill="#4b5563">9800</text>
+<line x1="486.80" y1="186" x2="486.80" y2="594" stroke="#eef2f7" />
+<line x1="122" y1="267.60" x2="578" y2="267.60" stroke="#eef2f7" />
+<text x="486.80" y="626" text-anchor="middle" font-family="Arial" font-size="13" font-weight="700" fill="#4b5563">5300</text>
+<text x="108" y="272.60" text-anchor="end" font-family="Arial" font-size="13" font-weight="700" fill="#4b5563">11400</text>
+<line x1="578.00" y1="186" x2="578.00" y2="594" stroke="#eef2f7" />
+<line x1="122" y1="186.00" x2="578" y2="186.00" stroke="#eef2f7" />
+<text x="578.00" y="626" text-anchor="middle" font-family="Arial" font-size="13" font-weight="700" fill="#4b5563">6000</text>
+<text x="108" y="191.00" text-anchor="end" font-family="Arial" font-size="13" font-weight="700" fill="#4b5563">13000</text>
+<text x="350.00" y="666" text-anchor="middle" font-family="Arial" font-size="18" font-weight="700" fill="#111827">DAMAGE per 10 min.</text>
+<text x="56" y="390.00" text-anchor="middle" transform="rotate(-90 56 390.00)" font-family="Arial" font-size="18" font-weight="700" fill="#111827">HEALING per 10 min.</text>
+<circle cx="251.74" cy="477.48" r="7" fill="#E2012D" fill-opacity="0.88" stroke="#ffffff" stroke-width="1.5"><title>Bliss: (3495.81, 7284.73)</title></circle>
+<text x="261.74" y="467.48" font-family="Arial" font-size="12" fill="#1f2937">Bliss</text>
+<circle cx="402.91" cy="264.76" r="7" fill="#E2012D" fill-opacity="0.88" stroke="#ffffff" stroke-width="1.5"><title>skewed: (4656.08, 11455.74)</title></circle>
+<text x="412.91" y="254.76" font-family="Arial" font-size="12" fill="#1f2937">skewed</text>
+<circle cx="320.14" cy="454.54" r="7" fill="#02BD70" fill-opacity="0.88" stroke="#ffffff" stroke-width="1.5"><title>ChiYo: (4020.81, 7734.53)</title></circle>
+<text x="330.14" y="444.54" font-family="Arial" font-size="12" fill="#1f2937">ChiYo</text>
+<circle cx="246.51" cy="223.04" r="7" fill="#02BD70" fill-opacity="0.88" stroke="#ffffff" stroke-width="1.5"><title>Fielder: (3455.68, 12273.65)</title></circle>
+<text x="256.51" y="213.04" font-family="Arial" font-size="12" fill="#1f2937">Fielder</text>
+<rect x="635" y="126" width="576" height="558" rx="10" fill="#ffffff" stroke="#d0d7de" />
+<text x="725" y="160" font-family="Arial" font-size="22" font-weight="700" fill="#111827">DPS DMG/10 vs Kills/10</text>
+<line x1="725.00" y1="186" x2="725.00" y2="594" stroke="#eef2f7" />
+<line x1="725" y1="594.00" x2="1181" y2="594.00" stroke="#eef2f7" />
+<text x="725.00" y="626" text-anchor="middle" font-family="Arial" font-size="13" font-weight="700" fill="#4b5563">6000</text>
+<text x="711" y="599.00" text-anchor="end" font-family="Arial" font-size="13" font-weight="700" fill="#4b5563">10</text>
+<line x1="816.20" y1="186" x2="816.20" y2="594" stroke="#eef2f7" />
+<line x1="725" y1="512.40" x2="1181" y2="512.40" stroke="#eef2f7" />
+<text x="816.20" y="626" text-anchor="middle" font-family="Arial" font-size="13" font-weight="700" fill="#4b5563">7200</text>
+<text x="711" y="517.40" text-anchor="end" font-family="Arial" font-size="13" font-weight="700" fill="#4b5563">14</text>
+<line x1="907.40" y1="186" x2="907.40" y2="594" stroke="#eef2f7" />
+<line x1="725" y1="430.80" x2="1181" y2="430.80" stroke="#eef2f7" />
+<text x="907.40" y="626" text-anchor="middle" font-family="Arial" font-size="13" font-weight="700" fill="#4b5563">8400</text>
+<text x="711" y="435.80" text-anchor="end" font-family="Arial" font-size="13" font-weight="700" fill="#4b5563">18</text>
+<line x1="998.60" y1="186" x2="998.60" y2="594" stroke="#eef2f7" />
+<line x1="725" y1="349.20" x2="1181" y2="349.20" stroke="#eef2f7" />
+<text x="998.60" y="626" text-anchor="middle" font-family="Arial" font-size="13" font-weight="700" fill="#4b5563">9600</text>
+<text x="711" y="354.20" text-anchor="end" font-family="Arial" font-size="13" font-weight="700" fill="#4b5563">22</text>
+<line x1="1089.80" y1="186" x2="1089.80" y2="594" stroke="#eef2f7" />
+<line x1="725" y1="267.60" x2="1181" y2="267.60" stroke="#eef2f7" />
+<text x="1089.80" y="626" text-anchor="middle" font-family="Arial" font-size="13" font-weight="700" fill="#4b5563">10800</text>
+<text x="711" y="272.60" text-anchor="end" font-family="Arial" font-size="13" font-weight="700" fill="#4b5563">26</text>
+<line x1="1181.00" y1="186" x2="1181.00" y2="594" stroke="#eef2f7" />
+<line x1="725" y1="186.00" x2="1181" y2="186.00" stroke="#eef2f7" />
+<text x="1181.00" y="626" text-anchor="middle" font-family="Arial" font-size="13" font-weight="700" fill="#4b5563">12000</text>
+<text x="711" y="191.00" text-anchor="end" font-family="Arial" font-size="13" font-weight="700" fill="#4b5563">30</text>
+<text x="953.00" y="666" text-anchor="middle" font-family="Arial" font-size="18" font-weight="700" fill="#111827">DAMAGE per 10 min.</text>
+<text x="659" y="390.00" text-anchor="middle" transform="rotate(-90 659 390.00)" font-family="Arial" font-size="18" font-weight="700" fill="#111827">KILLS per 10 min.</text>
+<circle cx="1164.62" cy="268.62" r="7" fill="#E2012D" fill-opacity="0.88" stroke="#ffffff" stroke-width="1.5"><title>Proud: (11784.53, 25.95)</title></circle>
+<text x="1174.62" y="258.62" font-family="Arial" font-size="12" fill="#1f2937">Proud</text>
+<circle cx="831.96" cy="434.06" r="7" fill="#E2012D" fill-opacity="0.88" stroke="#ffffff" stroke-width="1.5"><title>ZEST: (7407.36, 17.84)</title></circle>
+<text x="841.96" y="424.06" font-family="Arial" font-size="12" fill="#1f2937">ZEST</text>
+<circle cx="748.96" cy="508.52" r="7" fill="#02BD70" fill-opacity="0.88" stroke="#ffffff" stroke-width="1.5"><title>Checkmate: (6315.20, 14.19)</title></circle>
+<text x="758.96" y="498.52" font-family="Arial" font-size="12" fill="#1f2937">Checkmate</text>
+<circle cx="1094.50" cy="417.54" r="7" fill="#02BD70" fill-opacity="0.88" stroke="#ffffff" stroke-width="1.5"><title>MER1T: (10861.82, 18.65)</title></circle>
+<text x="1104.50" y="407.54" font-family="Arial" font-size="12" fill="#1f2937">MER1T</text>
+<rect x="1238" y="126" width="576" height="558" rx="10" fill="#ffffff" stroke="#d0d7de" />
+<text x="1328" y="160" font-family="Arial" font-size="22" font-weight="700" fill="#111827">Tank DMG/10 vs E/D</text>
+<line x1="1328.00" y1="186" x2="1328.00" y2="594" stroke="#eef2f7" />
+<line x1="1328" y1="594.00" x2="1784" y2="594.00" stroke="#eef2f7" />
+<text x="1328.00" y="626" text-anchor="middle" font-family="Arial" font-size="13" font-weight="700" fill="#4b5563">5500</text>
+<text x="1314" y="599.00" text-anchor="end" font-family="Arial" font-size="13" font-weight="700" fill="#4b5563">0.5</text>
+<line x1="1419.20" y1="186" x2="1419.20" y2="594" stroke="#eef2f7" />
+<line x1="1328" y1="512.40" x2="1784" y2="512.40" stroke="#eef2f7" />
+<text x="1419.20" y="626" text-anchor="middle" font-family="Arial" font-size="13" font-weight="700" fill="#4b5563">6700</text>
+<text x="1314" y="517.40" text-anchor="end" font-family="Arial" font-size="13" font-weight="700" fill="#4b5563">2</text>
+<line x1="1510.40" y1="186" x2="1510.40" y2="594" stroke="#eef2f7" />
+<line x1="1328" y1="430.80" x2="1784" y2="430.80" stroke="#eef2f7" />
+<text x="1510.40" y="626" text-anchor="middle" font-family="Arial" font-size="13" font-weight="700" fill="#4b5563">7900</text>
+<text x="1314" y="435.80" text-anchor="end" font-family="Arial" font-size="13" font-weight="700" fill="#4b5563">3.5</text>
+<line x1="1601.60" y1="186" x2="1601.60" y2="594" stroke="#eef2f7" />
+<line x1="1328" y1="349.20" x2="1784" y2="349.20" stroke="#eef2f7" />
+<text x="1601.60" y="626" text-anchor="middle" font-family="Arial" font-size="13" font-weight="700" fill="#4b5563">9100</text>
+<text x="1314" y="354.20" text-anchor="end" font-family="Arial" font-size="13" font-weight="700" fill="#4b5563">5</text>
+<line x1="1692.80" y1="186" x2="1692.80" y2="594" stroke="#eef2f7" />
+<line x1="1328" y1="267.60" x2="1784" y2="267.60" stroke="#eef2f7" />
+<text x="1692.80" y="626" text-anchor="middle" font-family="Arial" font-size="13" font-weight="700" fill="#4b5563">10300</text>
+<text x="1314" y="272.60" text-anchor="end" font-family="Arial" font-size="13" font-weight="700" fill="#4b5563">6.5</text>
+<line x1="1784.00" y1="186" x2="1784.00" y2="594" stroke="#eef2f7" />
+<line x1="1328" y1="186.00" x2="1784" y2="186.00" stroke="#eef2f7" />
+<text x="1784.00" y="626" text-anchor="middle" font-family="Arial" font-size="13" font-weight="700" fill="#4b5563">11500</text>
+<text x="1314" y="191.00" text-anchor="end" font-family="Arial" font-size="13" font-weight="700" fill="#4b5563">8</text>
+<text x="1556.00" y="666" text-anchor="middle" font-family="Arial" font-size="18" font-weight="700" fill="#111827">DAMAGE per 10 min.</text>
+<text x="1262" y="390.00" text-anchor="middle" transform="rotate(-90 1262 390.00)" font-family="Arial" font-size="18" font-weight="700" fill="#111827">KILLS per LIFE</text>
+<circle cx="1705.12" cy="403.60" r="7" fill="#E2012D" fill-opacity="0.88" stroke="#ffffff" stroke-width="1.5"><title>Jasm1ne: (10462.09, 4.00)</title></circle>
+<text x="1715.12" y="393.60" font-family="Arial" font-size="12" fill="#1f2937">Jasm1ne</text>
+<circle cx="1522.97" cy="458.00" r="7" fill="#02BD70" fill-opacity="0.88" stroke="#ffffff" stroke-width="1.5"><title>Hanbin: (8065.34, 3.00)</title></circle>
+<text x="1532.97" y="448.00" font-family="Arial" font-size="12" fill="#1f2937">Hanbin</text>
+<text x="32" y="711" font-family="Arial" font-size="16" font-weight="700" fill="#111827">Teams</text>
+<circle cx="113" cy="706" r="6" fill="#E2012D" />
+<text x="127" y="711" font-family="Arial" font-size="13" fill="#374151">T1</text>
+<circle cx="302" cy="706" r="6" fill="#02BD70" />
+<text x="316" y="711" font-family="Arial" font-size="13" fill="#374151">Team Falcons</text>
+</svg>

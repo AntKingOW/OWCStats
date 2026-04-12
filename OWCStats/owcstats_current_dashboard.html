@@ -1,572 +1,767 @@
-<!doctype html>
+﻿<!doctype html>
 <html lang="ko">
 <head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>OWCStats Current Dashboard</title>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>OWCS Korea 2026 Current Dashboard</title>
   <style>
     :root {
-      --bg: #0a1016;
-      --panel: #121b24;
-      --panel2: #182331;
-      --line: #223446;
-      --text: #edf3fb;
-      --muted: #97aabd;
-      --accent: #ff6542;
-      --accent2: #58d3b7;
-      --gold: #f0c55a;
+      --bg: #08111a;
+      --panel: #0f1b28;
+      --panel-2: #132335;
+      --panel-3: #172a40;
+      --line: #223852;
+      --text: #eef4fb;
+      --muted: #9cb0c4;
+      --accent: #8db9ff;
+      --good: #9ff7b3;
+      --warn: #ffd37b;
     }
     * { box-sizing: border-box; }
     body {
       margin: 0;
-      font-family: "Segoe UI", "Noto Sans KR", sans-serif;
+      font-family: "Segoe UI", Arial, sans-serif;
+      background: linear-gradient(180deg, #06101a 0%, #0b1622 100%);
       color: var(--text);
-      background: linear-gradient(180deg, #0a0f14 0%, #0b1117 100%);
     }
-    .wrap {
-      width: min(1520px, calc(100vw - 32px));
+    .page {
+      max-width: 1480px;
       margin: 0 auto;
-      padding: 28px 0 48px;
+      padding: 24px;
     }
     .hero, .panel {
       background: var(--panel);
       border: 1px solid var(--line);
-      border-radius: 20px;
-      box-shadow: 0 12px 32px rgba(0, 0, 0, .22);
+      border-radius: 22px;
+      box-shadow: 0 16px 36px rgba(0,0,0,0.25);
     }
     .hero {
-      padding: 28px;
+      padding: 24px 28px;
       margin-bottom: 20px;
-      background: linear-gradient(135deg, rgba(255,101,66,.14), rgba(88,211,183,.08));
+      background: linear-gradient(135deg, rgba(141,185,255,0.15), rgba(15,27,40,0.95));
     }
-    .hero h1 { margin: 0 0 8px; font-size: 42px; }
-    .hero p { margin: 0; color: var(--muted); }
-    .section { margin-top: 20px; }
+    .hero h1 {
+      margin: 0 0 8px;
+      font-size: 28px;
+      font-weight: 800;
+    }
+    .hero p {
+      margin: 0;
+      color: var(--muted);
+      line-height: 1.55;
+    }
+    .controls {
+      display: grid;
+      grid-template-columns: 170px 170px 150px 1fr 150px;
+      gap: 12px;
+      padding: 18px;
+      margin-bottom: 18px;
+    }
+    .graph-controls {
+      display: grid;
+      grid-template-columns: 180px 180px 180px;
+      gap: 12px;
+      margin-bottom: 16px;
+    }
+    label {
+      display: block;
+      font-size: 12px;
+      font-weight: 700;
+      color: var(--muted);
+      margin-bottom: 6px;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+    select, input {
+      width: 100%;
+      padding: 12px 14px;
+      border-radius: 12px;
+      border: 1px solid var(--line);
+      background: var(--panel-2);
+      color: var(--text);
+      outline: none;
+    }
     .section-title {
+      margin: 0 0 12px;
+      font-size: 20px;
+      font-weight: 800;
+    }
+    .table-panel { overflow: hidden; margin-bottom: 18px; }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 14px;
+    }
+    thead th {
+      padding: 14px 12px;
+      text-align: left;
+      color: #b8cae0;
+      background: rgba(255,255,255,0.02);
+      border-bottom: 1px solid var(--line);
+      cursor: pointer;
+      white-space: nowrap;
+      user-select: none;
+    }
+    tbody td {
+      padding: 13px 12px;
+      border-bottom: 1px solid rgba(255,255,255,0.04);
+      white-space: nowrap;
+    }
+    tbody tr:hover { background: rgba(141,185,255,0.06); }
+    .rank { font-weight: 800; color: var(--accent); }
+    .muted { color: var(--muted); }
+    .player-panel {
+      display: grid;
+      grid-template-columns: 320px 1fr;
+      gap: 18px;
+      padding: 18px;
+      margin-bottom: 18px;
+    }
+    .player-side, .player-main, .graph-panel, .role-board-wrap { padding: 18px; }
+    .player-picker { margin-bottom: 16px; }
+    .pills {
       display: flex;
-      justify-content: space-between;
-      align-items: center;
+      flex-wrap: wrap;
+      gap: 8px;
       margin-bottom: 14px;
     }
-    .section-title h2 { margin: 0; font-size: 22px; }
-    .results-grid, .top5-grid {
-      display: grid;
-      gap: 16px;
+    .pill {
+      border-radius: 999px;
+      padding: 8px 12px;
+      background: var(--panel-3);
+      border: 1px solid var(--line);
+      color: var(--muted);
+      font-size: 13px;
     }
-    .results-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); }
-    .top5-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); }
-    .card {
-      background: var(--panel);
+    .player-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 12px;
+    }
+    .stat-card {
+      position: relative;
+      background: var(--panel-2);
+      border: 1px solid var(--line);
+      border-radius: 16px;
+      padding: 14px;
+      min-height: 108px;
+    }
+    .stat-card h4 {
+      margin: 0 0 8px;
+      color: var(--muted);
+      font-size: 12px;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+    }
+    .stat-card .value {
+      font-size: 28px;
+      font-weight: 800;
+      margin-bottom: 6px;
+    }
+    .stat-card .sub {
+      color: var(--muted);
+      font-size: 13px;
+    }
+    .rank-badge {
+      position: absolute;
+      top: 12px;
+      right: 12px;
+      border-radius: 999px;
+      padding: 5px 9px;
+      background: rgba(141,185,255,0.16);
+      color: var(--accent);
+      font-size: 12px;
+      font-weight: 800;
+    }
+    .role-board-wrap { margin-bottom: 18px; }
+    .role-board-grid {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 14px;
+    }
+    .role-board {
+      background: var(--panel-2);
       border: 1px solid var(--line);
       border-radius: 18px;
       padding: 16px;
     }
-    .result-card strong {
-      display: block;
+    .role-board h3 {
+      margin: 0 0 12px;
       font-size: 18px;
-      margin-bottom: 8px;
     }
-    .muted { color: var(--muted); font-size: 13px; }
-    .score {
-      color: var(--accent2);
-      font-weight: 700;
-      margin-top: 8px;
-    }
-    .controls {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 10px;
-      margin-bottom: 14px;
-    }
-    .controls input,
-    .controls select {
-      background: var(--panel2);
-      color: var(--text);
-      border: 1px solid var(--line);
-      border-radius: 12px;
-      padding: 12px 14px;
-      font-size: 14px;
-    }
-    .controls input[type="text"] { flex: 1 1 240px; }
-    .controls input[type="number"] { width: 180px; }
-    .table-wrap {
-      overflow: auto;
-      border-top: 1px solid var(--line);
-    }
-    table {
-      width: 100%;
-      border-collapse: collapse;
-      min-width: 1320px;
-    }
-    th, td {
-      padding: 12px 10px;
-      text-align: left;
-      border-bottom: 1px solid rgba(255,255,255,.05);
-      font-size: 13px;
-      white-space: nowrap;
-      font-variant-numeric: tabular-nums;
-    }
-    th {
-      position: sticky;
-      top: 0;
-      background: #101821;
+    .board-block { margin-bottom: 14px; }
+    .board-block:last-child { margin-bottom: 0; }
+    .board-block h4 {
+      margin: 0 0 8px;
       color: var(--muted);
-      user-select: none;
+      font-size: 12px;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
     }
-    th.sortable {
-      cursor: pointer;
+    .leader-row {
+      display: grid;
+      grid-template-columns: 28px 1fr auto;
+      gap: 10px;
+      padding: 7px 0;
+      border-bottom: 1px solid rgba(255,255,255,0.04);
+      font-size: 13px;
     }
-    th.sortable:hover {
-      color: var(--text);
-    }
-    tbody tr:hover {
-      background: rgba(255,255,255,.03);
-    }
-    .rank-col {
-      width: 70px;
-    }
-    .role-card {
-      background: var(--panel);
+    .leader-row:last-child { border-bottom: 0; }
+    .graph-panel { margin-bottom: 18px; }
+    .graph-shell {
+      background: var(--panel-2);
       border: 1px solid var(--line);
       border-radius: 18px;
-      overflow: hidden;
-    }
-    .role-head {
-      padding: 16px 18px;
-      background: linear-gradient(90deg, rgba(255,101,66,.14), rgba(88,211,183,.06));
-      border-bottom: 1px solid var(--line);
-    }
-    .metric-block {
-      padding: 16px 18px;
-      border-top: 1px solid rgba(255,255,255,.04);
-    }
-    .metric-block h4 {
-      margin: 0 0 10px;
-      color: var(--gold);
-      font-size: 14px;
-      text-transform: uppercase;
-      letter-spacing: .04em;
-    }
-    .rank-list {
-      display: grid;
-      gap: 8px;
-    }
-    .rank-item {
-      display: grid;
-      grid-template-columns: 30px 1fr auto;
-      gap: 10px;
-      align-items: center;
-      padding: 10px 12px;
-      background: var(--panel2);
-      border-radius: 12px;
-    }
-    .rank-num {
-      color: var(--gold);
-      font-weight: 700;
-    }
-    .rank-meta strong {
-      display: block;
-      font-size: 14px;
-    }
-    .rank-meta span {
-      display: block;
-      color: var(--muted);
-      font-size: 12px;
-      margin-top: 4px;
-    }
-    .rank-value {
-      color: var(--accent2);
-      font-weight: 700;
-    }
-    .player-layout {
-      display: grid;
-      grid-template-columns: 340px 1fr;
-      gap: 16px;
-    }
-    .player-list {
-      max-height: 720px;
-      overflow: auto;
-      padding: 12px;
-      display: grid;
-      gap: 10px;
-    }
-    .player-button {
-      width: 100%;
-      text-align: left;
-      background: var(--panel2);
-      color: var(--text);
-      border: 1px solid rgba(255,255,255,.06);
-      border-radius: 14px;
-      padding: 12px 14px;
-      cursor: pointer;
-    }
-    .player-button.active {
-      border-color: rgba(255,101,66,.5);
-      box-shadow: inset 0 0 0 1px rgba(255,101,66,.35);
-    }
-    .player-button strong {
-      display: block;
-      font-size: 14px;
-    }
-    .player-button span {
-      display: block;
-      color: var(--muted);
-      font-size: 12px;
-      margin-top: 4px;
-    }
-    .player-detail {
-      padding: 20px;
-    }
-    .player-detail h3 {
-      margin: 0 0 8px;
-      font-size: 28px;
-    }
-    .subline {
-      color: var(--muted);
-      margin-bottom: 18px;
-    }
-    .stat-grid, .mini-grid {
-      display: grid;
-      gap: 12px;
-    }
-    .stat-grid {
-      grid-template-columns: repeat(3, minmax(0, 1fr));
-      margin-bottom: 18px;
-    }
-    .mini-grid {
-      grid-template-columns: repeat(3, minmax(0, 1fr));
-    }
-    .stat-card, .mini-card {
-      background: var(--panel2);
-      border: 1px solid rgba(255,255,255,.05);
-      border-radius: 14px;
       padding: 14px;
+      overflow-x: auto;
     }
-    .stat-card label, .mini-card label {
-      display: block;
+    svg { width: 100%; height: 520px; display: block; }
+    .graph-note {
       color: var(--muted);
-      font-size: 12px;
-      margin-bottom: 6px;
-      text-transform: uppercase;
-      letter-spacing: .04em;
+      font-size: 13px;
+      margin: 10px 0 0;
     }
-    .stat-card strong {
-      font-size: 24px;
-    }
-    .mini-card strong {
-      font-size: 18px;
+    .empty {
+      padding: 28px;
+      color: var(--muted);
+      text-align: center;
     }
     @media (max-width: 1100px) {
-      .results-grid,
-      .top5-grid,
-      .player-layout,
-      .stat-grid,
-      .mini-grid {
-        grid-template-columns: 1fr;
-      }
+      .controls { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+      .player-panel { grid-template-columns: 1fr; }
+      .role-board-grid { grid-template-columns: 1fr; }
+      .graph-controls { grid-template-columns: 1fr; }
+    }
+    @media (max-width: 720px) {
+      .page { padding: 14px; }
+      .controls { grid-template-columns: 1fr; }
+      .player-grid { grid-template-columns: 1fr; }
+      thead th, tbody td { padding: 10px 8px; font-size: 12px; }
+      .hero h1 { font-size: 24px; }
     }
   </style>
 </head>
 <body>
-  <div class="wrap">
+  <div class="page">
     <section class="hero">
-      <h1>OWCStats Current Dashboard</h1>
-      <p>현재까지 정리된 OWCS Korea 2026 경기 결과와 선수 통합 지표입니다. 역할별 Top 5는 총 출전 시간 60분 이상 선수만 포함합니다.</p>
+      <h1>OWCS Korea 2026 Player Stats Review</h1>
+      <p>선수 스탯 리뷰 전용 대시보드입니다. 선택한 기간 범위의 데이터를 합산해 표와 선수 상세, 역할별 리더보드, 기간별 그래프를 확인할 수 있습니다.</p>
     </section>
 
-    <section class="section">
-      <div class="section-title"><h2>Completed Matches</h2></div>
-      <div id="resultsGrid" class="results-grid"></div>
-    </section>
-
-    <section class="section">
-      <div class="section-title">
-        <h2>Current Role Top 5</h2>
-        <span class="muted">최소 출전 시간 60분</span>
+    <section class="panel controls">
+      <div>
+        <label for="startPeriod">Start Period</label>
+        <select id="startPeriod"></select>
       </div>
-      <div id="top5Grid" class="top5-grid"></div>
-    </section>
-
-    <section class="section panel">
-      <div class="section-title" style="padding:18px 18px 0;">
-        <h2>Scope Table</h2>
+      <div>
+        <label for="endPeriod">End Period</label>
+        <select id="endPeriod"></select>
       </div>
-      <div class="controls" style="padding:0 18px;">
-        <select id="scopeSelect">
-          <option value="Week 1">Week 1</option>
-          <option value="Week 2">Week 2</option>
-          <option value="Season Total">Season Total</option>
-        </select>
-        <input id="searchInput" type="text" placeholder="선수 이름 또는 팀명 검색">
+      <div>
+        <label for="roleFilter">Role</label>
         <select id="roleFilter">
-          <option value="ALL">모든 역할</option>
-          <option value="Tank">Tank</option>
+          <option value="ALL">All Roles</option>
           <option value="DPS">DPS</option>
+          <option value="Tank">Tank</option>
           <option value="Support">Support</option>
         </select>
-        <input id="minMinutesInput" type="number" min="0" step="1" value="0" placeholder="최소 출전 시간(분)">
       </div>
-      <div class="table-wrap">
-        <table>
-          <thead>
-            <tr>
-              <th class="sortable rank-col" data-sort="rank">Rank</th>
-              <th class="sortable" data-sort="Team">Team</th>
-              <th class="sortable" data-sort="Player">Player</th>
-              <th class="sortable" data-sort="Role">Role</th>
-              <th class="sortable" data-sort="E/10">E/10</th>
-              <th class="sortable" data-sort="A/10">A/10</th>
-              <th class="sortable" data-sort="D/10">D/10</th>
-              <th class="sortable" data-sort="DMG/10">DMG/10</th>
-              <th class="sortable" data-sort="H/10">H/10</th>
-              <th class="sortable" data-sort="MIT/10">MIT/10</th>
-              <th class="sortable" data-sort="Appearances">Appearances</th>
-              <th>Appearance Time</th>
-            </tr>
-          </thead>
-          <tbody id="overallTableBody"></tbody>
-        </table>
+      <div>
+        <label for="search">Search</label>
+        <input id="search" type="text" placeholder="Search player or team" />
+      </div>
+      <div>
+        <label for="minMinutes">Min Minutes</label>
+        <input id="minMinutes" type="number" min="0" step="1" value="0" />
       </div>
     </section>
 
-    <section class="section">
-      <div class="section-title"><h2>Player Detail</h2></div>
-      <div class="player-layout">
-        <div class="panel">
-          <div class="controls" style="padding:14px 14px 0;">
-            <input id="playerSearch" type="text" placeholder="선수 검색">
-          </div>
-          <div id="playerList" class="player-list"></div>
+    <section class="panel table-panel">
+      <table>
+        <thead>
+          <tr>
+            <th data-sort="Rank">Rank</th>
+            <th data-sort="Team">Team</th>
+            <th data-sort="Player">Player</th>
+            <th data-sort="Role">Role</th>
+            <th data-sort="E/10">킬</th>
+            <th data-sort="A/10">어시</th>
+            <th data-sort="D/10">데스</th>
+            <th data-sort="E/D">목숨당 처치</th>
+            <th data-sort="DMG/10">딜</th>
+            <th data-sort="H/10">힐</th>
+            <th data-sort="MIT/10">경감</th>
+            <th data-sort="Appearances">출전 경기</th>
+            <th data-sort="Minutes">출전 시간</th>
+          </tr>
+        </thead>
+        <tbody id="rows"></tbody>
+      </table>
+      <div id="empty" class="empty" hidden>선택한 조건에 맞는 선수가 없습니다.</div>
+    </section>
+
+    <section class="panel player-panel">
+      <div class="player-side">
+        <h2 class="section-title">Player Detail</h2>
+        <div class="player-picker">
+          <label for="selectedPlayer">Player</label>
+          <select id="selectedPlayer"></select>
         </div>
-        <div class="panel player-detail" id="playerDetail"></div>
+        <div id="playerMeta"></div>
       </div>
+      <div class="player-main">
+        <div id="playerCards" class="player-grid"></div>
+      </div>
+    </section>
+
+    <section class="panel role-board-wrap">
+      <h2 class="section-title">역할별 리더보드</h2>
+      <div id="roleBoards" class="role-board-grid"></div>
+    </section>
+
+    <section class="panel graph-panel">
+      <h2 class="section-title">기간별 추이 그래프</h2>
+      <div class="graph-controls">
+        <div>
+          <label for="graphRole">Graph Role</label>
+          <select id="graphRole">
+            <option value="DPS">DPS</option>
+            <option value="Tank">Tank</option>
+            <option value="Support">Support</option>
+          </select>
+        </div>
+        <div>
+          <label for="graphMetric">Graph Metric</label>
+          <select id="graphMetric">
+            <option value="E/10">킬</option>
+            <option value="A/10">어시</option>
+            <option value="D/10">데스</option>
+            <option value="E/D">목숨당 처치</option>
+            <option value="DMG/10">딜</option>
+            <option value="H/10">힐</option>
+            <option value="MIT/10">경감</option>
+          </select>
+        </div>
+        <div>
+          <label for="graphMinAppearances">출전 경기 최소</label>
+          <input id="graphMinAppearances" type="number" min="1" step="1" value="1" />
+        </div>
+      </div>
+      <div class="graph-shell">
+        <div id="graph"></div>
+      </div>
+      <p class="graph-note">그래프는 선택한 역할에서 1회 이상 출전한 모든 선수를 대상으로 하며, 팀별 색상으로 구분됩니다.</p>
     </section>
   </div>
 
   <script>
-    const scopeRows = {"Week 1": [{"Player": "A1IEN", "Team": "ZAN Esports", "Role": "DPS", "Appearances": 9, "Minutes": 114.4, "E": 198, "A": 1, "D": 67, "DMG": 114267, "H": 137, "MIT": 326, "E/10": 17.307692307692307, "A/10": 0.0874125874125874, "D/10": 5.856643356643357, "DMG/10": 9988.374125874127, "H/10": 11.975524475524475, "MIT/10": 28.496503496503497}, {"Player": "Argon", "Team": "Cheeseburger", "Role": "DPS", "Appearances": 6, "Minutes": 52.050000000000004, "E": 37, "A": 1, "D": 43, "DMG": 38127, "H": 829, "MIT": 3388, "E/10": 7.1085494716618625, "A/10": 0.19212295869356386, "D/10": 8.261287223823246, "DMG/10": 7325.072046109509, "H/10": 159.26993275696444, "MIT/10": 650.9125840537944}, {"Player": "Attack", "Team": "ONSIDE GAMING", "Role": "Tank", "Appearances": 10, "Minutes": 117.14999999999998, "E": 202, "A": 90, "D": 62, "DMG": 108150, "H": 23303, "MIT": 165809, "E/10": 17.24285104566795, "A/10": 7.682458386683741, "D/10": 5.292360221937687, "DMG/10": 9231.754161331628, "H/10": 1989.159197609902, "MIT/10": 14153.563807084936}, {"Player": "BLISS", "Team": "T1", "Role": "Support", "Appearances": 8, "Minutes": 78.03333333333333, "E": 93, "A": 116, "D": 26, "DMG": 33633, "H": 65333, "MIT": 19867, "E/10": 11.917983767620674, "A/10": 14.86544211875267, "D/10": 3.3319094404100813, "DMG/10": 4310.081161896625, "H/10": 8372.447671935071, "MIT/10": 2545.96326356258}, {"Player": "Becky", "Team": "ZAN Esports", "Role": "DPS", "Appearances": 9, "Minutes": 114.4, "E": 168, "A": 12, "D": 69, "DMG": 84172, "H": 4152, "MIT": 14092, "E/10": 14.685314685314685, "A/10": 1.048951048951049, "D/10": 6.031468531468532, "DMG/10": 7357.692307692307, "H/10": 362.93706293706293, "MIT/10": 1231.8181818181818}, {"Player": "Bernar", "Team": "ZETA DIVISION", "Role": "Tank", "Appearances": 7, "Minutes": 96.33333333333334, "E": 180, "A": 86, "D": 58, "DMG": 92969, "H": 13170, "MIT": 116641, "E/10": 18.685121107266433, "A/10": 8.927335640138407, "D/10": 6.0207612456747395, "DMG/10": 9650.76124567474, "H/10": 1367.1280276816608, "MIT/10": 12108.062283737021}, {"Player": "CARU", "Team": "Poker Face", "Role": "Support", "Appearances": 6, "Minutes": 60.56666666666667, "E": 58, "A": 118, "D": 20, "DMG": 21054, "H": 55823, "MIT": 581, "E/10": 9.57622454595487, "A/10": 19.482663731425426, "D/10": 3.3021463951568517, "DMG/10": 3476.1695101816176, "H/10": 9216.785910842047, "MIT/10": 95.92735277930655}, {"Player": "CH0R0NG", "Team": "Crazy Raccoon", "Role": "Support", "Appearances": 8, "Minutes": 104.75, "E": 136, "A": 145, "D": 57, "DMG": 50078, "H": 98465, "MIT": 23363, "E/10": 12.98329355608592, "A/10": 13.842482100238664, "D/10": 5.441527446300716, "DMG/10": 4780.715990453461, "H/10": 9400.0, "MIT/10": 2230.3579952267305}, {"Player": "Checkmate", "Team": "Team Falcons", "Role": "DPS", "Appearances": 8, "Minutes": 89.93333333333334, "E": 176, "A": 23, "D": 57, "DMG": 81276, "H": 3033, "MIT": 17678, "E/10": 19.5700518902891, "A/10": 2.5574499629355074, "D/10": 6.338028169014084, "DMG/10": 9037.361008154188, "H/10": 337.2498146775389, "MIT/10": 1965.678280207561}, {"Player": "ChiYo", "Team": "Team Falcons", "Role": "Support", "Appearances": 8, "Minutes": 89.93333333333334, "E": 136, "A": 169, "D": 49, "DMG": 46437, "H": 85160, "MIT": 23010, "E/10": 15.122312824314307, "A/10": 18.791697553743514, "D/10": 5.448480355819125, "DMG/10": 5163.491475166789, "H/10": 9469.23647146034, "MIT/10": 2558.5618977020013}, {"Player": "D0D0", "Team": "New Era", "Role": "DPS", "Appearances": 6, "Minutes": 55.11666666666667, "E": 45, "A": 4, "D": 41, "DMG": 31538, "H": 910, "MIT": 5257, "E/10": 8.16449954641669, "A/10": 0.725733293014817, "D/10": 7.438766253401875, "DMG/10": 5722.044148775325, "H/10": 165.10432416087087, "MIT/10": 953.7949803447234}, {"Player": "D4RT", "Team": "Poker Face", "Role": "DPS", "Appearances": 6, "Minutes": 60.56666666666667, "E": 126, "A": 10, "D": 27, "DMG": 52127, "H": 2228, "MIT": 4910, "E/10": 20.803522289488168, "A/10": 1.6510731975784259, "D/10": 4.45789763346175, "DMG/10": 8606.54925701706, "H/10": 367.85910842047326, "MIT/10": 810.676940011007}, {"Player": "FARMER", "Team": "Cheeseburger", "Role": "Tank", "Appearances": 1, "Minutes": 9.066666666666666, "E": 6, "A": 2, "D": 10, "DMG": 10501, "H": 2310, "MIT": 14004, "E/10": 6.617647058823529, "A/10": 2.2058823529411766, "D/10": 11.029411764705884, "DMG/10": 11581.985294117647, "H/10": 2547.794117647059, "MIT/10": 15445.588235294117}, {"Player": "Faith", "Team": "Cheeseburger", "Role": "Support", "Appearances": 6, "Minutes": 52.050000000000004, "E": 31, "A": 31, "D": 29, "DMG": 17483, "H": 35286, "MIT": 10135, "E/10": 5.95581171950048, "A/10": 5.95581171950048, "D/10": 5.571565802113351, "DMG/10": 3358.885686839577, "H/10": 6779.250720461095, "MIT/10": 1947.16618635927}, {"Player": "Fielder", "Team": "Team Falcons", "Role": "Support", "Appearances": 8, "Minutes": 89.93333333333334, "E": 119, "A": 204, "D": 51, "DMG": 42569, "H": 101985, "MIT": 1347, "E/10": 13.232023721275016, "A/10": 22.68346923647146, "D/10": 5.670867309117865, "DMG/10": 4733.395107487027, "H/10": 11340.066716085988, "MIT/10": 149.77761304670125}, {"Player": "Gur3um", "Team": "Poker Face", "Role": "Tank", "Appearances": 6, "Minutes": 60.56666666666667, "E": 129, "A": 59, "D": 17, "DMG": 51714, "H": 9578, "MIT": 73316, "E/10": 21.298844248761696, "A/10": 9.741331865712713, "D/10": 2.806824435883324, "DMG/10": 8538.359933957072, "H/10": 1581.3979086406164, "MIT/10": 12105.008255365989}, {"Player": "HEISER", "Team": "ZAN Esports", "Role": "Tank", "Appearances": 9, "Minutes": 114.4, "E": 198, "A": 84, "D": 66, "DMG": 107895, "H": 7938, "MIT": 107043, "E/10": 17.307692307692307, "A/10": 7.3426573426573425, "D/10": 5.769230769230768, "DMG/10": 9431.38111888112, "H/10": 693.8811188811188, "MIT/10": 9356.905594405594}, {"Player": "Hanbin", "Team": "Team Falcons", "Role": "Tank", "Appearances": 8, "Minutes": 89.93333333333334, "E": 235, "A": 113, "D": 35, "DMG": 73316, "H": 18956, "MIT": 113954, "E/10": 26.130467012601926, "A/10": 12.5648628613788, "D/10": 3.8917716827279465, "DMG/10": 8152.260934025204, "H/10": 2107.783543365456, "MIT/10": 12670.941438102298}, {"Player": "HeeSang", "Team": "Crazy Raccoon", "Role": "DPS", "Appearances": 7, "Minutes": 92.48333333333333, "E": 144, "A": 16, "D": 42, "DMG": 73783, "H": 2885, "MIT": 21222, "E/10": 15.570373040187421, "A/10": 1.7300414489097136, "D/10": 4.541358803387998, "DMG/10": 7977.978014056587, "H/10": 311.9480987565327, "MIT/10": 2294.683726797621}, {"Player": "IRONY", "Team": "ONSIDE GAMING", "Role": "Support", "Appearances": 10, "Minutes": 117.14999999999998, "E": 95, "A": 169, "D": 56, "DMG": 52169, "H": 123287, "MIT": 1956, "E/10": 8.109261630388392, "A/10": 14.425949637217245, "D/10": 4.780196329492105, "DMG/10": 4453.1796841656005, "H/10": 10523.858301323091, "MIT/10": 166.96542893725996}, {"Player": "JASM1NE", "Team": "T1", "Role": "Tank", "Appearances": 8, "Minutes": 78.03333333333333, "E": 149, "A": 76, "D": 27, "DMG": 70576, "H": 16871, "MIT": 119706, "E/10": 19.09440410081162, "A/10": 9.739427595044853, "D/10": 3.460059803502777, "DMG/10": 9044.340025630074, "H/10": 2162.0247757368643, "MIT/10": 15340.367364374199}, {"Player": "JunBin", "Team": "Crazy Raccoon", "Role": "Tank", "Appearances": 1, "Minutes": 10.4, "E": 8, "A": 3, "D": 7, "DMG": 6137, "H": 2414, "MIT": 14576, "E/10": 7.692307692307692, "A/10": 2.884615384615384, "D/10": 6.73076923076923, "DMG/10": 5900.961538461538, "H/10": 2321.153846153846, "MIT/10": 14015.384615384613}, {"Player": "KIVIS", "Team": "ZAN Esports", "Role": "Support", "Appearances": 9, "Minutes": 114.4, "E": 131, "A": 185, "D": 56, "DMG": 59349, "H": 113963, "MIT": 0, "E/10": 11.45104895104895, "A/10": 16.17132867132867, "D/10": 4.895104895104895, "DMG/10": 5187.84965034965, "H/10": 9961.800699300698, "MIT/10": 0.0}, {"Player": "Kilo", "Team": "ONSIDE GAMING", "Role": "DPS", "Appearances": 10, "Minutes": 117.14999999999998, "E": 169, "A": 7, "D": 72, "DMG": 104278, "H": 1553, "MIT": 9646, "E/10": 14.425949637217245, "A/10": 0.5975245411865131, "D/10": 6.145966709346993, "DMG/10": 8901.237729406745, "H/10": 132.56508749466497, "MIT/10": 823.388817755015}, {"Player": "LIP", "Team": "Crazy Raccoon", "Role": "DPS", "Appearances": 1, "Minutes": 12.266666666666667, "E": 16, "A": 2, "D": 10, "DMG": 12977, "H": 0, "MIT": 226, "E/10": 13.043478260869566, "A/10": 1.6304347826086958, "D/10": 8.152173913043478, "DMG/10": 10579.07608695652, "H/10": 0.0, "MIT/10": 184.23913043478257}, {"Player": "M1NUT2", "Team": "Poker Face", "Role": "DPS", "Appearances": 6, "Minutes": 60.56666666666667, "E": 113, "A": 11, "D": 27, "DMG": 58406, "H": 2467, "MIT": 4985, "E/10": 18.657127132636212, "A/10": 1.8161805173362686, "D/10": 4.45789763346175, "DMG/10": 9643.258117776553, "H/10": 407.31975784259765, "MIT/10": 823.0599889928453}, {"Player": "MAX", "Team": "Crazy Raccoon", "Role": "Tank", "Appearances": 7, "Minutes": 94.35, "E": 186, "A": 92, "D": 39, "DMG": 87551, "H": 17435, "MIT": 124570, "E/10": 19.71383147853736, "A/10": 9.750927397986223, "D/10": 4.133545310015899, "DMG/10": 9279.385267620562, "H/10": 1847.9067302596716, "MIT/10": 13202.967673555908}, {"Player": "MCD", "Team": "New Era", "Role": "Support", "Appearances": 6, "Minutes": 55.11666666666667, "E": 36, "A": 50, "D": 36, "DMG": 28472, "H": 47214, "MIT": 11479, "E/10": 6.531599637133353, "A/10": 9.071666162685213, "D/10": 6.531599637133353, "DMG/10": 5165.769579679468, "H/10": 8566.192924100393, "MIT/10": 2082.6731176292715}, {"Player": "MER1T", "Team": "Team Falcons", "Role": "DPS", "Appearances": 8, "Minutes": 89.93333333333334, "E": 190, "A": 23, "D": 59, "DMG": 86652, "H": 2554, "MIT": 21600, "E/10": 21.12676056338028, "A/10": 2.5574499629355074, "D/10": 6.560415122312824, "DMG/10": 9635.137138621201, "H/10": 283.98813936249076, "MIT/10": 2401.77909562639}, {"Player": "Mealgaru", "Team": "ZETA DIVISION", "Role": "Tank", "Appearances": 2, "Minutes": 24.466666666666665, "E": 54, "A": 20, "D": 12, "DMG": 30166, "H": 4510, "MIT": 19647, "E/10": 22.0708446866485, "A/10": 8.174386920980927, "D/10": 4.904632152588556, "DMG/10": 12329.427792915532, "H/10": 1843.324250681199, "MIT/10": 8030.108991825614}, {"Player": "OPENER", "Team": "ONSIDE GAMING", "Role": "Support", "Appearances": 10, "Minutes": 117.14999999999998, "E": 117, "A": 152, "D": 58, "DMG": 42955, "H": 93962, "MIT": 26732, "E/10": 9.987195902688862, "A/10": 12.974818608621428, "D/10": 4.950917626973966, "DMG/10": 3666.6666666666674, "H/10": 8020.657276995307, "MIT/10": 2281.860862142553}, {"Player": "PERR", "Team": "New Era", "Role": "DPS", "Appearances": 6, "Minutes": 55.11666666666667, "E": 46, "A": 0, "D": 36, "DMG": 43777, "H": 917, "MIT": 437, "E/10": 8.345932869670396, "A/10": 0.0, "D/10": 6.531599637133353, "DMG/10": 7942.606592077411, "H/10": 166.3743574236468, "MIT/10": 79.28636226186876}, {"Player": "PROUD", "Team": "T1", "Role": "DPS", "Appearances": 8, "Minutes": 78.03333333333333, "E": 139, "A": 0, "D": 35, "DMG": 79174, "H": 1491, "MIT": 643, "E/10": 17.812900469884664, "A/10": 0.0, "D/10": 4.48526270824434, "DMG/10": 10146.176847501069, "H/10": 191.0721913712089, "MIT/10": 82.40068346860315}, {"Player": "Proper", "Team": "ZETA DIVISION", "Role": "DPS", "Appearances": 9, "Minutes": 120.8, "E": 226, "A": 21, "D": 65, "DMG": 108989, "H": 3434, "MIT": 12161, "E/10": 18.70860927152318, "A/10": 1.73841059602649, "D/10": 5.380794701986755, "DMG/10": 9022.26821192053, "H/10": 284.27152317880797, "MIT/10": 1006.705298013245}, {"Player": "SECRET", "Team": "New Era", "Role": "Support", "Appearances": 6, "Minutes": 55.11666666666667, "E": 24, "A": 36, "D": 37, "DMG": 18808, "H": 48463, "MIT": 481, "E/10": 4.354399758088902, "A/10": 6.531599637133353, "D/10": 6.713032960387057, "DMG/10": 3412.39794375567, "H/10": 8792.80314484427, "MIT/10": 87.26942848503174}, {"Player": "SKEWED", "Team": "T1", "Role": "Support", "Appearances": 8, "Minutes": 78.03333333333333, "E": 68, "A": 135, "D": 25, "DMG": 38834, "H": 93221, "MIT": 1007, "E/10": 8.71422469030329, "A/10": 17.300299017513883, "D/10": 3.2037590773173856, "DMG/10": 4976.591200341734, "H/10": 11946.304997864161, "MIT/10": 129.0474156343443}, {"Player": "SP1NT", "Team": "ONSIDE GAMING", "Role": "DPS", "Appearances": 10, "Minutes": 117.14999999999998, "E": 156, "A": 35, "D": 74, "DMG": 93977, "H": 4297, "MIT": 16846, "E/10": 13.31626120358515, "A/10": 2.9876227059325657, "D/10": 6.316688006828853, "DMG/10": 8021.93768672642, "H/10": 366.7947076397781, "MIT/10": 1437.9854886897144}, {"Player": "SeungAn", "Team": "Cheeseburger", "Role": "Tank", "Appearances": 5, "Minutes": 42.98333333333334, "E": 43, "A": 16, "D": 27, "DMG": 26528, "H": 7526, "MIT": 47917, "E/10": 10.003877471888327, "A/10": 3.7223730127956567, "D/10": 6.2815044590926705, "DMG/10": 6171.694455215198, "H/10": 1750.911205893757, "MIT/10": 11147.809228383092}, {"Player": "SoLA", "Team": "New Era", "Role": "Tank", "Appearances": 6, "Minutes": 55.11666666666667, "E": 45, "A": 20, "D": 34, "DMG": 38863, "H": 12499, "MIT": 81322, "E/10": 8.16449954641669, "A/10": 3.628666465074085, "D/10": 6.168732990625944, "DMG/10": 7051.043241608709, "H/10": 2267.7351073480495, "MIT/10": 14754.520713637738}, {"Player": "Sp1NEL", "Team": "Poker Face", "Role": "Support", "Appearances": 1, "Minutes": 10.066666666666666, "E": 6, "A": 9, "D": 6, "DMG": 3048, "H": 6928, "MIT": 1265, "E/10": 5.960264900662252, "A/10": 8.940397350993377, "D/10": 5.960264900662252, "DMG/10": 3027.814569536424, "H/10": 6882.119205298013, "MIT/10": 1256.6225165562914}, {"Player": "Stalk3r", "Team": "Crazy Raccoon", "Role": "DPS", "Appearances": 8, "Minutes": 104.75, "E": 187, "A": 10, "D": 55, "DMG": 100334, "H": 1283, "MIT": 5850, "E/10": 17.852028639618137, "A/10": 0.954653937947494, "D/10": 5.250596658711217, "DMG/10": 9578.424821002387, "H/10": 122.48210023866349, "MIT/10": 558.4725536992839}, {"Player": "TenTen", "Team": "Poker Face", "Role": "Support", "Appearances": 5, "Minutes": 50.5, "E": 76, "A": 90, "D": 17, "DMG": 24004, "H": 31680, "MIT": 4775, "E/10": 15.049504950495049, "A/10": 17.821782178217823, "D/10": 3.3663366336633667, "DMG/10": 4753.267326732674, "H/10": 6273.267326732674, "MIT/10": 945.5445544554455}, {"Player": "Viol2t", "Team": "ZETA DIVISION", "Role": "Support", "Appearances": 9, "Minutes": 120.8, "E": 169, "A": 198, "D": 79, "DMG": 76733, "H": 107167, "MIT": 32222, "E/10": 13.990066225165563, "A/10": 16.39072847682119, "D/10": 6.539735099337749, "DMG/10": 6352.069536423841, "H/10": 8871.440397350994, "MIT/10": 2667.3841059602646}, {"Player": "WoochaN", "Team": "Cheeseburger", "Role": "Support", "Appearances": 6, "Minutes": 52.050000000000004, "E": 32, "A": 40, "D": 32, "DMG": 26307, "H": 41153, "MIT": 0, "E/10": 6.147934678194043, "A/10": 7.6849183477425544, "D/10": 6.147934678194043, "DMG/10": 5054.178674351585, "H/10": 7906.436119116233, "MIT/10": 0.0}, {"Player": "YangJun", "Team": "ZAN Esports", "Role": "Support", "Appearances": 9, "Minutes": 114.4, "E": 120, "A": 132, "D": 60, "DMG": 41331, "H": 95629, "MIT": 20388, "E/10": 10.48951048951049, "A/10": 11.538461538461537, "D/10": 5.244755244755245, "DMG/10": 3612.84965034965, "H/10": 8359.17832167832, "MIT/10": 1782.1678321678319}, {"Player": "ZEST", "Team": "T1", "Role": "DPS", "Appearances": 8, "Minutes": 78.03333333333333, "E": 133, "A": 24, "D": 39, "DMG": 62927, "H": 1607, "MIT": 11907, "E/10": 17.043998291328492, "A/10": 3.07560871422469, "D/10": 4.997864160615122, "DMG/10": 8064.117898334045, "H/10": 205.93763348996157, "MIT/10": 1525.8863733447245}, {"Player": "Zesin", "Team": "Cheeseburger", "Role": "DPS", "Appearances": 6, "Minutes": 52.050000000000004, "E": 37, "A": 0, "D": 40, "DMG": 38925, "H": 821, "MIT": 0, "E/10": 7.1085494716618625, "A/10": 0.0, "D/10": 7.6849183477425544, "DMG/10": 7478.386167146973, "H/10": 157.73294908741593, "MIT/10": 0.0}, {"Player": "knife", "Team": "ZETA DIVISION", "Role": "DPS", "Appearances": 9, "Minutes": 120.8, "E": 237, "A": 41, "D": 68, "DMG": 113682, "H": 5396, "MIT": 33135, "E/10": 19.619205298013245, "A/10": 3.394039735099338, "D/10": 5.629139072847682, "DMG/10": 9410.761589403974, "H/10": 446.68874172185434, "MIT/10": 2742.9635761589407}, {"Player": "shu", "Team": "ZETA DIVISION", "Role": "Support", "Appearances": 9, "Minutes": 120.8, "E": 145, "A": 195, "D": 70, "DMG": 62747, "H": 115851, "MIT": 6302, "E/10": 12.003311258278146, "A/10": 16.142384105960264, "D/10": 5.7947019867549665, "DMG/10": 5194.288079470199, "H/10": 9590.314569536424, "MIT/10": 521.6887417218543}, {"Player": "vigilante", "Team": "Crazy Raccoon", "Role": "Support", "Appearances": 8, "Minutes": 104.75, "E": 116, "A": 170, "D": 61, "DMG": 39711, "H": 113944, "MIT": 2483, "E/10": 11.07398568019093, "A/10": 16.2291169451074, "D/10": 5.823389021479714, "DMG/10": 3791.0262529832935, "H/10": 10877.708830548927, "MIT/10": 237.04057279236278}], "Week 2": [{"Player": "Argon", "Team": "Cheeseburger", "Role": "DPS", "Appearances": 3, "Minutes": 26.016666666666666, "E": 21, "A": 0, "D": 15, "DMG": 17640, "H": 413, "MIT": 0, "E/10": 8.071748878923767, "A/10": 0.0, "D/10": 5.7655349135169764, "DMG/10": 6780.269058295964, "H/10": 158.7443946188341, "MIT/10": 0.0}, {"Player": "Becky", "Team": "ZAN Esports", "Role": "DPS", "Appearances": 3, "Minutes": 26.016666666666666, "E": 64, "A": 2, "D": 7, "DMG": 20224, "H": 284, "MIT": 764, "E/10": 24.59961563100577, "A/10": 0.7687379884689303, "D/10": 2.6905829596412554, "DMG/10": 7773.478539397822, "H/10": 109.16079436258809, "MIT/10": 293.65791159513134}, {"Player": "Bernar", "Team": "ZETA DIVISION", "Role": "Tank", "Appearances": 2, "Minutes": 21.816666666666666, "E": 55, "A": 27, "D": 7, "DMG": 18075, "H": 3454, "MIT": 20649, "E/10": 25.210084033613445, "A/10": 12.375859434682964, "D/10": 3.2085561497326203, "DMG/10": 8284.950343773873, "H/10": 1583.1932773109245, "MIT/10": 9464.782276546983}, {"Player": "CARU", "Team": "Poker Face", "Role": "Support", "Appearances": 3, "Minutes": 29.333333333333332, "E": 12, "A": 26, "D": 23, "DMG": 8174, "H": 21820, "MIT": 0, "E/10": 4.090909090909091, "A/10": 8.863636363636363, "D/10": 7.840909090909092, "DMG/10": 2786.5909090909095, "H/10": 7438.636363636364, "MIT/10": 0.0}, {"Player": "D4RT", "Team": "Poker Face", "Role": "DPS", "Appearances": 3, "Minutes": 29.333333333333332, "E": 39, "A": 2, "D": 20, "DMG": 13932, "H": 224, "MIT": 1839, "E/10": 13.295454545454547, "A/10": 0.6818181818181819, "D/10": 6.818181818181818, "DMG/10": 4749.545454545455, "H/10": 76.36363636363637, "MIT/10": 626.9318181818182}, {"Player": "FARMER", "Team": "Cheeseburger", "Role": "Tank", "Appearances": 3, "Minutes": 26.016666666666666, "E": 21, "A": 3, "D": 23, "DMG": 17980, "H": 3039, "MIT": 19351, "E/10": 8.071748878923767, "A/10": 1.1531069827033953, "D/10": 8.840486867392697, "DMG/10": 6910.9545163356825, "H/10": 1168.0973734785393, "MIT/10": 7437.924407431134}, {"Player": "Faith", "Team": "Cheeseburger", "Role": "Support", "Appearances": 3, "Minutes": 26.016666666666666, "E": 16, "A": 17, "D": 17, "DMG": 8251, "H": 18931, "MIT": 7711, "E/10": 6.149903907751442, "A/10": 6.534272901985907, "D/10": 6.534272901985907, "DMG/10": 3171.4285714285716, "H/10": 7276.489429852659, "MIT/10": 2963.86931454196}, {"Player": "Gur3um", "Team": "Poker Face", "Role": "Tank", "Appearances": 3, "Minutes": 29.333333333333332, "E": 28, "A": 9, "D": 20, "DMG": 20366, "H": 2362, "MIT": 28075, "E/10": 9.545454545454547, "A/10": 3.0681818181818183, "D/10": 6.818181818181818, "DMG/10": 6942.954545454546, "H/10": 805.2272727272727, "MIT/10": 9571.022727272728}, {"Player": "HEISER", "Team": "ZAN Esports", "Role": "Tank", "Appearances": 3, "Minutes": 26.016666666666666, "E": 60, "A": 23, "D": 6, "DMG": 21232, "H": 4455, "MIT": 29627, "E/10": 23.062139654067906, "A/10": 8.840486867392697, "D/10": 2.3062139654067906, "DMG/10": 8160.922485586163, "H/10": 1712.3638693145422, "MIT/10": 11387.700192184497}, {"Player": "KIVIS", "Team": "ZAN Esports", "Role": "Support", "Appearances": 3, "Minutes": 26.016666666666666, "E": 40, "A": 52, "D": 10, "DMG": 10635, "H": 24239, "MIT": 0, "E/10": 15.374759769378603, "A/10": 19.987187700192187, "D/10": 3.8436899423446507, "DMG/10": 4087.764253683536, "H/10": 9316.720051249198, "MIT/10": 0.0}, {"Player": "M1NUT2", "Team": "Poker Face", "Role": "DPS", "Appearances": 3, "Minutes": 29.333333333333332, "E": 36, "A": 2, "D": 32, "DMG": 25471, "H": 676, "MIT": 132, "E/10": 12.272727272727273, "A/10": 0.6818181818181819, "D/10": 10.90909090909091, "DMG/10": 8683.295454545456, "H/10": 230.45454545454547, "MIT/10": 45.0}, {"Player": "Mealgaru", "Team": "ZETA DIVISION", "Role": "Tank", "Appearances": 1, "Minutes": 7.516666666666667, "E": 25, "A": 2, "D": 3, "DMG": 4643, "H": 1093, "MIT": 3167, "E/10": 33.25942350332595, "A/10": 2.6607538802660753, "D/10": 3.991130820399113, "DMG/10": 6176.940133037695, "H/10": 1454.10199556541, "MIT/10": 4213.30376940133}, {"Player": "Proper", "Team": "ZETA DIVISION", "Role": "DPS", "Appearances": 3, "Minutes": 29.333333333333332, "E": 60, "A": 6, "D": 11, "DMG": 23366, "H": 63, "MIT": 62, "E/10": 20.454545454545453, "A/10": 2.0454545454545454, "D/10": 3.75, "DMG/10": 7965.681818181819, "H/10": 21.47727272727273, "MIT/10": 21.136363636363637}, {"Player": "TenTen", "Team": "Poker Face", "Role": "Support", "Appearances": 3, "Minutes": 29.333333333333332, "E": 18, "A": 23, "D": 23, "DMG": 11261, "H": 19572, "MIT": 1972, "E/10": 6.136363636363637, "A/10": 7.840909090909092, "D/10": 7.840909090909092, "DMG/10": 3838.977272727273, "H/10": 6672.272727272728, "MIT/10": 672.2727272727274}, {"Player": "Viol2t", "Team": "ZETA DIVISION", "Role": "Support", "Appearances": 3, "Minutes": 29.333333333333332, "E": 48, "A": 43, "D": 12, "DMG": 9316, "H": 20701, "MIT": 0, "E/10": 16.363636363636363, "A/10": 14.65909090909091, "D/10": 4.090909090909091, "DMG/10": 3175.909090909091, "H/10": 7057.159090909091, "MIT/10": 0.0}, {"Player": "WoochaN", "Team": "Cheeseburger", "Role": "Support", "Appearances": 3, "Minutes": 26.016666666666666, "E": 12, "A": 22, "D": 15, "DMG": 10764, "H": 23291, "MIT": 0, "E/10": 4.612427930813581, "A/10": 8.456117873158233, "D/10": 5.7655349135169764, "DMG/10": 4137.347853939783, "H/10": 8952.338244714927, "MIT/10": 0.0}, {"Player": "YangJun", "Team": "ZAN Esports", "Role": "Support", "Appearances": 3, "Minutes": 26.016666666666666, "E": 45, "A": 47, "D": 7, "DMG": 11167, "H": 18499, "MIT": 2360, "E/10": 17.29660474055093, "A/10": 18.06534272901986, "D/10": 2.6905829596412554, "DMG/10": 4292.248558616272, "H/10": 7110.44202434337, "MIT/10": 907.1108263933377}, {"Player": "Zesin", "Team": "Cheeseburger", "Role": "DPS", "Appearances": 3, "Minutes": 26.016666666666666, "E": 21, "A": 2, "D": 25, "DMG": 17867, "H": 510, "MIT": 429, "E/10": 8.071748878923767, "A/10": 0.7687379884689303, "D/10": 9.609224855861628, "DMG/10": 6867.520819987189, "H/10": 196.0281870595772, "MIT/10": 164.89429852658554}, {"Player": "knife", "Team": "ZETA DIVISION", "Role": "DPS", "Appearances": 3, "Minutes": 29.333333333333332, "E": 61, "A": 9, "D": 18, "DMG": 25394, "H": 951, "MIT": 1303, "E/10": 20.795454545454547, "A/10": 3.0681818181818183, "D/10": 6.136363636363637, "DMG/10": 8657.045454545456, "H/10": 324.2045454545455, "MIT/10": 444.2045454545455}, {"Player": "probe", "Team": "ZAN Esports", "Role": "DPS", "Appearances": 3, "Minutes": 26.016666666666666, "E": 59, "A": 0, "D": 11, "DMG": 28788, "H": 1316, "MIT": 0, "E/10": 22.677770659833442, "A/10": 0.0, "D/10": 4.228058936579116, "DMG/10": 11065.214606021782, "H/10": 505.82959641255604, "MIT/10": 0.0}, {"Player": "shu", "Team": "ZETA DIVISION", "Role": "Support", "Appearances": 3, "Minutes": 29.333333333333332, "E": 29, "A": 35, "D": 17, "DMG": 15396, "H": 14947, "MIT": 1771, "E/10": 9.886363636363637, "A/10": 11.931818181818182, "D/10": 5.795454545454546, "DMG/10": 5248.636363636364, "H/10": 5095.568181818182, "MIT/10": 603.75}], "Season Total": [{"Player": "A1IEN", "Team": "ZAN Esports", "Role": "DPS", "Appearances": 9, "Minutes": 114.4, "E": 198, "A": 1, "D": 67, "DMG": 114267, "H": 137, "MIT": 326, "E/10": 17.307692307692307, "A/10": 0.0874125874125874, "D/10": 5.856643356643357, "DMG/10": 9988.374125874127, "H/10": 11.975524475524475, "MIT/10": 28.496503496503497}, {"Player": "Argon", "Team": "Cheeseburger", "Role": "DPS", "Appearances": 9, "Minutes": 78.06666666666668, "E": 58, "A": 1, "D": 58, "DMG": 55767, "H": 1242, "MIT": 3388, "E/10": 7.429547395388556, "A/10": 0.12809564474807855, "D/10": 7.429547395388556, "DMG/10": 7143.509820666096, "H/10": 159.09479077711356, "MIT/10": 433.9880444064901}, {"Player": "Attack", "Team": "ONSIDE GAMING", "Role": "Tank", "Appearances": 10, "Minutes": 117.14999999999998, "E": 202, "A": 90, "D": 62, "DMG": 108150, "H": 23303, "MIT": 165809, "E/10": 17.24285104566795, "A/10": 7.682458386683741, "D/10": 5.292360221937687, "DMG/10": 9231.754161331628, "H/10": 1989.159197609902, "MIT/10": 14153.563807084936}, {"Player": "BLISS", "Team": "T1", "Role": "Support", "Appearances": 8, "Minutes": 78.03333333333333, "E": 93, "A": 116, "D": 26, "DMG": 33633, "H": 65333, "MIT": 19867, "E/10": 11.917983767620674, "A/10": 14.86544211875267, "D/10": 3.3319094404100813, "DMG/10": 4310.081161896625, "H/10": 8372.447671935071, "MIT/10": 2545.96326356258}, {"Player": "Becky", "Team": "ZAN Esports", "Role": "DPS", "Appearances": 12, "Minutes": 140.41666666666666, "E": 232, "A": 14, "D": 76, "DMG": 104396, "H": 4436, "MIT": 14856, "E/10": 16.52225519287834, "A/10": 0.997032640949555, "D/10": 5.41246290801187, "DMG/10": 7434.729970326411, "H/10": 315.91691394658756, "MIT/10": 1057.994065281899}, {"Player": "Bernar", "Team": "ZETA DIVISION", "Role": "Tank", "Appearances": 9, "Minutes": 118.15000000000002, "E": 235, "A": 113, "D": 65, "DMG": 111044, "H": 16624, "MIT": 137290, "E/10": 19.88997037663986, "A/10": 9.564113415150231, "D/10": 5.5014811680067695, "DMG/10": 9398.561151079135, "H/10": 1407.0249682606855, "MIT/10": 11619.974608548453}, {"Player": "CARU", "Team": "Poker Face", "Role": "Support", "Appearances": 9, "Minutes": 89.9, "E": 70, "A": 144, "D": 43, "DMG": 29228, "H": 77643, "MIT": 581, "E/10": 7.78642936596218, "A/10": 16.017797552836484, "D/10": 4.783092324805339, "DMG/10": 3251.167964404894, "H/10": 8636.596218020022, "MIT/10": 64.62736373748609}, {"Player": "CH0R0NG", "Team": "Crazy Raccoon", "Role": "Support", "Appearances": 8, "Minutes": 104.75, "E": 136, "A": 145, "D": 57, "DMG": 50078, "H": 98465, "MIT": 23363, "E/10": 12.98329355608592, "A/10": 13.842482100238664, "D/10": 5.441527446300716, "DMG/10": 4780.715990453461, "H/10": 9400.0, "MIT/10": 2230.3579952267305}, {"Player": "Checkmate", "Team": "Team Falcons", "Role": "DPS", "Appearances": 8, "Minutes": 89.93333333333334, "E": 176, "A": 23, "D": 57, "DMG": 81276, "H": 3033, "MIT": 17678, "E/10": 19.5700518902891, "A/10": 2.5574499629355074, "D/10": 6.338028169014084, "DMG/10": 9037.361008154188, "H/10": 337.2498146775389, "MIT/10": 1965.678280207561}, {"Player": "ChiYo", "Team": "Team Falcons", "Role": "Support", "Appearances": 8, "Minutes": 89.93333333333334, "E": 136, "A": 169, "D": 49, "DMG": 46437, "H": 85160, "MIT": 23010, "E/10": 15.122312824314307, "A/10": 18.791697553743514, "D/10": 5.448480355819125, "DMG/10": 5163.491475166789, "H/10": 9469.23647146034, "MIT/10": 2558.5618977020013}, {"Player": "D0D0", "Team": "New Era", "Role": "DPS", "Appearances": 6, "Minutes": 55.11666666666667, "E": 45, "A": 4, "D": 41, "DMG": 31538, "H": 910, "MIT": 5257, "E/10": 8.16449954641669, "A/10": 0.725733293014817, "D/10": 7.438766253401875, "DMG/10": 5722.044148775325, "H/10": 165.10432416087087, "MIT/10": 953.7949803447234}, {"Player": "D4RT", "Team": "Poker Face", "Role": "DPS", "Appearances": 9, "Minutes": 89.9, "E": 165, "A": 12, "D": 47, "DMG": 66059, "H": 2452, "MIT": 6749, "E/10": 18.35372636262514, "A/10": 1.3348164627363737, "D/10": 5.2280311457174635, "DMG/10": 7348.0533926585085, "H/10": 272.74749721913236, "MIT/10": 750.7230255839822}, {"Player": "FARMER", "Team": "Cheeseburger", "Role": "Tank", "Appearances": 4, "Minutes": 35.08333333333333, "E": 27, "A": 5, "D": 33, "DMG": 28481, "H": 5349, "MIT": 33355, "E/10": 7.695961995249407, "A/10": 1.4251781472684089, "D/10": 9.406175771971498, "DMG/10": 8118.09976247031, "H/10": 1524.6555819477435, "MIT/10": 9507.363420427555}, {"Player": "Faith", "Team": "Cheeseburger", "Role": "Support", "Appearances": 9, "Minutes": 78.06666666666668, "E": 47, "A": 48, "D": 46, "DMG": 25734, "H": 54217, "MIT": 17846, "E/10": 6.0204953031596915, "A/10": 6.1485909479077705, "D/10": 5.892399658411613, "DMG/10": 3296.413321947053, "H/10": 6944.961571306575, "MIT/10": 2285.99487617421}, {"Player": "Fielder", "Team": "Team Falcons", "Role": "Support", "Appearances": 8, "Minutes": 89.93333333333334, "E": 119, "A": 204, "D": 51, "DMG": 42569, "H": 101985, "MIT": 1347, "E/10": 13.232023721275016, "A/10": 22.68346923647146, "D/10": 5.670867309117865, "DMG/10": 4733.395107487027, "H/10": 11340.066716085988, "MIT/10": 149.77761304670125}, {"Player": "Gur3um", "Team": "Poker Face", "Role": "Tank", "Appearances": 9, "Minutes": 89.9, "E": 157, "A": 68, "D": 37, "DMG": 72080, "H": 11940, "MIT": 101391, "E/10": 17.46384872080089, "A/10": 7.563959955506117, "D/10": 4.115684093437152, "DMG/10": 8017.797552836484, "H/10": 1328.1423804226918, "MIT/10": 11278.197997775305}, {"Player": "HEISER", "Team": "ZAN Esports", "Role": "Tank", "Appearances": 12, "Minutes": 140.41666666666666, "E": 258, "A": 107, "D": 72, "DMG": 129127, "H": 12393, "MIT": 136670, "E/10": 18.373887240356083, "A/10": 7.620178041543028, "D/10": 5.12759643916914, "DMG/10": 9195.9881305638, "H/10": 882.5875370919881, "MIT/10": 9733.175074183977}, {"Player": "Hanbin", "Team": "Team Falcons", "Role": "Tank", "Appearances": 8, "Minutes": 89.93333333333334, "E": 235, "A": 113, "D": 35, "DMG": 73316, "H": 18956, "MIT": 113954, "E/10": 26.130467012601926, "A/10": 12.5648628613788, "D/10": 3.8917716827279465, "DMG/10": 8152.260934025204, "H/10": 2107.783543365456, "MIT/10": 12670.941438102298}, {"Player": "HeeSang", "Team": "Crazy Raccoon", "Role": "DPS", "Appearances": 7, "Minutes": 92.48333333333333, "E": 144, "A": 16, "D": 42, "DMG": 73783, "H": 2885, "MIT": 21222, "E/10": 15.570373040187421, "A/10": 1.7300414489097136, "D/10": 4.541358803387998, "DMG/10": 7977.978014056587, "H/10": 311.9480987565327, "MIT/10": 2294.683726797621}, {"Player": "IRONY", "Team": "ONSIDE GAMING", "Role": "Support", "Appearances": 10, "Minutes": 117.14999999999998, "E": 95, "A": 169, "D": 56, "DMG": 52169, "H": 123287, "MIT": 1956, "E/10": 8.109261630388392, "A/10": 14.425949637217245, "D/10": 4.780196329492105, "DMG/10": 4453.1796841656005, "H/10": 10523.858301323091, "MIT/10": 166.96542893725996}, {"Player": "JASM1NE", "Team": "T1", "Role": "Tank", "Appearances": 8, "Minutes": 78.03333333333333, "E": 149, "A": 76, "D": 27, "DMG": 70576, "H": 16871, "MIT": 119706, "E/10": 19.09440410081162, "A/10": 9.739427595044853, "D/10": 3.460059803502777, "DMG/10": 9044.340025630074, "H/10": 2162.0247757368643, "MIT/10": 15340.367364374199}, {"Player": "JunBin", "Team": "Crazy Raccoon", "Role": "Tank", "Appearances": 1, "Minutes": 10.4, "E": 8, "A": 3, "D": 7, "DMG": 6137, "H": 2414, "MIT": 14576, "E/10": 7.692307692307692, "A/10": 2.884615384615384, "D/10": 6.73076923076923, "DMG/10": 5900.961538461538, "H/10": 2321.153846153846, "MIT/10": 14015.384615384613}, {"Player": "KIVIS", "Team": "ZAN Esports", "Role": "Support", "Appearances": 12, "Minutes": 140.41666666666666, "E": 171, "A": 237, "D": 66, "DMG": 69984, "H": 138202, "MIT": 0, "E/10": 12.178041543026708, "A/10": 16.878338278931754, "D/10": 4.700296735905044, "DMG/10": 4984.023738872404, "H/10": 9842.278931750741, "MIT/10": 0.0}, {"Player": "Kilo", "Team": "ONSIDE GAMING", "Role": "DPS", "Appearances": 10, "Minutes": 117.14999999999998, "E": 169, "A": 7, "D": 72, "DMG": 104278, "H": 1553, "MIT": 9646, "E/10": 14.425949637217245, "A/10": 0.5975245411865131, "D/10": 6.145966709346993, "DMG/10": 8901.237729406745, "H/10": 132.56508749466497, "MIT/10": 823.388817755015}, {"Player": "LIP", "Team": "Crazy Raccoon", "Role": "DPS", "Appearances": 1, "Minutes": 12.266666666666667, "E": 16, "A": 2, "D": 10, "DMG": 12977, "H": 0, "MIT": 226, "E/10": 13.043478260869566, "A/10": 1.6304347826086958, "D/10": 8.152173913043478, "DMG/10": 10579.07608695652, "H/10": 0.0, "MIT/10": 184.23913043478257}, {"Player": "M1NUT2", "Team": "Poker Face", "Role": "DPS", "Appearances": 9, "Minutes": 89.9, "E": 149, "A": 13, "D": 59, "DMG": 83877, "H": 3143, "MIT": 5117, "E/10": 16.57397107897664, "A/10": 1.4460511679644048, "D/10": 6.562847608453836, "DMG/10": 9330.033370411567, "H/10": 349.61067853170186, "MIT/10": 569.1879866518353}, {"Player": "MAX", "Team": "Crazy Raccoon", "Role": "Tank", "Appearances": 7, "Minutes": 94.35, "E": 186, "A": 92, "D": 39, "DMG": 87551, "H": 17435, "MIT": 124570, "E/10": 19.71383147853736, "A/10": 9.750927397986223, "D/10": 4.133545310015899, "DMG/10": 9279.385267620562, "H/10": 1847.9067302596716, "MIT/10": 13202.967673555908}, {"Player": "MCD", "Team": "New Era", "Role": "Support", "Appearances": 6, "Minutes": 55.11666666666667, "E": 36, "A": 50, "D": 36, "DMG": 28472, "H": 47214, "MIT": 11479, "E/10": 6.531599637133353, "A/10": 9.071666162685213, "D/10": 6.531599637133353, "DMG/10": 5165.769579679468, "H/10": 8566.192924100393, "MIT/10": 2082.6731176292715}, {"Player": "MER1T", "Team": "Team Falcons", "Role": "DPS", "Appearances": 8, "Minutes": 89.93333333333334, "E": 190, "A": 23, "D": 59, "DMG": 86652, "H": 2554, "MIT": 21600, "E/10": 21.12676056338028, "A/10": 2.5574499629355074, "D/10": 6.560415122312824, "DMG/10": 9635.137138621201, "H/10": 283.98813936249076, "MIT/10": 2401.77909562639}, {"Player": "Mealgaru", "Team": "ZETA DIVISION", "Role": "Tank", "Appearances": 3, "Minutes": 31.98333333333333, "E": 79, "A": 22, "D": 15, "DMG": 34809, "H": 5603, "MIT": 22814, "E/10": 24.700364773319443, "A/10": 6.878582595101616, "D/10": 4.689942678478374, "DMG/10": 10883.480979676915, "H/10": 1751.8499218342888, "MIT/10": 7133.0901511203765}, {"Player": "OPENER", "Team": "ONSIDE GAMING", "Role": "Support", "Appearances": 10, "Minutes": 117.14999999999998, "E": 117, "A": 152, "D": 58, "DMG": 42955, "H": 93962, "MIT": 26732, "E/10": 9.987195902688862, "A/10": 12.974818608621428, "D/10": 4.950917626973966, "DMG/10": 3666.6666666666674, "H/10": 8020.657276995307, "MIT/10": 2281.860862142553}, {"Player": "PERR", "Team": "New Era", "Role": "DPS", "Appearances": 6, "Minutes": 55.11666666666667, "E": 46, "A": 0, "D": 36, "DMG": 43777, "H": 917, "MIT": 437, "E/10": 8.345932869670396, "A/10": 0.0, "D/10": 6.531599637133353, "DMG/10": 7942.606592077411, "H/10": 166.3743574236468, "MIT/10": 79.28636226186876}, {"Player": "PROUD", "Team": "T1", "Role": "DPS", "Appearances": 8, "Minutes": 78.03333333333333, "E": 139, "A": 0, "D": 35, "DMG": 79174, "H": 1491, "MIT": 643, "E/10": 17.812900469884664, "A/10": 0.0, "D/10": 4.48526270824434, "DMG/10": 10146.176847501069, "H/10": 191.0721913712089, "MIT/10": 82.40068346860315}, {"Player": "Proper", "Team": "ZETA DIVISION", "Role": "DPS", "Appearances": 12, "Minutes": 150.13333333333333, "E": 286, "A": 27, "D": 76, "DMG": 132355, "H": 3497, "MIT": 12223, "E/10": 19.04973357015986, "A/10": 1.7984014209591477, "D/10": 5.0621669626998225, "DMG/10": 8815.830373001776, "H/10": 232.92628774422738, "MIT/10": 814.1429840142097}, {"Player": "SECRET", "Team": "New Era", "Role": "Support", "Appearances": 6, "Minutes": 55.11666666666667, "E": 24, "A": 36, "D": 37, "DMG": 18808, "H": 48463, "MIT": 481, "E/10": 4.354399758088902, "A/10": 6.531599637133353, "D/10": 6.713032960387057, "DMG/10": 3412.39794375567, "H/10": 8792.80314484427, "MIT/10": 87.26942848503174}, {"Player": "SKEWED", "Team": "T1", "Role": "Support", "Appearances": 8, "Minutes": 78.03333333333333, "E": 68, "A": 135, "D": 25, "DMG": 38834, "H": 93221, "MIT": 1007, "E/10": 8.71422469030329, "A/10": 17.300299017513883, "D/10": 3.2037590773173856, "DMG/10": 4976.591200341734, "H/10": 11946.304997864161, "MIT/10": 129.0474156343443}, {"Player": "SP1NT", "Team": "ONSIDE GAMING", "Role": "DPS", "Appearances": 10, "Minutes": 117.14999999999998, "E": 156, "A": 35, "D": 74, "DMG": 93977, "H": 4297, "MIT": 16846, "E/10": 13.31626120358515, "A/10": 2.9876227059325657, "D/10": 6.316688006828853, "DMG/10": 8021.93768672642, "H/10": 366.7947076397781, "MIT/10": 1437.9854886897144}, {"Player": "SeungAn", "Team": "Cheeseburger", "Role": "Tank", "Appearances": 5, "Minutes": 42.98333333333334, "E": 43, "A": 16, "D": 27, "DMG": 26528, "H": 7526, "MIT": 47917, "E/10": 10.003877471888327, "A/10": 3.7223730127956567, "D/10": 6.2815044590926705, "DMG/10": 6171.694455215198, "H/10": 1750.911205893757, "MIT/10": 11147.809228383092}, {"Player": "SoLA", "Team": "New Era", "Role": "Tank", "Appearances": 6, "Minutes": 55.11666666666667, "E": 45, "A": 20, "D": 34, "DMG": 38863, "H": 12499, "MIT": 81322, "E/10": 8.16449954641669, "A/10": 3.628666465074085, "D/10": 6.168732990625944, "DMG/10": 7051.043241608709, "H/10": 2267.7351073480495, "MIT/10": 14754.520713637738}, {"Player": "Sp1NEL", "Team": "Poker Face", "Role": "Support", "Appearances": 1, "Minutes": 10.066666666666666, "E": 6, "A": 9, "D": 6, "DMG": 3048, "H": 6928, "MIT": 1265, "E/10": 5.960264900662252, "A/10": 8.940397350993377, "D/10": 5.960264900662252, "DMG/10": 3027.814569536424, "H/10": 6882.119205298013, "MIT/10": 1256.6225165562914}, {"Player": "Stalk3r", "Team": "Crazy Raccoon", "Role": "DPS", "Appearances": 8, "Minutes": 104.75, "E": 187, "A": 10, "D": 55, "DMG": 100334, "H": 1283, "MIT": 5850, "E/10": 17.852028639618137, "A/10": 0.954653937947494, "D/10": 5.250596658711217, "DMG/10": 9578.424821002387, "H/10": 122.48210023866349, "MIT/10": 558.4725536992839}, {"Player": "TenTen", "Team": "Poker Face", "Role": "Support", "Appearances": 8, "Minutes": 79.83333333333334, "E": 94, "A": 113, "D": 40, "DMG": 35265, "H": 51252, "MIT": 6747, "E/10": 11.774530271398746, "A/10": 14.1544885177453, "D/10": 5.010438413361169, "DMG/10": 4417.32776617954, "H/10": 6419.874739039665, "MIT/10": 845.1356993736952}, {"Player": "Viol2t", "Team": "ZETA DIVISION", "Role": "Support", "Appearances": 12, "Minutes": 150.13333333333333, "E": 217, "A": 241, "D": 91, "DMG": 86049, "H": 127868, "MIT": 32222, "E/10": 14.453818827708705, "A/10": 16.05239786856128, "D/10": 6.0612788632326815, "DMG/10": 5731.505328596803, "H/10": 8516.962699822381, "MIT/10": 2146.2255772646536}, {"Player": "WoochaN", "Team": "Cheeseburger", "Role": "Support", "Appearances": 9, "Minutes": 78.06666666666668, "E": 44, "A": 62, "D": 47, "DMG": 37071, "H": 64444, "MIT": 0, "E/10": 5.636208368915456, "A/10": 7.94192997438087, "D/10": 6.0204953031596915, "DMG/10": 4748.63364645602, "H/10": 8254.995730145174, "MIT/10": 0.0}, {"Player": "YangJun", "Team": "ZAN Esports", "Role": "Support", "Appearances": 12, "Minutes": 140.41666666666666, "E": 165, "A": 179, "D": 67, "DMG": 52498, "H": 114128, "MIT": 22748, "E/10": 11.750741839762613, "A/10": 12.747774480712167, "D/10": 4.771513353115727, "DMG/10": 3738.72997032641, "H/10": 8127.8100890207725, "MIT/10": 1620.0356083086056}, {"Player": "ZEST", "Team": "T1", "Role": "DPS", "Appearances": 8, "Minutes": 78.03333333333333, "E": 133, "A": 24, "D": 39, "DMG": 62927, "H": 1607, "MIT": 11907, "E/10": 17.043998291328492, "A/10": 3.07560871422469, "D/10": 4.997864160615122, "DMG/10": 8064.117898334045, "H/10": 205.93763348996157, "MIT/10": 1525.8863733447245}, {"Player": "Zesin", "Team": "Cheeseburger", "Role": "DPS", "Appearances": 9, "Minutes": 78.06666666666668, "E": 58, "A": 2, "D": 65, "DMG": 56792, "H": 1331, "MIT": 429, "E/10": 7.429547395388556, "A/10": 0.2561912894961571, "D/10": 8.326216908625106, "DMG/10": 7274.807856532878, "H/10": 170.49530315969253, "MIT/10": 54.9530315969257}, {"Player": "knife", "Team": "ZETA DIVISION", "Role": "DPS", "Appearances": 12, "Minutes": 150.13333333333333, "E": 298, "A": 50, "D": 86, "DMG": 139076, "H": 6347, "MIT": 34438, "E/10": 19.849023090586147, "A/10": 3.330373001776199, "D/10": 5.728241563055062, "DMG/10": 9263.499111900534, "H/10": 422.7575488454707, "MIT/10": 2293.827708703375}, {"Player": "probe", "Team": "ZAN Esports", "Role": "DPS", "Appearances": 3, "Minutes": 26.016666666666666, "E": 59, "A": 0, "D": 11, "DMG": 28788, "H": 1316, "MIT": 0, "E/10": 22.677770659833442, "A/10": 0.0, "D/10": 4.228058936579116, "DMG/10": 11065.214606021782, "H/10": 505.82959641255604, "MIT/10": 0.0}, {"Player": "shu", "Team": "ZETA DIVISION", "Role": "Support", "Appearances": 12, "Minutes": 150.13333333333333, "E": 174, "A": 230, "D": 87, "DMG": 78143, "H": 130798, "MIT": 8073, "E/10": 11.589698046181173, "A/10": 15.319715808170516, "D/10": 5.7948490230905865, "DMG/10": 5204.90674955595, "H/10": 8712.122557726467, "MIT/10": 537.7220248667851}, {"Player": "vigilante", "Team": "Crazy Raccoon", "Role": "Support", "Appearances": 8, "Minutes": 104.75, "E": 116, "A": 170, "D": 61, "DMG": 39711, "H": 113944, "MIT": 2483, "E/10": 11.07398568019093, "A/10": 16.2291169451074, "D/10": 5.823389021479714, "DMG/10": 3791.0262529832935, "H/10": 10877.708830548927, "MIT/10": 237.04057279236278}]};
-    const top5Data = {"Tank": [{"metric": "DMG/10", "rows": [{"Player": "Bernar", "Team": "ZETA DIVISION", "Role": "Tank", "Appearances": 9, "Minutes": 118.15000000000002, "E": 235, "A": 113, "D": 65, "DMG": 111044, "H": 16624, "MIT": 137290, "E/10": 19.88997037663986, "A/10": 9.564113415150231, "D/10": 5.5014811680067695, "DMG/10": 9398.561151079135, "H/10": 1407.0249682606855, "MIT/10": 11619.974608548453}, {"Player": "MAX", "Team": "Crazy Raccoon", "Role": "Tank", "Appearances": 7, "Minutes": 94.35, "E": 186, "A": 92, "D": 39, "DMG": 87551, "H": 17435, "MIT": 124570, "E/10": 19.71383147853736, "A/10": 9.750927397986223, "D/10": 4.133545310015899, "DMG/10": 9279.385267620562, "H/10": 1847.9067302596716, "MIT/10": 13202.967673555908}, {"Player": "Attack", "Team": "ONSIDE GAMING", "Role": "Tank", "Appearances": 10, "Minutes": 117.14999999999998, "E": 202, "A": 90, "D": 62, "DMG": 108150, "H": 23303, "MIT": 165809, "E/10": 17.24285104566795, "A/10": 7.682458386683741, "D/10": 5.292360221937687, "DMG/10": 9231.754161331628, "H/10": 1989.159197609902, "MIT/10": 14153.563807084936}, {"Player": "HEISER", "Team": "ZAN Esports", "Role": "Tank", "Appearances": 12, "Minutes": 140.41666666666666, "E": 258, "A": 107, "D": 72, "DMG": 129127, "H": 12393, "MIT": 136670, "E/10": 18.373887240356083, "A/10": 7.620178041543028, "D/10": 5.12759643916914, "DMG/10": 9195.9881305638, "H/10": 882.5875370919881, "MIT/10": 9733.175074183977}, {"Player": "JASM1NE", "Team": "T1", "Role": "Tank", "Appearances": 8, "Minutes": 78.03333333333333, "E": 149, "A": 76, "D": 27, "DMG": 70576, "H": 16871, "MIT": 119706, "E/10": 19.09440410081162, "A/10": 9.739427595044853, "D/10": 3.460059803502777, "DMG/10": 9044.340025630074, "H/10": 2162.0247757368643, "MIT/10": 15340.367364374199}]}, {"metric": "H/10", "rows": [{"Player": "JASM1NE", "Team": "T1", "Role": "Tank", "Appearances": 8, "Minutes": 78.03333333333333, "E": 149, "A": 76, "D": 27, "DMG": 70576, "H": 16871, "MIT": 119706, "E/10": 19.09440410081162, "A/10": 9.739427595044853, "D/10": 3.460059803502777, "DMG/10": 9044.340025630074, "H/10": 2162.0247757368643, "MIT/10": 15340.367364374199}, {"Player": "Hanbin", "Team": "Team Falcons", "Role": "Tank", "Appearances": 8, "Minutes": 89.93333333333334, "E": 235, "A": 113, "D": 35, "DMG": 73316, "H": 18956, "MIT": 113954, "E/10": 26.130467012601926, "A/10": 12.5648628613788, "D/10": 3.8917716827279465, "DMG/10": 8152.260934025204, "H/10": 2107.783543365456, "MIT/10": 12670.941438102298}, {"Player": "Attack", "Team": "ONSIDE GAMING", "Role": "Tank", "Appearances": 10, "Minutes": 117.14999999999998, "E": 202, "A": 90, "D": 62, "DMG": 108150, "H": 23303, "MIT": 165809, "E/10": 17.24285104566795, "A/10": 7.682458386683741, "D/10": 5.292360221937687, "DMG/10": 9231.754161331628, "H/10": 1989.159197609902, "MIT/10": 14153.563807084936}, {"Player": "MAX", "Team": "Crazy Raccoon", "Role": "Tank", "Appearances": 7, "Minutes": 94.35, "E": 186, "A": 92, "D": 39, "DMG": 87551, "H": 17435, "MIT": 124570, "E/10": 19.71383147853736, "A/10": 9.750927397986223, "D/10": 4.133545310015899, "DMG/10": 9279.385267620562, "H/10": 1847.9067302596716, "MIT/10": 13202.967673555908}, {"Player": "Bernar", "Team": "ZETA DIVISION", "Role": "Tank", "Appearances": 9, "Minutes": 118.15000000000002, "E": 235, "A": 113, "D": 65, "DMG": 111044, "H": 16624, "MIT": 137290, "E/10": 19.88997037663986, "A/10": 9.564113415150231, "D/10": 5.5014811680067695, "DMG/10": 9398.561151079135, "H/10": 1407.0249682606855, "MIT/10": 11619.974608548453}]}, {"metric": "MIT/10", "rows": [{"Player": "JASM1NE", "Team": "T1", "Role": "Tank", "Appearances": 8, "Minutes": 78.03333333333333, "E": 149, "A": 76, "D": 27, "DMG": 70576, "H": 16871, "MIT": 119706, "E/10": 19.09440410081162, "A/10": 9.739427595044853, "D/10": 3.460059803502777, "DMG/10": 9044.340025630074, "H/10": 2162.0247757368643, "MIT/10": 15340.367364374199}, {"Player": "Attack", "Team": "ONSIDE GAMING", "Role": "Tank", "Appearances": 10, "Minutes": 117.14999999999998, "E": 202, "A": 90, "D": 62, "DMG": 108150, "H": 23303, "MIT": 165809, "E/10": 17.24285104566795, "A/10": 7.682458386683741, "D/10": 5.292360221937687, "DMG/10": 9231.754161331628, "H/10": 1989.159197609902, "MIT/10": 14153.563807084936}, {"Player": "MAX", "Team": "Crazy Raccoon", "Role": "Tank", "Appearances": 7, "Minutes": 94.35, "E": 186, "A": 92, "D": 39, "DMG": 87551, "H": 17435, "MIT": 124570, "E/10": 19.71383147853736, "A/10": 9.750927397986223, "D/10": 4.133545310015899, "DMG/10": 9279.385267620562, "H/10": 1847.9067302596716, "MIT/10": 13202.967673555908}, {"Player": "Hanbin", "Team": "Team Falcons", "Role": "Tank", "Appearances": 8, "Minutes": 89.93333333333334, "E": 235, "A": 113, "D": 35, "DMG": 73316, "H": 18956, "MIT": 113954, "E/10": 26.130467012601926, "A/10": 12.5648628613788, "D/10": 3.8917716827279465, "DMG/10": 8152.260934025204, "H/10": 2107.783543365456, "MIT/10": 12670.941438102298}, {"Player": "Bernar", "Team": "ZETA DIVISION", "Role": "Tank", "Appearances": 9, "Minutes": 118.15000000000002, "E": 235, "A": 113, "D": 65, "DMG": 111044, "H": 16624, "MIT": 137290, "E/10": 19.88997037663986, "A/10": 9.564113415150231, "D/10": 5.5014811680067695, "DMG/10": 9398.561151079135, "H/10": 1407.0249682606855, "MIT/10": 11619.974608548453}]}], "DPS": [{"metric": "DMG/10", "rows": [{"Player": "PROUD", "Team": "T1", "Role": "DPS", "Appearances": 8, "Minutes": 78.03333333333333, "E": 139, "A": 0, "D": 35, "DMG": 79174, "H": 1491, "MIT": 643, "E/10": 17.812900469884664, "A/10": 0.0, "D/10": 4.48526270824434, "DMG/10": 10146.176847501069, "H/10": 191.0721913712089, "MIT/10": 82.40068346860315}, {"Player": "A1IEN", "Team": "ZAN Esports", "Role": "DPS", "Appearances": 9, "Minutes": 114.4, "E": 198, "A": 1, "D": 67, "DMG": 114267, "H": 137, "MIT": 326, "E/10": 17.307692307692307, "A/10": 0.0874125874125874, "D/10": 5.856643356643357, "DMG/10": 9988.374125874127, "H/10": 11.975524475524475, "MIT/10": 28.496503496503497}, {"Player": "MER1T", "Team": "Team Falcons", "Role": "DPS", "Appearances": 8, "Minutes": 89.93333333333334, "E": 190, "A": 23, "D": 59, "DMG": 86652, "H": 2554, "MIT": 21600, "E/10": 21.12676056338028, "A/10": 2.5574499629355074, "D/10": 6.560415122312824, "DMG/10": 9635.137138621201, "H/10": 283.98813936249076, "MIT/10": 2401.77909562639}, {"Player": "Stalk3r", "Team": "Crazy Raccoon", "Role": "DPS", "Appearances": 8, "Minutes": 104.75, "E": 187, "A": 10, "D": 55, "DMG": 100334, "H": 1283, "MIT": 5850, "E/10": 17.852028639618137, "A/10": 0.954653937947494, "D/10": 5.250596658711217, "DMG/10": 9578.424821002387, "H/10": 122.48210023866349, "MIT/10": 558.4725536992839}, {"Player": "M1NUT2", "Team": "Poker Face", "Role": "DPS", "Appearances": 9, "Minutes": 89.9, "E": 149, "A": 13, "D": 59, "DMG": 83877, "H": 3143, "MIT": 5117, "E/10": 16.57397107897664, "A/10": 1.4460511679644048, "D/10": 6.562847608453836, "DMG/10": 9330.033370411567, "H/10": 349.61067853170186, "MIT/10": 569.1879866518353}]}, {"metric": "H/10", "rows": [{"Player": "knife", "Team": "ZETA DIVISION", "Role": "DPS", "Appearances": 12, "Minutes": 150.13333333333333, "E": 298, "A": 50, "D": 86, "DMG": 139076, "H": 6347, "MIT": 34438, "E/10": 19.849023090586147, "A/10": 3.330373001776199, "D/10": 5.728241563055062, "DMG/10": 9263.499111900534, "H/10": 422.7575488454707, "MIT/10": 2293.827708703375}, {"Player": "SP1NT", "Team": "ONSIDE GAMING", "Role": "DPS", "Appearances": 10, "Minutes": 117.14999999999998, "E": 156, "A": 35, "D": 74, "DMG": 93977, "H": 4297, "MIT": 16846, "E/10": 13.31626120358515, "A/10": 2.9876227059325657, "D/10": 6.316688006828853, "DMG/10": 8021.93768672642, "H/10": 366.7947076397781, "MIT/10": 1437.9854886897144}, {"Player": "M1NUT2", "Team": "Poker Face", "Role": "DPS", "Appearances": 9, "Minutes": 89.9, "E": 149, "A": 13, "D": 59, "DMG": 83877, "H": 3143, "MIT": 5117, "E/10": 16.57397107897664, "A/10": 1.4460511679644048, "D/10": 6.562847608453836, "DMG/10": 9330.033370411567, "H/10": 349.61067853170186, "MIT/10": 569.1879866518353}, {"Player": "Checkmate", "Team": "Team Falcons", "Role": "DPS", "Appearances": 8, "Minutes": 89.93333333333334, "E": 176, "A": 23, "D": 57, "DMG": 81276, "H": 3033, "MIT": 17678, "E/10": 19.5700518902891, "A/10": 2.5574499629355074, "D/10": 6.338028169014084, "DMG/10": 9037.361008154188, "H/10": 337.2498146775389, "MIT/10": 1965.678280207561}, {"Player": "Becky", "Team": "ZAN Esports", "Role": "DPS", "Appearances": 12, "Minutes": 140.41666666666666, "E": 232, "A": 14, "D": 76, "DMG": 104396, "H": 4436, "MIT": 14856, "E/10": 16.52225519287834, "A/10": 0.997032640949555, "D/10": 5.41246290801187, "DMG/10": 7434.729970326411, "H/10": 315.91691394658756, "MIT/10": 1057.994065281899}]}, {"metric": "MIT/10", "rows": [{"Player": "MER1T", "Team": "Team Falcons", "Role": "DPS", "Appearances": 8, "Minutes": 89.93333333333334, "E": 190, "A": 23, "D": 59, "DMG": 86652, "H": 2554, "MIT": 21600, "E/10": 21.12676056338028, "A/10": 2.5574499629355074, "D/10": 6.560415122312824, "DMG/10": 9635.137138621201, "H/10": 283.98813936249076, "MIT/10": 2401.77909562639}, {"Player": "HeeSang", "Team": "Crazy Raccoon", "Role": "DPS", "Appearances": 7, "Minutes": 92.48333333333333, "E": 144, "A": 16, "D": 42, "DMG": 73783, "H": 2885, "MIT": 21222, "E/10": 15.570373040187421, "A/10": 1.7300414489097136, "D/10": 4.541358803387998, "DMG/10": 7977.978014056587, "H/10": 311.9480987565327, "MIT/10": 2294.683726797621}, {"Player": "knife", "Team": "ZETA DIVISION", "Role": "DPS", "Appearances": 12, "Minutes": 150.13333333333333, "E": 298, "A": 50, "D": 86, "DMG": 139076, "H": 6347, "MIT": 34438, "E/10": 19.849023090586147, "A/10": 3.330373001776199, "D/10": 5.728241563055062, "DMG/10": 9263.499111900534, "H/10": 422.7575488454707, "MIT/10": 2293.827708703375}, {"Player": "Checkmate", "Team": "Team Falcons", "Role": "DPS", "Appearances": 8, "Minutes": 89.93333333333334, "E": 176, "A": 23, "D": 57, "DMG": 81276, "H": 3033, "MIT": 17678, "E/10": 19.5700518902891, "A/10": 2.5574499629355074, "D/10": 6.338028169014084, "DMG/10": 9037.361008154188, "H/10": 337.2498146775389, "MIT/10": 1965.678280207561}, {"Player": "ZEST", "Team": "T1", "Role": "DPS", "Appearances": 8, "Minutes": 78.03333333333333, "E": 133, "A": 24, "D": 39, "DMG": 62927, "H": 1607, "MIT": 11907, "E/10": 17.043998291328492, "A/10": 3.07560871422469, "D/10": 4.997864160615122, "DMG/10": 8064.117898334045, "H/10": 205.93763348996157, "MIT/10": 1525.8863733447245}]}], "Support": [{"metric": "DMG/10", "rows": [{"Player": "Viol2t", "Team": "ZETA DIVISION", "Role": "Support", "Appearances": 12, "Minutes": 150.13333333333333, "E": 217, "A": 241, "D": 91, "DMG": 86049, "H": 127868, "MIT": 32222, "E/10": 14.453818827708705, "A/10": 16.05239786856128, "D/10": 6.0612788632326815, "DMG/10": 5731.505328596803, "H/10": 8516.962699822381, "MIT/10": 2146.2255772646536}, {"Player": "shu", "Team": "ZETA DIVISION", "Role": "Support", "Appearances": 12, "Minutes": 150.13333333333333, "E": 174, "A": 230, "D": 87, "DMG": 78143, "H": 130798, "MIT": 8073, "E/10": 11.589698046181173, "A/10": 15.319715808170516, "D/10": 5.7948490230905865, "DMG/10": 5204.90674955595, "H/10": 8712.122557726467, "MIT/10": 537.7220248667851}, {"Player": "ChiYo", "Team": "Team Falcons", "Role": "Support", "Appearances": 8, "Minutes": 89.93333333333334, "E": 136, "A": 169, "D": 49, "DMG": 46437, "H": 85160, "MIT": 23010, "E/10": 15.122312824314307, "A/10": 18.791697553743514, "D/10": 5.448480355819125, "DMG/10": 5163.491475166789, "H/10": 9469.23647146034, "MIT/10": 2558.5618977020013}, {"Player": "KIVIS", "Team": "ZAN Esports", "Role": "Support", "Appearances": 12, "Minutes": 140.41666666666666, "E": 171, "A": 237, "D": 66, "DMG": 69984, "H": 138202, "MIT": 0, "E/10": 12.178041543026708, "A/10": 16.878338278931754, "D/10": 4.700296735905044, "DMG/10": 4984.023738872404, "H/10": 9842.278931750741, "MIT/10": 0.0}, {"Player": "SKEWED", "Team": "T1", "Role": "Support", "Appearances": 8, "Minutes": 78.03333333333333, "E": 68, "A": 135, "D": 25, "DMG": 38834, "H": 93221, "MIT": 1007, "E/10": 8.71422469030329, "A/10": 17.300299017513883, "D/10": 3.2037590773173856, "DMG/10": 4976.591200341734, "H/10": 11946.304997864161, "MIT/10": 129.0474156343443}]}, {"metric": "H/10", "rows": [{"Player": "SKEWED", "Team": "T1", "Role": "Support", "Appearances": 8, "Minutes": 78.03333333333333, "E": 68, "A": 135, "D": 25, "DMG": 38834, "H": 93221, "MIT": 1007, "E/10": 8.71422469030329, "A/10": 17.300299017513883, "D/10": 3.2037590773173856, "DMG/10": 4976.591200341734, "H/10": 11946.304997864161, "MIT/10": 129.0474156343443}, {"Player": "Fielder", "Team": "Team Falcons", "Role": "Support", "Appearances": 8, "Minutes": 89.93333333333334, "E": 119, "A": 204, "D": 51, "DMG": 42569, "H": 101985, "MIT": 1347, "E/10": 13.232023721275016, "A/10": 22.68346923647146, "D/10": 5.670867309117865, "DMG/10": 4733.395107487027, "H/10": 11340.066716085988, "MIT/10": 149.77761304670125}, {"Player": "vigilante", "Team": "Crazy Raccoon", "Role": "Support", "Appearances": 8, "Minutes": 104.75, "E": 116, "A": 170, "D": 61, "DMG": 39711, "H": 113944, "MIT": 2483, "E/10": 11.07398568019093, "A/10": 16.2291169451074, "D/10": 5.823389021479714, "DMG/10": 3791.0262529832935, "H/10": 10877.708830548927, "MIT/10": 237.04057279236278}, {"Player": "IRONY", "Team": "ONSIDE GAMING", "Role": "Support", "Appearances": 10, "Minutes": 117.14999999999998, "E": 95, "A": 169, "D": 56, "DMG": 52169, "H": 123287, "MIT": 1956, "E/10": 8.109261630388392, "A/10": 14.425949637217245, "D/10": 4.780196329492105, "DMG/10": 4453.1796841656005, "H/10": 10523.858301323091, "MIT/10": 166.96542893725996}, {"Player": "KIVIS", "Team": "ZAN Esports", "Role": "Support", "Appearances": 12, "Minutes": 140.41666666666666, "E": 171, "A": 237, "D": 66, "DMG": 69984, "H": 138202, "MIT": 0, "E/10": 12.178041543026708, "A/10": 16.878338278931754, "D/10": 4.700296735905044, "DMG/10": 4984.023738872404, "H/10": 9842.278931750741, "MIT/10": 0.0}]}, {"metric": "MIT/10", "rows": [{"Player": "ChiYo", "Team": "Team Falcons", "Role": "Support", "Appearances": 8, "Minutes": 89.93333333333334, "E": 136, "A": 169, "D": 49, "DMG": 46437, "H": 85160, "MIT": 23010, "E/10": 15.122312824314307, "A/10": 18.791697553743514, "D/10": 5.448480355819125, "DMG/10": 5163.491475166789, "H/10": 9469.23647146034, "MIT/10": 2558.5618977020013}, {"Player": "BLISS", "Team": "T1", "Role": "Support", "Appearances": 8, "Minutes": 78.03333333333333, "E": 93, "A": 116, "D": 26, "DMG": 33633, "H": 65333, "MIT": 19867, "E/10": 11.917983767620674, "A/10": 14.86544211875267, "D/10": 3.3319094404100813, "DMG/10": 4310.081161896625, "H/10": 8372.447671935071, "MIT/10": 2545.96326356258}, {"Player": "Faith", "Team": "Cheeseburger", "Role": "Support", "Appearances": 9, "Minutes": 78.06666666666668, "E": 47, "A": 48, "D": 46, "DMG": 25734, "H": 54217, "MIT": 17846, "E/10": 6.0204953031596915, "A/10": 6.1485909479077705, "D/10": 5.892399658411613, "DMG/10": 3296.413321947053, "H/10": 6944.961571306575, "MIT/10": 2285.99487617421}, {"Player": "OPENER", "Team": "ONSIDE GAMING", "Role": "Support", "Appearances": 10, "Minutes": 117.14999999999998, "E": 117, "A": 152, "D": 58, "DMG": 42955, "H": 93962, "MIT": 26732, "E/10": 9.987195902688862, "A/10": 12.974818608621428, "D/10": 4.950917626973966, "DMG/10": 3666.6666666666674, "H/10": 8020.657276995307, "MIT/10": 2281.860862142553}, {"Player": "CH0R0NG", "Team": "Crazy Raccoon", "Role": "Support", "Appearances": 8, "Minutes": 104.75, "E": 136, "A": 145, "D": 57, "DMG": 50078, "H": 98465, "MIT": 23363, "E/10": 12.98329355608592, "A/10": 13.842482100238664, "D/10": 5.441527446300716, "DMG/10": 4780.715990453461, "H/10": 9400.0, "MIT/10": 2230.3579952267305}]}]};
-    const results = [{"date": "2026-03-20", "match": 1, "team1": "Cheeseburger", "team2": "Poker Face", "winner": "Poker Face", "loser": "Cheeseburger", "score": "0:3", "mvp": "D4RT"}, {"date": "2026-03-20", "match": 2, "team1": "Crazy Raccoon", "team2": "ZETA DIVISION", "winner": "ZETA DIVISION", "loser": "Crazy Raccoon", "score": "1:3", "mvp": "Viol2t"}, {"date": "2026-03-20", "match": 3, "team1": "ZAN Esports", "team2": "ONSIDE GAMING", "winner": "ONSIDE GAMING", "loser": "ZAN Esports", "score": "2:3", "mvp": "SP1NT"}, {"date": "2026-03-21", "match": 1, "team1": "New Era", "team2": "T1", "winner": "T1", "loser": "New Era", "score": "0:3", "mvp": "ZEST"}, {"date": "2026-03-21", "match": 2, "team1": "Cheeseburger", "team2": "Team Falcons", "winner": "Team Falcons", "loser": "Cheeseburger", "score": "0:3", "mvp": "Hanbin"}, {"date": "2026-03-21", "match": 3, "team1": "ZAN Esports", "team2": "Crazy Raccoon", "winner": "Crazy Raccoon", "loser": "ZAN Esports", "score": "1:3", "mvp": "HeeSang"}, {"date": "2026-03-22", "match": 1, "team1": "Poker Face", "team2": "New Era", "winner": "Poker Face", "loser": "New Era", "score": "3:0", "mvp": "D4RT"}, {"date": "2026-03-22", "match": 2, "team1": "ONSIDE GAMING", "team2": "T1", "winner": "ONSIDE GAMING", "loser": "T1", "score": "3:2", "mvp": "Kilo"}, {"date": "2026-03-22", "match": 3, "team1": "ZETA DIVISION", "team2": "Team Falcons", "winner": "ZETA DIVISION", "loser": "Team Falcons", "score": "3:2", "mvp": "Bernar"}, {"date": "2026-04-03", "match": 1, "team1": "Cheeseburger", "team2": "ZAN Esports", "winner": "ZAN Esports", "loser": "Cheeseburger", "score": "0:3", "mvp": "HEISER"}, {"date": "2026-04-03", "match": 2, "team1": "Poker Face", "team2": "ZETA DIVISION", "winner": "ZETA DIVISION", "loser": "Poker Face", "score": "0:3", "mvp": "Viol2t"}];
-    const numericFields = ["Appearances", "Minutes", "E", "A", "D", "DMG", "H", "MIT", "E/10", "A/10", "D/10", "DMG/10", "H/10", "MIT/10"];
-    Object.values(scopeRows).forEach(rows => rows.forEach(row => numericFields.forEach(field => row[field] = Number(row[field]))));
+    const PERIODS = ["Week 1", "Week 2", "Week 3", "Week 4", "Playoff"];
+const PERIOD_ROWS = {"Week 1":[{"Team":"ZETA DIVISION","Player":"Proper","Role":"DPS","E":226,"A":21,"D":65,"DMG":108989,"H":3434,"MIT":12161,"Appearances":9,"Minutes":120.8,"E/10":18.7086,"A/10":1.7384,"D/10":5.3808,"E/D":3.4242,"DMG/10":9022.2682,"H/10":284.2715,"MIT/10":1006.7053},{"Team":"ZETA DIVISION","Player":"Viol2t","Role":"Support","E":169,"A":198,"D":79,"DMG":76733,"H":107167,"MIT":32222,"Appearances":9,"Minutes":120.8,"E/10":13.9901,"A/10":16.3907,"D/10":6.5397,"E/D":2.1125,"DMG/10":6352.0695,"H/10":8871.4404,"MIT/10":2667.3841},{"Team":"ZETA DIVISION","Player":"knife","Role":"DPS","E":237,"A":41,"D":68,"DMG":113682,"H":5396,"MIT":33135,"Appearances":9,"Minutes":120.8,"E/10":19.6192,"A/10":3.394,"D/10":5.6291,"E/D":3.4348,"DMG/10":9410.7616,"H/10":446.6887,"MIT/10":2742.9636},{"Team":"ZETA DIVISION","Player":"shu","Role":"Support","E":145,"A":195,"D":70,"DMG":62747,"H":115851,"MIT":6302,"Appearances":9,"Minutes":120.8,"E/10":12.0033,"A/10":16.1424,"D/10":5.7947,"E/D":2.0423,"DMG/10":5194.2881,"H/10":9590.3146,"MIT/10":521.6887},{"Team":"ONSIDE GAMING","Player":"Attack","Role":"Tank","E":202,"A":90,"D":62,"DMG":108150,"H":23303,"MIT":165809,"Appearances":10,"Minutes":117.15,"E/10":17.2429,"A/10":7.6825,"D/10":5.2924,"E/D":3.2063,"DMG/10":9231.7542,"H/10":1989.1592,"MIT/10":14153.5638},{"Team":"ONSIDE GAMING","Player":"IRONY","Role":"Support","E":95,"A":169,"D":56,"DMG":52169,"H":123287,"MIT":1956,"Appearances":10,"Minutes":117.15,"E/10":8.1093,"A/10":14.4259,"D/10":4.7802,"E/D":1.6667,"DMG/10":4453.1797,"H/10":10523.8583,"MIT/10":166.9654},{"Team":"ONSIDE GAMING","Player":"Kilo","Role":"DPS","E":169,"A":7,"D":72,"DMG":104278,"H":1553,"MIT":9646,"Appearances":10,"Minutes":117.15,"E/10":14.4259,"A/10":0.5975,"D/10":6.146,"E/D":2.3151,"DMG/10":8901.2377,"H/10":132.5651,"MIT/10":823.3888},{"Team":"ONSIDE GAMING","Player":"OPENER","Role":"Support","E":117,"A":152,"D":58,"DMG":42955,"H":93962,"MIT":26732,"Appearances":10,"Minutes":117.15,"E/10":9.9872,"A/10":12.9748,"D/10":4.9509,"E/D":1.9831,"DMG/10":3666.6667,"H/10":8020.6573,"MIT/10":2281.8609},{"Team":"ONSIDE GAMING","Player":"SP1NT","Role":"DPS","E":156,"A":35,"D":74,"DMG":93977,"H":4297,"MIT":16846,"Appearances":10,"Minutes":117.15,"E/10":13.3163,"A/10":2.9876,"D/10":6.3167,"E/D":2.08,"DMG/10":8021.9377,"H/10":366.7947,"MIT/10":1437.9855},{"Team":"ZAN Esports","Player":"A1IEN","Role":"DPS","E":198,"A":1,"D":67,"DMG":114267,"H":137,"MIT":326,"Appearances":9,"Minutes":114.4,"E/10":17.3077,"A/10":0.0874,"D/10":5.8566,"E/D":2.9118,"DMG/10":9988.3741,"H/10":11.9755,"MIT/10":28.4965},{"Team":"ZAN Esports","Player":"Becky","Role":"DPS","E":168,"A":12,"D":69,"DMG":84172,"H":4152,"MIT":14092,"Appearances":9,"Minutes":114.4,"E/10":14.6853,"A/10":1.049,"D/10":6.0315,"E/D":2.4,"DMG/10":7357.6923,"H/10":362.9371,"MIT/10":1231.8182},{"Team":"ZAN Esports","Player":"HEISER","Role":"Tank","E":198,"A":84,"D":66,"DMG":107895,"H":7938,"MIT":107043,"Appearances":9,"Minutes":114.4,"E/10":17.3077,"A/10":7.3427,"D/10":5.7692,"E/D":2.9552,"DMG/10":9431.3811,"H/10":693.8811,"MIT/10":9356.9056},{"Team":"ZAN Esports","Player":"KIVIS","Role":"Support","E":131,"A":185,"D":56,"DMG":59349,"H":113963,"MIT":0,"Appearances":9,"Minutes":114.4,"E/10":11.451,"A/10":16.1713,"D/10":4.8951,"E/D":2.2982,"DMG/10":5187.8497,"H/10":9961.8007,"MIT/10":0},{"Team":"ZAN Esports","Player":"YangJun","Role":"Support","E":120,"A":132,"D":60,"DMG":41331,"H":95629,"MIT":20388,"Appearances":9,"Minutes":114.4,"E/10":10.4895,"A/10":11.5385,"D/10":5.2448,"E/D":1.9672,"DMG/10":3612.8497,"H/10":8359.1783,"MIT/10":1782.1678},{"Team":"Crazy Raccoon","Player":"CH0R0NG","Role":"Support","E":136,"A":145,"D":57,"DMG":50078,"H":98465,"MIT":23363,"Appearances":8,"Minutes":104.75,"E/10":12.9833,"A/10":13.8425,"D/10":5.4415,"E/D":2.3448,"DMG/10":4780.716,"H/10":9400,"MIT/10":2230.358},{"Team":"Crazy Raccoon","Player":"Stalk3r","Role":"DPS","E":187,"A":10,"D":55,"DMG":100334,"H":1283,"MIT":5850,"Appearances":8,"Minutes":104.75,"E/10":17.852,"A/10":0.9547,"D/10":5.2506,"E/D":3.3393,"DMG/10":9578.4248,"H/10":122.4821,"MIT/10":558.4726},{"Team":"Crazy Raccoon","Player":"vigilante","Role":"Support","E":116,"A":170,"D":61,"DMG":39711,"H":113944,"MIT":2483,"Appearances":8,"Minutes":104.75,"E/10":11.074,"A/10":16.2291,"D/10":5.8234,"E/D":1.871,"DMG/10":3791.0263,"H/10":10877.7088,"MIT/10":237.0406},{"Team":"ZETA DIVISION","Player":"Bernar","Role":"Tank","E":180,"A":86,"D":58,"DMG":92969,"H":13170,"MIT":116641,"Appearances":7,"Minutes":96.3333,"E/10":18.6851,"A/10":8.9273,"D/10":6.0208,"E/D":3.0508,"DMG/10":9650.7612,"H/10":1367.128,"MIT/10":12108.0623},{"Team":"Crazy Raccoon","Player":"MAX","Role":"Tank","E":186,"A":92,"D":39,"DMG":87551,"H":17435,"MIT":124570,"Appearances":7,"Minutes":94.35,"E/10":19.7138,"A/10":9.7509,"D/10":4.1335,"E/D":4.65,"DMG/10":9279.3853,"H/10":1847.9067,"MIT/10":13202.9677},{"Team":"Crazy Raccoon","Player":"HeeSang","Role":"DPS","E":144,"A":16,"D":42,"DMG":73783,"H":2885,"MIT":21222,"Appearances":7,"Minutes":92.4833,"E/10":15.5704,"A/10":1.73,"D/10":4.5414,"E/D":3.3488,"DMG/10":7977.978,"H/10":311.9481,"MIT/10":2294.6837},{"Team":"Team Falcons","Player":"Checkmate","Role":"DPS","E":176,"A":23,"D":57,"DMG":81276,"H":3033,"MIT":17678,"Appearances":8,"Minutes":89.9333,"E/10":19.5701,"A/10":2.5574,"D/10":6.338,"E/D":3.0345,"DMG/10":9037.361,"H/10":337.2498,"MIT/10":1965.6783},{"Team":"Team Falcons","Player":"ChiYo","Role":"Support","E":136,"A":169,"D":49,"DMG":46437,"H":85160,"MIT":23010,"Appearances":8,"Minutes":89.9333,"E/10":15.1223,"A/10":18.7917,"D/10":5.4485,"E/D":2.72,"DMG/10":5163.4915,"H/10":9469.2365,"MIT/10":2558.5619},{"Team":"Team Falcons","Player":"Fielder","Role":"Support","E":119,"A":204,"D":51,"DMG":42569,"H":101985,"MIT":1347,"Appearances":8,"Minutes":89.9333,"E/10":13.232,"A/10":22.6835,"D/10":5.6709,"E/D":2.2885,"DMG/10":4733.3951,"H/10":11340.0667,"MIT/10":149.7776},{"Team":"Team Falcons","Player":"Hanbin","Role":"Tank","E":235,"A":113,"D":35,"DMG":73316,"H":18956,"MIT":113954,"Appearances":8,"Minutes":89.9333,"E/10":26.1305,"A/10":12.5649,"D/10":3.8918,"E/D":6.5278,"DMG/10":8152.2609,"H/10":2107.7835,"MIT/10":12670.9414},{"Team":"Team Falcons","Player":"MER1T","Role":"DPS","E":190,"A":23,"D":59,"DMG":86652,"H":2554,"MIT":21600,"Appearances":8,"Minutes":89.9333,"E/10":21.1268,"A/10":2.5574,"D/10":6.5604,"E/D":3.1667,"DMG/10":9635.1371,"H/10":283.9881,"MIT/10":2401.7791},{"Team":"T1","Player":"BLISS","Role":"Support","E":93,"A":116,"D":26,"DMG":33633,"H":65333,"MIT":19867,"Appearances":8,"Minutes":78.0333,"E/10":11.918,"A/10":14.8654,"D/10":3.3319,"E/D":3.4444,"DMG/10":4310.0812,"H/10":8372.4477,"MIT/10":2545.9633},{"Team":"T1","Player":"JASM1NE","Role":"Tank","E":149,"A":76,"D":27,"DMG":70576,"H":16871,"MIT":119706,"Appearances":8,"Minutes":78.0333,"E/10":19.0944,"A/10":9.7394,"D/10":3.4601,"E/D":5.3214,"DMG/10":9044.34,"H/10":2162.0248,"MIT/10":15340.3674},{"Team":"T1","Player":"PROUD","Role":"DPS","E":139,"A":0,"D":35,"DMG":79174,"H":1491,"MIT":643,"Appearances":8,"Minutes":78.0333,"E/10":17.8129,"A/10":0,"D/10":4.4853,"E/D":3.8611,"DMG/10":10146.1768,"H/10":191.0722,"MIT/10":82.4007},{"Team":"T1","Player":"SKEWED","Role":"Support","E":68,"A":135,"D":25,"DMG":38834,"H":93221,"MIT":1007,"Appearances":8,"Minutes":78.0333,"E/10":8.7142,"A/10":17.3003,"D/10":3.2038,"E/D":2.6154,"DMG/10":4976.5912,"H/10":11946.305,"MIT/10":129.0474},{"Team":"T1","Player":"ZEST","Role":"DPS","E":133,"A":24,"D":39,"DMG":62927,"H":1607,"MIT":11907,"Appearances":8,"Minutes":78.0333,"E/10":17.044,"A/10":3.0756,"D/10":4.9979,"E/D":3.325,"DMG/10":8064.1179,"H/10":205.9376,"MIT/10":1525.8864},{"Team":"New Era","Player":"D0D0","Role":"DPS","E":45,"A":4,"D":41,"DMG":31538,"H":910,"MIT":5257,"Appearances":6,"Minutes":55.1167,"E/10":8.1645,"A/10":0.7257,"D/10":7.4388,"E/D":1.0714,"DMG/10":5722.0441,"H/10":165.1043,"MIT/10":953.795},{"Team":"New Era","Player":"MCD","Role":"Support","E":36,"A":50,"D":36,"DMG":28472,"H":47214,"MIT":11479,"Appearances":6,"Minutes":55.1167,"E/10":6.5316,"A/10":9.0717,"D/10":6.5316,"E/D":0.973,"DMG/10":5165.7696,"H/10":8566.1929,"MIT/10":2082.6731},{"Team":"New Era","Player":"PERR","Role":"DPS","E":46,"A":0,"D":36,"DMG":43777,"H":917,"MIT":437,"Appearances":6,"Minutes":55.1167,"E/10":8.3459,"A/10":0,"D/10":6.5316,"E/D":1.2432,"DMG/10":7942.6066,"H/10":166.3744,"MIT/10":79.2864},{"Team":"New Era","Player":"SECRET","Role":"Support","E":24,"A":36,"D":37,"DMG":18808,"H":48463,"MIT":481,"Appearances":6,"Minutes":55.1167,"E/10":4.3544,"A/10":6.5316,"D/10":6.713,"E/D":0.6316,"DMG/10":3412.3979,"H/10":8792.8031,"MIT/10":87.2694},{"Team":"New Era","Player":"SoLA","Role":"Tank","E":45,"A":20,"D":34,"DMG":38863,"H":12499,"MIT":81322,"Appearances":6,"Minutes":55.1167,"E/10":8.1645,"A/10":3.6287,"D/10":6.1687,"E/D":1.2857,"DMG/10":7051.0432,"H/10":2267.7351,"MIT/10":14754.5207},{"Team":"Poker Face","Player":"CARU","Role":"Support","E":31,"A":61,"D":8,"DMG":12030,"H":26278,"MIT":581,"Appearances":3,"Minutes":31.1167,"E/10":9.9625,"A/10":19.6036,"D/10":2.571,"E/D":3.4444,"DMG/10":3866.0953,"H/10":8444.992,"MIT/10":186.7167},{"Team":"Poker Face","Player":"D4RT","Role":"DPS","E":63,"A":5,"D":16,"DMG":24732,"H":1509,"MIT":2813,"Appearances":3,"Minutes":31.1167,"E/10":20.2464,"A/10":1.6069,"D/10":5.1419,"E/D":3.7059,"DMG/10":7948.1521,"H/10":484.9491,"MIT/10":904.0171},{"Team":"Poker Face","Player":"Gur3um","Role":"Tank","E":72,"A":32,"D":7,"DMG":27742,"H":4397,"MIT":33476,"Appearances":3,"Minutes":31.1167,"E/10":23.1387,"A/10":10.2839,"D/10":2.2496,"E/D":9,"DMG/10":8915.4794,"H/10":1413.0691,"MIT/10":10758.2217},{"Team":"Poker Face","Player":"M1NUT2","Role":"DPS","E":57,"A":6,"D":15,"DMG":29667,"H":1601,"MIT":2847,"Appearances":3,"Minutes":31.1167,"E/10":18.3182,"A/10":1.9282,"D/10":4.8206,"E/D":3.5625,"DMG/10":9534.1189,"H/10":514.5153,"MIT/10":914.9438},{"Team":"Poker Face","Player":"TenTen","Role":"Support","E":45,"A":52,"D":12,"DMG":17207,"H":16829,"MIT":2722,"Appearances":3,"Minutes":31.1167,"E/10":14.4617,"A/10":16.7113,"D/10":3.8565,"E/D":3.4615,"DMG/10":5529.834,"H/10":5408.3557,"MIT/10":874.7724},{"Team":"ZETA DIVISION","Player":"Mealgaru","Role":"Tank","E":54,"A":20,"D":12,"DMG":30166,"H":4510,"MIT":19647,"Appearances":2,"Minutes":24.4667,"E/10":22.0708,"A/10":8.1744,"D/10":4.9046,"E/D":4.1538,"DMG/10":12329.4278,"H/10":1843.3243,"MIT/10":8030.109},{"Team":"Cheeseburger","Player":"Argon","Role":"DPS","E":9,"A":0,"D":24,"DMG":16010,"H":143,"MIT":1526,"Appearances":3,"Minutes":22.6,"E/10":3.9823,"A/10":0,"D/10":10.6195,"E/D":0.36,"DMG/10":7084.0708,"H/10":63.2743,"MIT/10":675.2212},{"Team":"Cheeseburger","Player":"Faith","Role":"Support","E":8,"A":4,"D":17,"DMG":7932,"H":13710,"MIT":3186,"Appearances":3,"Minutes":22.6,"E/10":3.5398,"A/10":1.7699,"D/10":7.5221,"E/D":0.4444,"DMG/10":3509.7345,"H/10":6066.3717,"MIT/10":1409.7345},{"Team":"Cheeseburger","Player":"WoochaN","Role":"Support","E":7,"A":9,"D":16,"DMG":12824,"H":17765,"MIT":0,"Appearances":3,"Minutes":22.6,"E/10":3.0973,"A/10":3.9823,"D/10":7.0796,"E/D":0.4118,"DMG/10":5674.3363,"H/10":7860.6195,"MIT/10":0},{"Team":"Cheeseburger","Player":"Zesin","Role":"DPS","E":6,"A":0,"D":19,"DMG":15473,"H":161,"MIT":0,"Appearances":3,"Minutes":22.6,"E/10":2.6549,"A/10":0,"D/10":8.4071,"E/D":0.3,"DMG/10":6846.4602,"H/10":71.2389,"MIT/10":0},{"Team":"Cheeseburger","Player":"SeungAn","Role":"Tank","E":5,"A":3,"D":8,"DMG":7149,"H":3510,"MIT":18006,"Appearances":2,"Minutes":13.5333,"E/10":3.6946,"A/10":2.2167,"D/10":5.9113,"E/D":0.5556,"DMG/10":5282.5123,"H/10":2593.5961,"MIT/10":13304.9261},{"Team":"Crazy Raccoon","Player":"LIP","Role":"DPS","E":16,"A":2,"D":10,"DMG":12977,"H":0,"MIT":226,"Appearances":1,"Minutes":12.2667,"E/10":13.0435,"A/10":1.6304,"D/10":8.1522,"E/D":1.4545,"DMG/10":10579.0761,"H/10":0,"MIT/10":184.2391},{"Team":"Crazy Raccoon","Player":"JunBin","Role":"Tank","E":8,"A":3,"D":7,"DMG":6137,"H":2414,"MIT":14576,"Appearances":1,"Minutes":10.4,"E/10":7.6923,"A/10":2.8846,"D/10":6.7308,"E/D":1,"DMG/10":5900.9615,"H/10":2321.1538,"MIT/10":14015.3846},{"Team":"Cheeseburger","Player":"FARMER","Role":"Tank","E":6,"A":2,"D":10,"DMG":10501,"H":2310,"MIT":14004,"Appearances":1,"Minutes":9.0667,"E/10":6.6176,"A/10":2.2059,"D/10":11.0294,"E/D":0.5455,"DMG/10":11581.9853,"H/10":2547.7941,"MIT/10":15445.5882}],"Week 2":[{"Team":"Crazy Raccoon","Player":"CH0R0NG","Role":"Support","E":141,"A":142,"D":43,"DMG":44101,"H":65937,"MIT":18492,"Appearances":8,"Minutes":93.0167,"E/10":15.1586,"A/10":15.2661,"D/10":4.6228,"E/D":3.2045,"DMG/10":4741.1933,"H/10":7088.7296,"MIT/10":1988.0308},{"Team":"Crazy Raccoon","Player":"MAX","Role":"Tank","E":183,"A":89,"D":40,"DMG":82252,"H":12346,"MIT":120548,"Appearances":8,"Minutes":93.0167,"E/10":19.6739,"A/10":9.5682,"D/10":4.3003,"E/D":4.4634,"DMG/10":8842.7164,"H/10":1327.289,"MIT/10":12959.828},{"Team":"Crazy Raccoon","Player":"vigilante","Role":"Support","E":111,"A":151,"D":36,"DMG":38565,"H":96232,"MIT":2130,"Appearances":8,"Minutes":93.0167,"E/10":11.9333,"A/10":16.2336,"D/10":3.8703,"E/D":3,"DMG/10":4146.0312,"H/10":10345.6728,"MIT/10":228.9912},{"Team":"ONSIDE GAMING","Player":"Attack","Role":"Tank","E":138,"A":39,"D":33,"DMG":83151,"H":14376,"MIT":84760,"Appearances":8,"Minutes":83.7333,"E/10":16.4809,"A/10":4.6576,"D/10":3.9411,"E/D":4.0588,"DMG/10":9930.4538,"H/10":1716.879,"MIT/10":10122.6115},{"Team":"ONSIDE GAMING","Player":"IRONY","Role":"Support","E":69,"A":126,"D":35,"DMG":35688,"H":90050,"MIT":1768,"Appearances":8,"Minutes":83.7333,"E/10":8.2404,"A/10":15.0478,"D/10":4.1799,"E/D":1.9167,"DMG/10":4262.1019,"H/10":10754.379,"MIT/10":211.1465},{"Team":"ONSIDE GAMING","Player":"Kilo","Role":"DPS","E":143,"A":3,"D":44,"DMG":92593,"H":4376,"MIT":986,"Appearances":8,"Minutes":83.7333,"E/10":17.078,"A/10":0.3583,"D/10":5.2548,"E/D":3.1778,"DMG/10":11058.0812,"H/10":522.6115,"MIT/10":117.7548},{"Team":"ONSIDE GAMING","Player":"OPENER","Role":"Support","E":77,"A":121,"D":35,"DMG":29270,"H":66852,"MIT":19761,"Appearances":8,"Minutes":83.7333,"E/10":9.1959,"A/10":14.4506,"D/10":4.1799,"E/D":2.1389,"DMG/10":3495.621,"H/10":7983.9172,"MIT/10":2359.992},{"Team":"ONSIDE GAMING","Player":"SP1NT","Role":"DPS","E":117,"A":7,"D":37,"DMG":61147,"H":1193,"MIT":6238,"Appearances":8,"Minutes":83.7333,"E/10":13.9729,"A/10":0.836,"D/10":4.4188,"E/D":3.0789,"DMG/10":7302.5876,"H/10":142.4761,"MIT/10":744.9841},{"Team":"Crazy Raccoon","Player":"HeeSang","Role":"DPS","E":143,"A":16,"D":34,"DMG":66533,"H":1941,"MIT":5526,"Appearances":7,"Minutes":80.65,"E/10":17.7309,"A/10":1.9839,"D/10":4.2157,"E/D":4.0857,"DMG/10":8249.597,"H/10":240.6696,"MIT/10":685.1829},{"Team":"Crazy Raccoon","Player":"Stalk3r","Role":"DPS","E":140,"A":8,"D":36,"DMG":63477,"H":1668,"MIT":4433,"Appearances":7,"Minutes":77.8667,"E/10":17.9795,"A/10":1.0274,"D/10":4.6233,"E/D":3.7838,"DMG/10":8152.012,"H/10":214.2123,"MIT/10":569.3065},{"Team":"ZETA DIVISION","Player":"Proper","Role":"DPS","E":143,"A":6,"D":21,"DMG":51178,"H":593,"MIT":1103,"Appearances":6,"Minutes":66.4167,"E/10":21.5307,"A/10":0.9034,"D/10":3.1619,"E/D":6.5,"DMG/10":7705.596,"H/10":89.2848,"MIT/10":166.0728},{"Team":"ZETA DIVISION","Player":"Viol2t","Role":"Support","E":132,"A":97,"D":29,"DMG":31750,"H":50715,"MIT":3175,"Appearances":6,"Minutes":66.4167,"E/10":19.8745,"A/10":14.604799999999999,"D/10":4.3664,"E/D":4.4,"DMG/10":4780.4266,"H/10":7635.8846,"MIT/10":478.0427},{"Team":"ZETA DIVISION","Player":"knife","Role":"DPS","E":136,"A":9,"D":39,"DMG":60396,"H":3445,"MIT":1303,"Appearances":6,"Minutes":66.4167,"E/10":20.4768,"A/10":1.3551,"D/10":5.872,"E/D":3.4,"DMG/10":9093.5006,"H/10":518.6951,"MIT/10":196.1857},{"Team":"ZAN Esports","Player":"Becky","Role":"DPS","E":107,"A":7,"D":40,"DMG":41449,"H":1181,"MIT":6825,"Appearances":6,"Minutes":63.1,"E/10":16.9572,"A/10":1.1094,"D/10":6.3391,"E/D":2.6098,"DMG/10":6568.7797,"H/10":187.1632,"MIT/10":1081.6165},{"Team":"ZAN Esports","Player":"HEISER","Role":"Tank","E":109,"A":50,"D":34,"DMG":49197,"H":7916,"MIT":67684,"Appearances":6,"Minutes":63.1,"E/10":17.2742,"A/10":7.9239,"D/10":5.3883,"E/D":3.1143,"DMG/10":7796.6719,"H/10":1254.5166,"MIT/10":10726.4659},{"Team":"ZAN Esports","Player":"KIVIS","Role":"Support","E":78,"A":91,"D":34,"DMG":27397,"H":60668,"MIT":1491,"Appearances":6,"Minutes":63.1,"E/10":12.3613,"A/10":14.4216,"D/10":5.3883,"E/D":2.2286,"DMG/10":4341.8384,"H/10":9614.58,"MIT/10":236.2916},{"Team":"ZAN Esports","Player":"YangJun","Role":"Support","E":80,"A":83,"D":32,"DMG":21754,"H":50571,"MIT":9543,"Appearances":6,"Minutes":63.1,"E/10":12.6783,"A/10":13.1537,"D/10":5.0713,"E/D":2.4242,"DMG/10":3447.5436,"H/10":8014.4216,"MIT/10":1512.3613},{"Team":"ZAN Esports","Player":"probe","Role":"DPS","E":105,"A":0,"D":37,"DMG":66479,"H":4215,"MIT":0,"Appearances":6,"Minutes":63.1,"E/10":16.6403,"A/10":0,"D/10":5.8637,"E/D":2.7632,"DMG/10":10535.4992,"H/10":667.9873,"MIT/10":0},{"Team":"Cheeseburger","Player":"Faith","Role":"Support","E":49,"A":49,"D":36,"DMG":21759,"H":45094,"MIT":15232,"Appearances":6,"Minutes":61.2333,"E/10":8.0022,"A/10":8.0022,"D/10":5.8792,"E/D":1.3243,"DMG/10":3553.4567,"H/10":7364.2896,"MIT/10":2487.534},{"Team":"Cheeseburger","Player":"WoochaN","Role":"Support","E":43,"A":54,"D":34,"DMG":27102,"H":55946,"MIT":1144,"Appearances":6,"Minutes":61.2333,"E/10":7.0223,"A/10":8.8187,"D/10":5.5525,"E/D":1.2286,"DMG/10":4426.0207,"H/10":9136.5269,"MIT/10":186.8263},{"Team":"Poker Face","Player":"CARU","Role":"Support","E":20,"A":49,"D":43,"DMG":15547,"H":46603,"MIT":0,"Appearances":6,"Minutes":58.9333,"E/10":3.3937,"A/10":8.3145,"D/10":7.2964,"E/D":0.4545,"DMG/10":2638.0656,"H/10":7907.7489,"MIT/10":0},{"Team":"Poker Face","Player":"D4RT","Role":"DPS","E":59,"A":4,"D":43,"DMG":30880,"H":1002,"MIT":4511,"Appearances":6,"Minutes":58.9333,"E/10":10.0113,"A/10":0.6787,"D/10":7.2964,"E/D":1.3409,"DMG/10":5239.819,"H/10":170.0226,"MIT/10":765.4412},{"Team":"Poker Face","Player":"Gur3um","Role":"Tank","E":51,"A":16,"D":45,"DMG":39886,"H":4872,"MIT":56007,"Appearances":6,"Minutes":58.9333,"E/10":8.6538,"A/10":2.7149,"D/10":7.6357,"E/D":1.1087,"DMG/10":6767.9864,"H/10":826.6968,"MIT/10":9503.4502},{"Team":"Poker Face","Player":"M1NUT2","Role":"DPS","E":54,"A":2,"D":55,"DMG":50305,"H":1497,"MIT":4375,"Appearances":6,"Minutes":58.9333,"E/10":9.1629,"A/10":0.3394,"D/10":9.3326,"E/D":0.9643,"DMG/10":8535.9163,"H/10":254.0158,"MIT/10":742.3643},{"Team":"Poker Face","Player":"TenTen","Role":"Support","E":31,"A":40,"D":39,"DMG":20978,"H":39346,"MIT":5820,"Appearances":6,"Minutes":58.9333,"E/10":5.2602,"A/10":6.7873,"D/10":6.6176,"E/D":0.775,"DMG/10":3559.6154,"H/10":6676.3575,"MIT/10":987.5566},{"Team":"ZETA DIVISION","Player":"Bernar","Role":"Tank","E":146,"A":67,"D":25,"DMG":53411,"H":7959,"MIT":62249,"Appearances":5,"Minutes":58.9,"E/10":24.7878,"A/10":11.3752,"D/10":4.2445,"E/D":5.6154,"DMG/10":9068.0815,"H/10":1351.2733,"MIT/10":10568.5908},{"Team":"New Era","Player":"D0D0","Role":"DPS","E":31,"A":3,"D":41,"DMG":35811,"H":842,"MIT":7994,"Appearances":6,"Minutes":51.05,"E/10":6.0725,"A/10":0.5877,"D/10":8.0313,"E/D":0.7381,"DMG/10":7014.8874,"H/10":164.9363,"MIT/10":1565.9158},{"Team":"New Era","Player":"MCD","Role":"Support","E":14,"A":23,"D":33,"DMG":21858,"H":44879,"MIT":1085,"Appearances":6,"Minutes":51.05,"E/10":2.7424,"A/10":4.5054,"D/10":6.4643,"E/D":0.4118,"DMG/10":4281.6846,"H/10":8791.1851,"MIT/10":212.5367},{"Team":"New Era","Player":"Secret","Role":"Support","E":11,"A":30,"D":39,"DMG":14645,"H":40325,"MIT":12454,"Appearances":6,"Minutes":51.05,"E/10":2.1548,"A/10":5.8766,"D/10":7.6396,"E/D":0.275,"DMG/10":2868.7561,"H/10":7899.1185,"MIT/10":2439.569},{"Team":"New Era","Player":"SoLA","Role":"Tank","E":23,"A":7,"D":37,"DMG":31577,"H":8568,"MIT":72055,"Appearances":6,"Minutes":51.05,"E/10":4.5054,"A/10":1.3712,"D/10":7.2478,"E/D":0.6053,"DMG/10":6185.5044,"H/10":1678.3546,"MIT/10":14114.5935},{"Team":"New Era","Player":"perr","Role":"DPS","E":29,"A":0,"D":33,"DMG":54092,"H":3409,"MIT":0,"Appearances":6,"Minutes":51.05,"E/10":5.6807,"A/10":0,"D/10":6.4643,"E/D":0.8529,"DMG/10":10595.8864,"H/10":667.7767,"MIT/10":0},{"Team":"Cheeseburger","Player":"Argon","Role":"DPS","E":44,"A":0,"D":27,"DMG":30253,"H":530,"MIT":0,"Appearances":5,"Minutes":46.0833,"E/10":9.5479,"A/10":0,"D/10":5.859,"E/D":1.5714,"DMG/10":6564.8463,"H/10":115.009,"MIT/10":0},{"Team":"Cheeseburger","Player":"FARMER","Role":"Tank","E":46,"A":15,"D":39,"DMG":35843,"H":3981,"MIT":35906,"Appearances":5,"Minutes":46.0833,"E/10":9.9819,"A/10":3.255,"D/10":8.4629,"E/D":1.15,"DMG/10":7777.8662,"H/10":863.8698,"MIT/10":7791.5371},{"Team":"Cheeseburger","Player":"Zesin","Role":"DPS","E":28,"A":3,"D":38,"DMG":28461,"H":1266,"MIT":429,"Appearances":4,"Minutes":41.1667,"E/10":6.8016,"A/10":0.7287,"D/10":9.2308,"E/D":0.7179,"DMG/10":6913.6032,"H/10":307.5304,"MIT/10":104.2105},{"Team":"ZETA DIVISION","Player":"Shu","Role":"Support","E":56,"A":65,"D":18,"DMG":17850,"H":26912,"MIT":2524,"Appearances":3,"Minutes":37.0833,"E/10":15.1011,"A/10":17.5281,"D/10":4.8539,"E/D":2.9474,"DMG/10":4813.4831,"H/10":7257.1685,"MIT/10":680.6292},{"Team":"Cheeseburger","Player":"Jamelgong","Role":"DPS","E":39,"A":4,"D":24,"DMG":25170,"H":1696,"MIT":4667,"Appearances":3,"Minutes":35.2167,"E/10":11.0743,"A/10":1.1358,"D/10":6.815,"E/D":1.56,"DMG/10":7147.1841,"H/10":481.5902,"MIT/10":1325.2248},{"Team":"T1","Player":"Bliss","Role":"Support","E":50,"A":49,"D":2,"DMG":10510,"H":20137,"MIT":3874,"Appearances":3,"Minutes":29.6,"E/10":16.8919,"A/10":16.5541,"D/10":0.6757,"E/D":16.6667,"DMG/10":3550.6757,"H/10":6803.0405,"MIT/10":1308.7838},{"Team":"T1","Player":"Jasm1ne","Role":"Tank","E":65,"A":26,"D":7,"DMG":24505,"H":1512,"MIT":25366,"Appearances":3,"Minutes":29.6,"E/10":21.9595,"A/10":8.7838,"D/10":2.3649,"E/D":8.125,"DMG/10":8278.7162,"H/10":510.8108,"MIT/10":8569.5946},{"Team":"T1","Player":"Proud","Role":"DPS","E":77,"A":0,"D":12,"DMG":31330,"H":502,"MIT":0,"Appearances":3,"Minutes":29.6,"E/10":26.0135,"A/10":0,"D/10":4.0541,"E/D":5.9231,"DMG/10":10584.4595,"H/10":169.5946,"MIT/10":0},{"Team":"T1","Player":"ZEST","Role":"DPS","E":60,"A":7,"D":8,"DMG":20997,"H":1282,"MIT":4151,"Appearances":3,"Minutes":29.6,"E/10":20.2703,"A/10":2.3649,"D/10":2.7027,"E/D":6.6667,"DMG/10":7093.5811,"H/10":433.1081,"MIT/10":1402.3649},{"Team":"T1","Player":"skewed","Role":"Support","E":43,"A":72,"D":5,"DMG":13330,"H":32065,"MIT":0,"Appearances":3,"Minutes":29.6,"E/10":14.527,"A/10":24.3243,"D/10":1.6892,"E/D":7.1667,"DMG/10":4503.3784,"H/10":10832.7703,"MIT/10":0},{"Team":"ZETA DIVISION","Player":"shu","Role":"Support","E":29,"A":35,"D":17,"DMG":15396,"H":14947,"MIT":1771,"Appearances":3,"Minutes":29.3333,"E/10":9.8864,"A/10":11.9318,"D/10":5.7955,"E/D":1.6111,"DMG/10":5248.6364,"H/10":5095.5682,"MIT/10":603.75},{"Team":"Crazy Raccoon","Player":"LIP","Role":"DPS","E":49,"A":0,"D":12,"DMG":25937,"H":604,"MIT":2053,"Appearances":2,"Minutes":27.5167,"E/10":17.8074,"A/10":0,"D/10":4.361,"E/D":3.7692,"DMG/10":9425.9237,"H/10":219.5033,"MIT/10":746.0933},{"Team":"Team Falcons","Player":"Checkmate","Role":"DPS","E":50,"A":6,"D":7,"DMG":21314,"H":464,"MIT":6078,"Appearances":3,"Minutes":25.1167,"E/10":19.9071,"A/10":2.3889,"D/10":2.787,"E/D":6.25,"DMG/10":8485.9987,"H/10":184.7379,"MIT/10":2419.9071},{"Team":"Team Falcons","Player":"ChiYo","Role":"Support","E":37,"A":48,"D":4,"DMG":12043,"H":20517,"MIT":7256,"Appearances":3,"Minutes":25.1167,"E/10":14.7313,"A/10":19.1108,"D/10":1.5926,"E/D":7.4,"DMG/10":4794.8242,"H/10":8168.6795,"MIT/10":2888.9184},{"Team":"Team Falcons","Player":"Fielder","Role":"Support","E":24,"A":47,"D":5,"DMG":8090,"H":29385,"MIT":541,"Appearances":3,"Minutes":25.1167,"E/10":9.5554,"A/10":18.7127,"D/10":1.9907,"E/D":4,"DMG/10":3220.9688,"H/10":11699.4028,"MIT/10":215.3948},{"Team":"Team Falcons","Player":"Hanbin","Role":"Tank","E":52,"A":26,"D":2,"DMG":17933,"H":3619,"MIT":40682,"Appearances":3,"Minutes":25.1167,"E/10":20.7034,"A/10":10.3517,"D/10":0.7963,"E/D":17.3333,"DMG/10":7139.8806,"H/10":1440.8759,"MIT/10":16197.213},{"Team":"Team Falcons","Player":"MER1T","Role":"DPS","E":60,"A":0,"D":6,"DMG":31647,"H":1180,"MIT":28,"Appearances":3,"Minutes":25.1167,"E/10":23.8885,"A/10":0,"D/10":2.3889,"E/D":8.5714,"DMG/10":12600,"H/10":469.8076,"MIT/10":11.148},{"Team":"Cheeseburger","Player":"SeungAn","Role":"Tank","E":11,"A":0,"D":10,"DMG":12229,"H":0,"MIT":26929,"Appearances":1,"Minutes":15.15,"E/10":7.2607,"A/10":0,"D/10":6.6007,"E/D":1,"DMG/10":8071.9472,"H/10":0,"MIT/10":17774.9175},{"Team":"ZETA DIVISION","Player":"Mealgaru","Role":"Tank","E":25,"A":2,"D":3,"DMG":4643,"H":1093,"MIT":3167,"Appearances":1,"Minutes":7.5167,"E/10":33.2594,"A/10":2.6608,"D/10":3.9911,"E/D":6.25,"DMG/10":6176.9401,"H/10":1454.102,"MIT/10":4213.3038}],"Week 3":[{"Team":"Crazy Raccoon","Player":"CH0R0NG","Role":"Support","E":148,"A":157,"D":57,"DMG":40556,"H":66859,"MIT":17775,"Appearances":8,"Minutes":98.05,"E/10":11.4068,"A/10":13.9924,"D/10":6.0837,"E/D":1.8293,"DMG/10":3903.8783,"H/10":6743.27,"MIT/10":1761.9772},{"Team":"Cheeseburger","Player":"Argon","Role":"DPS","E":59,"A":5,"D":36,"DMG":37579,"H":547,"MIT":470,"Appearances":6,"Minutes":56.5167,"E/10":13.8235,"A/10":1.1765,"D/10":5.5882,"E/D":2.35,"DMG/10":6344.4118,"H/10":150.5882,"MIT/10":138.2353},{"Team":"Cheeseburger","Player":"Faith","Role":"Support","E":50,"A":48,"D":25,"DMG":19002,"H":39292,"MIT":14064,"Appearances":6,"Minutes":56.5167,"E/10":10.2941,"A/10":11.1765,"D/10":2.9412,"E/D":3.1818,"DMG/10":3153.8235,"H/10":7341.7647,"MIT/10":3194.4118},{"Team":"ONSIDE GAMING","Player":"IRONY","Role":"Support","E":68,"A":134,"D":51,"DMG":32645,"H":95682,"MIT":1644,"Appearances":8,"Minutes":88.9667,"E/10":7.0588,"A/10":14.7059,"D/10":3.8235,"E/D":1.7143,"DMG/10":3490,"H/10":10388.2353,"MIT/10":397.3529},{"Team":"Cheeseburger","Player":"WoochaN","Role":"Support","E":51,"A":47,"D":30,"DMG":23536,"H":51685,"MIT":3814,"Appearances":6,"Minutes":56.5167,"E/10":10.8824,"A/10":10.5882,"D/10":4.4118,"E/D":2.3125,"DMG/10":4540.2941,"H/10":8747.6471,"MIT/10":681.1765},{"Team":"Cheeseburger","Player":"Zesin","Role":"DPS","E":52,"A":0,"D":41,"DMG":45989,"H":3466,"MIT":23,"Appearances":6,"Minutes":56.5167,"E/10":12.0588,"A/10":0,"D/10":6.1765,"E/D":1.8636,"DMG/10":8648.5294,"H/10":580.2941,"MIT/10":6.7647},{"Team":"ONSIDE GAMING","Player":"Attack","Role":"Tank","E":156,"A":37,"D":45,"DMG":92501,"H":16306,"MIT":93034,"Appearances":8,"Minutes":88.9667,"E/10":16.4706,"A/10":1.7647,"D/10":3.8235,"E/D":4,"DMG/10":9619.4118,"H/10":2234.4118,"MIT/10":8774.7059},{"Team":"Crazy Raccoon","Player":"HeeSang","Role":"DPS","E":177,"A":18,"D":58,"DMG":78972,"H":2561,"MIT":2289,"Appearances":8,"Minutes":98.05,"E/10":15.3612,"A/10":1.673,"D/10":6.2357,"E/D":2.4048,"DMG/10":7491.1027,"H/10":271.3308,"MIT/10":286.9962},{"Team":"Crazy Raccoon","Player":"JunBin","Role":"Tank","E":58,"A":16,"D":28,"DMG":38439,"H":7743,"MIT":39386,"Appearances":4,"Minutes":47.2,"E/10":10.199,"A/10":2.2388,"D/10":6.4677,"E/D":1.5185,"DMG/10":7174.6269,"H/10":1557.9602,"MIT/10":8539.5522},{"Team":"Cheeseburger","Player":"FARMER","Role":"Tank","E":60,"A":21,"D":34,"DMG":44146,"H":9111,"MIT":39793,"Appearances":5,"Minutes":51.3167,"E/10":14.1176,"A/10":3.8235,"D/10":5.2941,"E/D":2.5263,"DMG/10":9445,"H/10":1944.7059,"MIT/10":8673.2353},{"Team":"Crazy Raccoon","Player":"Stalk3r","Role":"DPS","E":187,"A":3,"D":54,"DMG":95952,"H":6669,"MIT":158,"Appearances":8,"Minutes":98.05,"E/10":15.8175,"A/10":0.4563,"D/10":6.0837,"E/D":2.5366,"DMG/10":10100.2281,"H/10":682.5856,"MIT/10":24.0304},{"Team":"Crazy Raccoon","Player":"vigilante","Role":"Support","E":136,"A":157,"D":51,"DMG":34163,"H":111149,"MIT":101,"Appearances":8,"Minutes":98.05,"E/10":11.711,"A/10":14.4487,"D/10":5.3232,"E/D":2.1389,"DMG/10":3324.1065,"H/10":12200,"MIT/10":0},{"Team":"T1","Player":"Bliss","Role":"Support","E":136,"A":132,"D":36,"DMG":37585,"H":55651,"MIT":17702,"Appearances":8,"Minutes":88.2667,"E/10":14.4487,"A/10":15.8175,"D/10":4.8669,"E/D":2.8788,"DMG/10":4582.0532,"H/10":6402.5856,"MIT/10":2460.9886},{"Team":"Poker Face","Player":"Gur3um","Role":"Tank","E":109,"A":39,"D":51,"DMG":64974,"H":7774,"MIT":51276,"Appearances":6,"Minutes":72.3,"E/10":13.75,"A/10":3.25,"D/10":6.75,"E/D":1.9643,"DMG/10":8093.5,"H/10":1160.75,"MIT/10":7723.25},{"Team":"ONSIDE GAMING","Player":"Kilo","Role":"DPS","E":132,"A":2,"D":69,"DMG":88441,"H":4695,"MIT":594,"Appearances":8,"Minutes":88.9667,"E/10":12.3529,"A/10":0,"D/10":5.8824,"E/D":2,"DMG/10":9235.8824,"H/10":283.2353,"MIT/10":45.5882},{"Team":"ONSIDE GAMING","Player":"OPENER","Role":"Support","E":76,"A":109,"D":57,"DMG":33158,"H":67622,"MIT":17582,"Appearances":8,"Minutes":88.9667,"E/10":10,"A/10":11.7647,"D/10":4.4118,"E/D":2.125,"DMG/10":3226.7647,"H/10":7285.2941,"MIT/10":1898.2353},{"Team":"Poker Face","Player":"Sp1nel","Role":"Support","E":15,"A":24,"D":12,"DMG":4398,"H":7704,"MIT":5152,"Appearances":1,"Minutes":12.5},{"Team":"Poker Face","Player":"CARU","Role":"Support","E":51,"A":91,"D":55,"DMG":17241,"H":62774,"MIT":0,"Appearances":6,"Minutes":72.3,"E/10":4.75,"A/10":11,"D/10":7.5,"E/D":0.6129,"DMG/10":2173,"H/10":8344.25,"MIT/10":0},{"Team":"Poker Face","Player":"D4RT","Role":"DPS","E":114,"A":13,"D":50,"DMG":54159,"H":2250,"MIT":4206,"Appearances":6,"Minutes":72.3,"E/10":12.75,"A/10":1,"D/10":7,"E/D":1.7586,"DMG/10":7391.75,"H/10":235,"MIT/10":648.5},{"Team":"T1","Player":"Proud","Role":"DPS","E":194,"A":0,"D":43,"DMG":105153,"H":6169,"MIT":0,"Appearances":8,"Minutes":88.2667,"E/10":19.6198,"A/10":0,"D/10":5.6274,"E/D":3.3947,"DMG/10":11994.5247,"H/10":682.8897,"MIT/10":0},{"Team":"Poker Face","Player":"M1NUT2","Role":"DPS","E":99,"A":0,"D":65,"DMG":63661,"H":2929,"MIT":0,"Appearances":6,"Minutes":72.3,"E/10":12.25,"A/10":0,"D/10":7.5,"E/D":1.5806,"DMG/10":9031,"H/10":391.75,"MIT/10":0},{"Team":"Poker Face","Player":"TenTen","Role":"Support","E":58,"A":60,"D":41,"DMG":20586,"H":37306,"MIT":8303,"Appearances":5,"Minutes":59.8,"E/10":7.75,"A/10":8.75,"D/10":6.5,"E/D":1.1481,"DMG/10":2898.5,"H/10":5941.75,"MIT/10":1244.5},{"Team":"ONSIDE GAMING","Player":"SP1NT","Role":"DPS","E":124,"A":9,"D":47,"DMG":69841,"H":1203,"MIT":3708,"Appearances":8,"Minutes":88.9667,"E/10":12.9412,"A/10":0.8824,"D/10":5.2941,"E/D":2.3158,"DMG/10":7389.4118,"H/10":47.3529,"MIT/10":311.7647},{"Team":"T1","Player":"DONGHAK","Role":"Tank","E":133,"A":48,"D":20,"DMG":52812,"H":9623,"MIT":41253,"Appearances":6,"Minutes":63.6334,"E/10":23.105,"A/10":8.2692,"D/10":2.9185,"E/D":7.3077,"DMG/10":8392.7037,"H/10":1694.4467,"MIT/10":6171.7065},{"Team":"T1","Player":"Jasm1ne","Role":"Tank","E":33,"A":15,"D":20,"DMG":22280,"H":158,"MIT":18822,"Appearances":2,"Minutes":24.6333,"E/10":13.3965,"A/10":6.0893,"D/10":8.1191,"E/D":1.5714,"DMG/10":9044.6549,"H/10":64.1407,"MIT/10":7640.866},{"Team":"Crazy Raccoon","Player":"MAX","Role":"Tank","E":123,"A":59,"D":32,"DMG":51970,"H":2360,"MIT":40714,"Appearances":4,"Minutes":50.85,"E/10":21.135,"A/10":11.7417,"D/10":6.2622,"E/D":3.1765,"DMG/10":10336.2035,"H/10":99.0215,"MIT/10":8163.6008},{"Team":"T1","Player":"skewed","Role":"Support","E":111,"A":149,"D":34,"DMG":34313,"H":98352,"MIT":2326,"Appearances":8,"Minutes":88.2667,"E/10":12.3194,"A/10":16.5779,"D/10":4.7148,"E/D":2.5312,"DMG/10":3901.4449,"H/10":10978.8593,"MIT/10":319.0875},{"Team":"T1","Player":"ZEST","Role":"DPS","E":169,"A":17,"D":42,"DMG":65320,"H":1504,"MIT":2699,"Appearances":8,"Minutes":88.2667,"E/10":17.9468,"A/10":2.2814,"D/10":5.6274,"E/D":3.1053,"DMG/10":6871.7871,"H/10":205.7795,"MIT/10":349.2015},{"Team":"Team Falcons","Player":"Checkmate","Role":"DPS","E":154,"A":7,"D":42,"DMG":52989,"H":1745,"MIT":3893,"Appearances":6,"Minutes":78.3167,"E/10":19,"A/10":1.25,"D/10":5.25,"E/D":3.4545,"DMG/10":6753.75,"H/10":149.75,"MIT/10":317.75},{"Team":"Team Falcons","Player":"ChiYo","Role":"Support","E":142,"A":139,"D":38,"DMG":31782,"H":60967,"MIT":15854,"Appearances":6,"Minutes":78.3167,"E/10":16.75,"A/10":17,"D/10":4.75,"E/D":3.35,"DMG/10":3401.5,"H/10":7052,"MIT/10":1117.25},{"Team":"Team Falcons","Player":"Fielder","Role":"Support","E":90,"A":182,"D":40,"DMG":27981,"H":78348,"MIT":0,"Appearances":6,"Minutes":78.3167,"E/10":11.75,"A/10":20.75,"D/10":4.25,"E/D":2.6111,"DMG/10":3712,"H/10":9015.25,"MIT/10":0},{"Team":"Team Falcons","Player":"MER1T","Role":"DPS","E":183,"A":4,"D":44,"DMG":85310,"H":4441,"MIT":215,"Appearances":6,"Minutes":78.3167,"E/10":24.75,"A/10":0,"D/10":4.75,"E/D":4.95,"DMG/10":10864.25,"H/10":565.5,"MIT/10":0},{"Team":"Team Falcons","Player":"SOMEONE","Role":"Tank","E":187,"A":97,"D":29,"DMG":60602,"H":6825,"MIT":67503,"Appearances":6,"Minutes":78.3167,"E/10":24,"A/10":11.5,"D/10":3.5,"E/D":6.4,"DMG/10":7295,"H/10":739.5,"MIT/10":8229},{"Team":"New Era","Player":"D0D0","Role":"DPS","E":48,"A":0,"D":45,"DMG":30584,"H":1377,"MIT":6692,"Appearances":6,"Minutes":48.1666,"E/10":0,"A/10":0,"D/10":0,"E/D":0,"DMG/10":0,"H/10":0,"MIT/10":0},{"Team":"New Era","Player":"MCD","Role":"Tank","E":47,"A":25,"D":35,"DMG":42035,"H":524,"MIT":37814,"Appearances":6,"Minutes":48.1666,"E/10":0,"A/10":0,"D/10":0,"E/D":0,"DMG/10":0,"H/10":0,"MIT/10":0},{"Team":"New Era","Player":"perr","Role":"DPS","E":51,"A":0,"D":37,"DMG":42695,"H":1389,"MIT":0,"Appearances":6,"Minutes":48.1666,"E/10":0,"A/10":0,"D/10":0,"E/D":0,"DMG/10":0,"H/10":0,"MIT/10":0},{"Team":"New Era","Player":"Secret","Role":"Support","E":28,"A":45,"D":37,"DMG":15626,"H":53664,"MIT":1844,"Appearances":6,"Minutes":48.1666,"E/10":0,"A/10":0,"D/10":0,"E/D":0,"DMG/10":0,"H/10":0,"MIT/10":0},{"Team":"New Era","Player":"Yate","Role":"Support","E":27,"A":40,"D":30,"DMG":10193,"H":44901,"MIT":6335,"Appearances":6,"Minutes":48.1666,"E/10":0,"A/10":0,"D/10":0,"E/D":0,"DMG/10":0,"H/10":0,"MIT/10":0},{"Team":"ZAN Esports","Player":"A1IEN","Role":"DPS","E":117,"A":0,"D":36,"DMG":65319,"H":2047,"MIT":112,"Appearances":6,"Minutes":65.35,"E/10":0,"A/10":0,"D/10":0,"E/D":0,"DMG/10":0,"H/10":0,"MIT/10":0},{"Team":"ZAN Esports","Player":"Becky","Role":"DPS","E":106,"A":14,"D":39,"DMG":51398,"H":2341,"MIT":4580,"Appearances":6,"Minutes":65.35,"E/10":0,"A/10":0,"D/10":0,"E/D":0,"DMG/10":0,"H/10":0,"MIT/10":0},{"Team":"ZAN Esports","Player":"HEISER","Role":"Tank","E":111,"A":45,"D":39,"DMG":64755,"H":5010,"MIT":75153,"Appearances":6,"Minutes":65.35,"E/10":0,"A/10":0,"D/10":0,"E/D":0,"DMG/10":0,"H/10":0,"MIT/10":0},{"Team":"ZAN Esports","Player":"KIVIS","Role":"Support","E":76,"A":94,"D":38,"DMG":37965,"H":52996,"MIT":0,"Appearances":6,"Minutes":65.35,"E/10":0,"A/10":0,"D/10":0,"E/D":0,"DMG/10":0,"H/10":0,"MIT/10":0},{"Team":"ZAN Esports","Player":"YangJun","Role":"Support","E":58,"A":71,"D":27,"DMG":17778,"H":36463,"MIT":11597,"Appearances":5,"Minutes":50,"E/10":0,"A/10":0,"D/10":0,"E/D":0,"DMG/10":0,"H/10":0,"MIT/10":0},{"Team":"ZAN Esports","Player":"Havira","Role":"Support","E":8,"A":18,"D":7,"DMG":2972,"H":14538,"MIT":662,"Appearances":1,"Minutes":15.35,"E/10":0,"A/10":0,"D/10":0,"E/D":0,"DMG/10":0,"H/10":0,"MIT/10":0},{"Team":"ZETA DIVISION","Player":"Bernar","Role":"Tank","E":84,"A":38,"D":23,"DMG":36914,"H":1091,"MIT":26539,"Appearances":4,"Minutes":35.75,"E/10":0,"A/10":0,"D/10":0,"E/D":0,"DMG/10":0,"H/10":0,"MIT/10":0},{"Team":"ZETA DIVISION","Player":"knife","Role":"DPS","E":153,"A":5,"D":41,"DMG":70485,"H":3427,"MIT":2596,"Appearances":8,"Minutes":76.1,"E/10":0,"A/10":0,"D/10":0,"E/D":0,"DMG/10":0,"H/10":0,"MIT/10":0},{"Team":"ZETA DIVISION","Player":"Mealgaru","Role":"Tank","E":87,"A":34,"D":13,"DMG":39393,"H":8782,"MIT":33921,"Appearances":4,"Minutes":40.35,"E/10":0,"A/10":0,"D/10":0,"E/D":0,"DMG/10":0,"H/10":0,"MIT/10":0},{"Team":"ZETA DIVISION","Player":"Proper","Role":"DPS","E":162,"A":7,"D":30,"DMG":66124,"H":651,"MIT":2529,"Appearances":8,"Minutes":76.1,"E/10":0,"A/10":0,"D/10":0,"E/D":0,"DMG/10":0,"H/10":0,"MIT/10":0},{"Team":"ZETA DIVISION","Player":"Shu","Role":"Support","E":100,"A":136,"D":40,"DMG":34903,"H":71096,"MIT":2871,"Appearances":8,"Minutes":76.1,"E/10":0,"A/10":0,"D/10":0,"E/D":0,"DMG/10":0,"H/10":0,"MIT/10":0},{"Team":"ZETA DIVISION","Player":"Viol2t","Role":"Support","E":124,"A":115,"D":36,"DMG":41945,"H":58685,"MIT":6968,"Appearances":8,"Minutes":76.1,"E/10":0,"A/10":0,"D/10":0,"E/D":0,"DMG/10":0,"H/10":0,"MIT/10":0},{"Team":"Cheeseburger","Player":"SeungAn","Role":"Tank","E":5,"A":1,"D":3,"DMG":4031,"H":0,"MIT":6582,"Appearances":1,"Minutes":5.2,"E/10":0,"A/10":0,"D/10":0,"E/D":0,"DMG/10":0,"H/10":0,"MIT/10":0}],"Week 4":[],"Playoff":[]};
 
-    const top5Grid = document.getElementById("top5Grid");
-    const resultsGrid = document.getElementById("resultsGrid");
-    const overallTableBody = document.getElementById("overallTableBody");
-    const searchInput = document.getElementById("searchInput");
-    const roleFilter = document.getElementById("roleFilter");
-    const scopeSelect = document.getElementById("scopeSelect");
-    const minMinutesInput = document.getElementById("minMinutesInput");
-    const playerSearch = document.getElementById("playerSearch");
-    const playerList = document.getElementById("playerList");
-    const playerDetail = document.getElementById("playerDetail");
+    const TEAM_COLORS = {
+      "ZETA DIVISION": "#CEFF00",
+      "Team Falcons": "#02BD70",
+      "Crazy Raccoon": "#E11919",
+      "T1": "#E2012D",
+      "Cheeseburger": "#FFBE17",
+      "ONSIDE GAMING": "#E2E319",
+      "ZAN Esports": "#828493",
+      "Poker Face": "#501F64",
+      "New Era": "#1A1662"
+    };
 
-    let activePlayer = null;
-    let sortState = { key: "DMG/10", direction: "desc" };
+    const PLAYER_CANONICAL = {
+      "t1||proud": "Proud",
+      "t1||zest": "ZEST",
+      "t1||donghak": "DONGHAK",
+      "t1||jasm1ne": "Jasm1ne",
+      "t1||skewed": "skewed",
+      "t1||bliss": "Bliss",
+      "team falcons||checkmate": "Checkmate",
+      "team falcons||mer1t": "MER1T",
+      "team falcons||hanbin": "Hanbin",
+      "team falcons||someone": "SOMEONE",
+      "team falcons||chiyo": "ChiYo",
+      "team falcons||fielder": "Fielder",
+      "crazy raccoon||lip": "LIP",
+      "crazy raccoon||heesang": "HeeSang",
+      "crazy raccoon||stalk3r": "Stalk3r",
+      "crazy raccoon||max": "MAX",
+      "crazy raccoon||junbin": "JunBin",
+      "crazy raccoon||ch0r0ng": "CH0R0NG",
+      "crazy raccoon||vigilante": "vigilante",
+      "zeta division||proper": "Proper",
+      "zeta division||knife": "knife",
+      "zeta division||mealgaru": "Mealgaru",
+      "zeta division||bernar": "Bernar",
+      "zeta division||shu": "Shu",
+      "zeta division||viol2t": "Viol2t",
+      "new era||d0d0": "D0D0",
+      "new era||perr": "perr",
+      "new era||sola": "SoLA",
+      "new era||yate": "Yate",
+      "new era||secret": "Secret",
+      "new era||mcd": "MCD",
+      "onside gaming||sp1nt": "SP1NT",
+      "onside gaming||kilo": "Kilo",
+      "onside gaming||haksal": "HAKSAL",
+      "onside gaming||attack": "Attack",
+      "onside gaming||irony": "IRONY",
+      "onside gaming||opener": "OPENER",
+      "zan esports||a1ien": "A1IEN",
+      "zan esports||probe": "probe",
+      "zan esports||becky": "Becky",
+      "zan esports||heiser": "HEISER",
+      "zan esports||yangjun": "YangJun",
+      "zan esports||kivis": "KIVIS",
+      "zan esports||havira": "Havira",
+      "cheeseburger||argon": "Argon",
+      "cheeseburger||zesin": "Zesin",
+      "cheeseburger||jamelgong": "Jamelgong",
+      "cheeseburger||farmer": "FARMER",
+      "cheeseburger||seungan": "SeungAn",
+      "cheeseburger||woochan": "WoochaN",
+      "cheeseburger||faith": "Faith",
+      "poker face||m1nut2": "M1NUT2",
+      "poker face||d4rt": "D4RT",
+      "poker face||fearful": "FEARFUL",
+      "poker face||gur3um": "Gur3um",
+      "poker face||caru": "CARU",
+      "poker face||tenten": "TenTen",
+      "poker face||sp1nel": "Sp1nel"
+    };
 
-    function fmtNumber(value) {
-      return new Intl.NumberFormat("en-US").format(value);
+    const METRIC_LABELS = {
+      "E/10": "킬",
+      "A/10": "어시",
+      "D/10": "데스",
+      "E/D": "목숨당 처치",
+      "DMG/10": "딜",
+      "H/10": "힐",
+      "MIT/10": "경감"
+    };
+
+    const ROLE_BOARD_METRICS = {
+      DPS: ["E/10", "A/10", "D/10", "DMG/10"],
+      Support: ["E/10", "DMG/10", "H/10", "D/10"],
+      Tank: ["E/10", "DMG/10", "MIT/10", "D/10"]
+    };
+
+    const state = {
+      start: PERIODS[0],
+      end: PERIODS[PERIODS.length - 1],
+      role: "ALL",
+      sort: "DMG/10",
+      dir: "desc",
+      search: "",
+      min: 0,
+      selected: "",
+      graphRole: "DPS",
+      graphMetric: "DMG/10",
+      graphMinApps: 1
+    };
+
+    const $ = (id) => document.getElementById(id);
+    const fmt = (n) => Number.isFinite(n) ? n.toFixed(2) : "0.00";
+    const mins = (n) => Number.isFinite(n) ? n.toFixed(2) : "0.00";
+
+    function rangePeriods() {
+      const s = PERIODS.indexOf(state.start);
+      const e = PERIODS.indexOf(state.end);
+      if (s === -1 || e === -1) return [PERIODS[0]];
+      const from = Math.min(s, e);
+      const to = Math.max(s, e);
+      return PERIODS.slice(from, to + 1);
     }
 
-    function fmtRate(value) {
-      return Number(value).toFixed(2);
+    function canonicalPlayerName(team, player) {
+      const key = `${String(team || "").toLowerCase()}||${String(player || "").toLowerCase()}`;
+      return PLAYER_CANONICAL[key] || player;
     }
 
-    function renderResults() {
-      resultsGrid.innerHTML = "";
-      results.forEach(item => {
-        const card = document.createElement("div");
-        card.className = "card result-card";
-        card.innerHTML = `
-          <strong>${item.date} Match ${item.match}</strong>
-          <div>${item.team1} vs ${item.team2}</div>
-          <div class="score">${item.winner} ${item.score}</div>
-          <div class="muted">MVP: ${item.mvp}</div>
-        `;
-        resultsGrid.appendChild(card);
-      });
+    function normalizeRow(row) {
+      const e = Number(row.E || 0);
+      const a = Number(row.A || 0);
+      const d = Number(row.D || 0);
+      const dmg = Number(row.DMG || 0);
+      const h = Number(row.H || 0);
+      const mit = Number(row.MIT || 0);
+      const minutes = Number(row.Minutes || 0);
+      const team = row.Team;
+      const player = canonicalPlayerName(team, row.Player);
+      return {
+        Team: team,
+        Player: player,
+        Role: row.Role,
+        Appearances: Number(row.Appearances || 0),
+        Minutes: minutes,
+        E: e,
+        A: a,
+        D: d,
+        DMG: dmg,
+        H: h,
+        MIT: mit,
+        "E/10": minutes > 0 ? (e * 10) / minutes : 0,
+        "A/10": minutes > 0 ? (a * 10) / minutes : 0,
+        "D/10": minutes > 0 ? (d * 10) / minutes : 0,
+        "E/D": e / (d + 1),
+        "DMG/10": minutes > 0 ? (dmg * 10) / minutes : 0,
+        "H/10": minutes > 0 ? (h * 10) / minutes : 0,
+        "MIT/10": minutes > 0 ? (mit * 10) / minutes : 0
+      };
     }
 
-    function renderTop5() {
-      top5Grid.innerHTML = "";
-      ["Tank", "DPS", "Support"].forEach(role => {
-        const roleCard = document.createElement("div");
-        roleCard.className = "role-card";
-        roleCard.innerHTML = `<div class="role-head"><h3>${role}</h3></div>`;
-
-        (top5Data[role] || []).forEach(group => {
-          const block = document.createElement("div");
-          block.className = "metric-block";
-          block.innerHTML = `<h4>${group.metric}</h4>`;
-
-          const list = document.createElement("div");
-          list.className = "rank-list";
-
-          group.rows.forEach((item, index) => {
-            const row = document.createElement("div");
-            row.className = "rank-item";
-            row.innerHTML = `
-              <div class="rank-num">#${index + 1}</div>
-              <div class="rank-meta">
-                <strong>${item.Player}</strong>
-                <span>${item.Team} · ${fmtRate(item.Minutes)}분</span>
-              </div>
-              <div class="rank-value">${fmtRate(item[group.metric])}</div>
-            `;
-            list.appendChild(row);
-          });
-
-          block.appendChild(list);
-          roleCard.appendChild(block);
-        });
-
-        top5Grid.appendChild(roleCard);
-      });
-    }
-
-    function currentRows() {
-      return scopeRows[scopeSelect.value] || [];
-    }
-
-    function filteredRows() {
-      const keyword = searchInput.value.trim().toLowerCase();
-      const role = roleFilter.value;
-      const minMinutes = Number(minMinutesInput.value || 0);
-
-      const rows = [...currentRows()]
-        .filter(row => role === "ALL" || row.Role === role)
-        .filter(row => row.Minutes >= minMinutes)
-        .filter(row => !keyword || row.Player.toLowerCase().includes(keyword) || row.Team.toLowerCase().includes(keyword));
-
-      if (sortState.key === "rank") {
-        return rows;
-      }
-
-      return rows.sort((a, b) => {
-        const key = sortState.key;
-        const dir = sortState.direction === "asc" ? 1 : -1;
-
-        if (["Team", "Player", "Role"].includes(key)) {
-          return a[key].localeCompare(b[key]) * dir;
+    function aggregate(periods = rangePeriods()) {
+      const map = new Map();
+      for (const period of periods) {
+        for (const row of PERIOD_ROWS[period] || []) {
+          const canonicalPlayer = canonicalPlayerName(row.Team, row.Player);
+          const key = `${row.Team}||${canonicalPlayer}||${row.Role}`;
+          if (!map.has(key)) {
+            map.set(key, { Team: row.Team, Player: canonicalPlayer, Role: row.Role, Appearances: 0, Minutes: 0, E: 0, A: 0, D: 0, DMG: 0, H: 0, MIT: 0 });
+          }
+          const entry = map.get(key);
+          entry.Appearances += Number(row.Appearances || 0);
+          entry.Minutes += Number(row.Minutes || 0);
+          entry.E += Number(row.E || 0);
+          entry.A += Number(row.A || 0);
+          entry.D += Number(row.D || 0);
+          entry.DMG += Number(row.DMG || 0);
+          entry.H += Number(row.H || 0);
+          entry.MIT += Number(row.MIT || 0);
         }
+      }
+      return Array.from(map.values()).map(normalizeRow);
+    }
 
-        return ((a[key] ?? 0) - (b[key] ?? 0)) * dir;
+    function sortRows(list) {
+      const metric = state.sort;
+      const direction = state.dir === "asc" ? 1 : -1;
+      return [...list].sort((a, b) => {
+        let av = a[metric];
+        let bv = b[metric];
+        if (["Team", "Player", "Role"].includes(metric)) {
+          av = String(av);
+          bv = String(bv);
+          return av.localeCompare(bv) * direction;
+        }
+        if (metric === "Rank") return 0;
+        return ((av ?? 0) - (bv ?? 0)) * direction;
       });
     }
 
-    function renderTable() {
-      overallTableBody.innerHTML = "";
+    function rows() {
+      let list = aggregate();
+      if (state.role !== "ALL") list = list.filter((r) => r.Role === state.role);
+      if (state.search.trim()) {
+        const q = state.search.trim().toLowerCase();
+        list = list.filter((r) => r.Player.toLowerCase().includes(q) || r.Team.toLowerCase().includes(q));
+      }
+      list = list.filter((r) => r.Minutes >= state.min);
+      list = sortRows(list);
+      return list.map((row, idx) => ({ ...row, Rank: idx + 1 }));
+    }
 
-      filteredRows().forEach((row, index) => {
-        const tr = document.createElement("tr");
-        tr.innerHTML = `
-          <td>${index + 1}</td>
+    function metricRankingPool(list, metric) {
+      const base = [...list];
+      const asc = metric === "D/10";
+      base.sort((a, b) => asc ? (a[metric] - b[metric]) : (b[metric] - a[metric]));
+      return base;
+    }
+
+    function rankForMetric(metric, row, list) {
+      const pool = metricRankingPool(list, metric);
+      const found = pool.findIndex((item) => item.Team === row.Team && item.Player === row.Player && item.Role === row.Role);
+      return found === -1 ? "-" : found + 1;
+    }
+
+    function renderTable(list) {
+      const tbody = $("rows");
+      tbody.innerHTML = list.map((row) => `
+        <tr>
+          <td class="rank">${row.Rank}</td>
           <td>${row.Team}</td>
           <td>${row.Player}</td>
           <td>${row.Role}</td>
-          <td>${fmtRate(row["E/10"])}</td>
-          <td>${fmtRate(row["A/10"])}</td>
-          <td>${fmtRate(row["D/10"])}</td>
-          <td>${fmtRate(row["DMG/10"])}</td>
-          <td>${fmtRate(row["H/10"])}</td>
-          <td>${fmtRate(row["MIT/10"])}</td>
-          <td>${fmtNumber(row["Appearances"])}</td>
-          <td>${fmtRate(row["Minutes"])} min</td>
-        `;
-        overallTableBody.appendChild(tr);
-      });
+          <td>${fmt(row["E/10"])}</td>
+          <td>${fmt(row["A/10"])}</td>
+          <td>${fmt(row["D/10"])}</td>
+          <td>${fmt(row["E/D"])}</td>
+          <td>${fmt(row["DMG/10"])}</td>
+          <td>${fmt(row["H/10"])}</td>
+          <td>${fmt(row["MIT/10"])}</td>
+          <td>${row.Appearances}</td>
+          <td>${mins(row.Minutes)}</td>
+        </tr>`).join("");
+      $("empty").hidden = list.length > 0;
     }
 
-    function currentPlayerRows() {
-      const keyword = playerSearch.value.trim().toLowerCase();
-      return [...currentRows()]
-        .filter(row => !keyword || row.Player.toLowerCase().includes(keyword) || row.Team.toLowerCase().includes(keyword))
-        .sort((a, b) => a.Player.localeCompare(b.Player));
-    }
-
-    function renderPlayerList() {
-      const rows = currentPlayerRows();
-      if (!rows.some(row => row.Player === activePlayer) && rows.length) {
-        activePlayer = rows[0].Player;
+    function renderPlayer(list) {
+      const select = $("selectedPlayer");
+      const current = list.find((r) => `${r.Player} | ${r.Team} | ${r.Role}` === state.selected) || list[0] || null;
+      select.innerHTML = list.map((r) => {
+        const key = `${r.Player} | ${r.Team} | ${r.Role}`;
+        return `<option value="${key}">${key}</option>`;
+      }).join("");
+      if (current) {
+        state.selected = `${current.Player} | ${current.Team} | ${current.Role}`;
+        select.value = state.selected;
+      } else {
+        state.selected = "";
       }
-
-      playerList.innerHTML = "";
-      rows.forEach(row => {
-        const btn = document.createElement("button");
-        btn.className = "player-button" + (row.Player === activePlayer ? " active" : "");
-        btn.innerHTML = `
-          <strong>${row.Player}</strong>
-          <span>${row.Team} · ${row.Role}</span>
-        `;
-        btn.addEventListener("click", () => {
-          activePlayer = row.Player;
-          renderPlayerList();
-          renderPlayerDetail();
-        });
-        playerList.appendChild(btn);
-      });
-    }
-
-    function renderPlayerDetail() {
-      const row = currentRows().find(item => item.Player === activePlayer);
-      if (!row) {
-        playerDetail.innerHTML = "<p>선수를 선택해 주세요.</p>";
+      if (!current) {
+        $("playerMeta").innerHTML = '<div class="muted">선수를 선택하면 세부 지표를 볼 수 있습니다.</div>';
+        $("playerCards").innerHTML = "";
         return;
       }
-
-      playerDetail.innerHTML = `
-        <h3>${row.Player}</h3>
-        <div class="subline">${scopeSelect.value} · ${row.Team} · ${row.Role} · 출전 ${row.Appearances}회 · 총 ${fmtRate(row.Minutes)}분</div>
-        <div class="stat-grid">
-          <div class="stat-card"><label>DMG/10</label><strong>${fmtRate(row["DMG/10"])}</strong></div>
-          <div class="stat-card"><label>H/10</label><strong>${fmtRate(row["H/10"])}</strong></div>
-          <div class="stat-card"><label>MIT/10</label><strong>${fmtRate(row["MIT/10"])}</strong></div>
-        </div>
-        <div class="mini-grid">
-          <div class="mini-card"><label>E/10</label><strong>${fmtRate(row["E/10"])}</strong></div>
-          <div class="mini-card"><label>A/10</label><strong>${fmtRate(row["A/10"])}</strong></div>
-          <div class="mini-card"><label>D/10</label><strong>${fmtRate(row["D/10"])}</strong></div>
-          <div class="mini-card"><label>Total E</label><strong>${fmtNumber(row["E"])}</strong></div>
-          <div class="mini-card"><label>Total A</label><strong>${fmtNumber(row["A"])}</strong></div>
-          <div class="mini-card"><label>Total D</label><strong>${fmtNumber(row["D"])}</strong></div>
-          <div class="mini-card"><label>Total DMG</label><strong>${fmtNumber(row["DMG"])}</strong></div>
-          <div class="mini-card"><label>Total H</label><strong>${fmtNumber(row["H"])}</strong></div>
-          <div class="mini-card"><label>Total MIT</label><strong>${fmtNumber(row["MIT"])}</strong></div>
-        </div>
-      `;
+      $("playerMeta").innerHTML = `
+        <div class="pills">
+          <span class="pill">Team: ${current.Team}</span>
+          <span class="pill">Role: ${current.Role}</span>
+          <span class="pill">출전 경기 횟수: ${current.Appearances}</span>
+          <span class="pill">출전 시간: ${mins(current.Minutes)}분</span>
+        </div>`;
+      const metrics = ["E/10", "A/10", "D/10", "E/D", "DMG/10", "H/10", "MIT/10"];
+      $("playerCards").innerHTML = metrics.map((metric) => `
+        <article class="stat-card">
+          <span class="rank-badge">#${rankForMetric(metric, current, list)}</span>
+          <h4>${METRIC_LABELS[metric]}</h4>
+          <div class="value">${fmt(current[metric])}</div>
+          <div class="sub">전체 선수 기준 순위</div>
+        </article>`).join("");
     }
 
-    function bindSortHeaders() {
-      document.querySelectorAll("th.sortable").forEach(th => {
-        th.addEventListener("click", () => {
+    function roleBoardRows(role, metric) {
+      return aggregate(rangePeriods())
+        .filter((r) => r.Role === role)
+        .sort((a, b) => metric === "D/10" ? a[metric] - b[metric] : b[metric] - a[metric])
+        .slice(0, 5);
+    }
+
+    function renderRoleBoards() {
+      $("roleBoards").innerHTML = ["DPS", "Support", "Tank"].map((role) => `
+        <section class="role-board">
+          <h3>${role}</h3>
+          ${ROLE_BOARD_METRICS[role].map((metric) => `
+            <div class="board-block">
+              <h4>${METRIC_LABELS[metric]}</h4>
+              ${roleBoardRows(role, metric).map((row, idx) => `
+                <div class="leader-row">
+                  <div class="rank">${idx + 1}</div>
+                  <div>${row.Player} <span class="muted">(${row.Team})</span></div>
+                  <div>${fmt(row[metric])}</div>
+                </div>`).join("") || '<div class="muted">데이터 없음</div>'}
+            </div>`).join("")}
+        </section>`).join("");
+    }
+
+    function renderGraph() {
+      const periods = rangePeriods();
+      const role = state.graphRole;
+      const metric = state.graphMetric;
+      const minApps = Math.max(1, Number(state.graphMinApps || 1));
+      const aggregated = aggregate(periods).filter((r) => r.Role === role && r.Appearances >= minApps);
+      const players = aggregated.sort((a, b) => b[metric] - a[metric]);
+      if (!players.length) {
+        $("graph").innerHTML = '<div class="empty">선택한 그래프 조건에 맞는 선수가 없습니다.</div>';
+        return;
+      }
+      const periodData = new Map();
+      for (const period of periods) {
+        const rows = (PERIOD_ROWS[period] || []).map(normalizeRow);
+        periodData.set(period, rows.filter((r) => r.Role === role));
+      }
+      const series = players.map((player) => {
+        const values = periods.map((period) => {
+          const row = (periodData.get(period) || []).find((r) => r.Team === player.Team && r.Player === player.Player && r.Role === player.Role);
+          return row ? row[metric] : null;
+        });
+        return { ...player, values };
+      });
+      const numericValues = series.flatMap((s) => s.values.filter((v) => v !== null));
+      const max = Math.max(...numericValues, 1);
+      const min = Math.min(...numericValues, 0);
+      const width = Math.max(820, periods.length * 220);
+      const height = 520;
+      const margin = { top: 20, right: 30, bottom: 70, left: 70 };
+      const innerW = width - margin.left - margin.right;
+      const innerH = height - margin.top - margin.bottom;
+      const x = (idx) => margin.left + (periods.length === 1 ? innerW / 2 : (idx * innerW) / (periods.length - 1));
+      const y = (value) => {
+        if (max === min) return margin.top + innerH / 2;
+        return margin.top + innerH - ((value - min) / (max - min)) * innerH;
+      };
+      const yTicks = 5;
+      let svg = `<svg viewBox="0 0 ${width} ${height}" role="img" aria-label="${role} ${metric} trend chart">`;
+      for (let i = 0; i <= yTicks; i++) {
+        const value = min + ((max - min) * i) / yTicks;
+        const yy = margin.top + innerH - (innerH * i) / yTicks;
+        svg += `<line x1="${margin.left}" y1="${yy}" x2="${width - margin.right}" y2="${yy}" stroke="#223852" stroke-width="1" />`;
+        svg += `<text x="${margin.left - 10}" y="${yy + 4}" fill="#9cb0c4" font-size="12" text-anchor="end">${fmt(value)}</text>`;
+      }
+      periods.forEach((period, idx) => {
+        const xx = x(idx);
+        svg += `<line x1="${xx}" y1="${margin.top}" x2="${xx}" y2="${margin.top + innerH}" stroke="rgba(255,255,255,0.05)" stroke-width="1" />`;
+        svg += `<text x="${xx}" y="${height - 24}" fill="#9cb0c4" font-size="12" text-anchor="middle">${period}</text>`;
+      });
+      series.forEach((s) => {
+        const color = TEAM_COLORS[s.Team] || '#8db9ff';
+        const points = s.values.map((v, idx) => v === null ? null : `${x(idx)},${y(v)}`).filter(Boolean);
+        if (points.length >= 2) {
+          svg += `<polyline fill="none" stroke="${color}" stroke-width="2.4" points="${points.join(' ')}"><title>${s.Player} (${s.Team})</title></polyline>`;
+        }
+        s.values.forEach((v, idx) => {
+          if (v === null) return;
+          svg += `<circle cx="${x(idx)}" cy="${y(v)}" r="4.5" fill="${color}" stroke="#08111a" stroke-width="1.5"><title>${s.Player} | ${s.Team} | ${periods[idx]} | ${METRIC_LABELS[metric]} ${fmt(v)}</title></circle>`;
+        });
+      });
+      svg += `</svg>`;
+      $("graph").innerHTML = svg;
+    }
+
+    function render() {
+      const list = rows();
+      renderTable(list);
+      renderPlayer(list);
+      renderRoleBoards();
+      renderGraph();
+    }
+
+    function bind() {
+      const start = $("startPeriod");
+      const end = $("endPeriod");
+      start.innerHTML = PERIODS.map((p) => `<option value="${p}">${p}</option>`).join("");
+      end.innerHTML = PERIODS.map((p) => `<option value="${p}">${p}</option>`).join("");
+      start.value = state.start;
+      end.value = state.end;
+      start.addEventListener('change', (e) => { state.start = e.target.value; render(); });
+      end.addEventListener('change', (e) => { state.end = e.target.value; render(); });
+      $("roleFilter").addEventListener('change', (e) => { state.role = e.target.value; render(); });
+      $("search").addEventListener('input', (e) => { state.search = e.target.value; render(); });
+      $("minMinutes").addEventListener('input', (e) => { state.min = Number(e.target.value || 0); render(); });
+      $("selectedPlayer").addEventListener('change', (e) => { state.selected = e.target.value; render(); });
+      $("graphRole").addEventListener('change', (e) => { state.graphRole = e.target.value; renderGraph(); });
+      $("graphMetric").addEventListener('change', (e) => { state.graphMetric = e.target.value; renderGraph(); });
+      $("graphMinAppearances").addEventListener('input', (e) => { state.graphMinApps = Number(e.target.value || 1); renderGraph(); });
+      document.querySelectorAll('thead th[data-sort]').forEach((th) => {
+        th.addEventListener('click', () => {
           const key = th.dataset.sort;
-          if (sortState.key === key) {
-            sortState.direction = sortState.direction === "asc" ? "desc" : "asc";
+          if (state.sort === key) {
+            state.dir = state.dir === 'asc' ? 'desc' : 'asc';
           } else {
-            sortState.key = key;
-            sortState.direction = ["Team", "Player", "Role"].includes(key) ? "asc" : "desc";
+            state.sort = key;
+            state.dir = ['D/10'].includes(key) ? 'asc' : 'desc';
           }
-          renderTable();
+          render();
         });
       });
     }
 
-    searchInput.addEventListener("input", renderTable);
-    roleFilter.addEventListener("change", renderTable);
-    minMinutesInput.addEventListener("input", renderTable);
-    playerSearch.addEventListener("input", renderPlayerList);
-    scopeSelect.addEventListener("change", () => {
-      renderTable();
-      renderPlayerList();
-      renderPlayerDetail();
-    });
-
-    bindSortHeaders();
-    renderResults();
-    renderTop5();
-    renderTable();
-    renderPlayerList();
-    renderPlayerDetail();
+    bind();
+    render();
   </script>
 </body>
 </html>
+
+
+

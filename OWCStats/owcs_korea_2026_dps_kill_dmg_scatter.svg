@@ -1,0 +1,93 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1400" height="900" viewBox="0 0 1400 900">
+<rect width="100%" height="100%" fill="#fafafa" />
+<rect x="110" y="90" width="1010" height="700" fill="#ffffff" stroke="#d0d7de" />
+<text x="110" y="42" font-family="Arial" font-size="28" font-weight="700" fill="#111827">OWCS Korea 2026 DPS DMG/10 vs Kills/10</text>
+<text x="110" y="68" font-family="Arial" font-size="15" fill="#4b5563">Each point is a dps player aggregated from owcstats_current_dashboard.html covering Weeks 1-3.</text>
+<line x1="110.00" y1="90" x2="110.00" y2="790" stroke="#eef2f7" />
+<line x1="110" y1="790.00" x2="1120" y2="790.00" stroke="#eef2f7" />
+<text x="110.00" y="822" text-anchor="middle" font-family="Arial" font-size="13" font-weight="700" fill="#4b5563">6000</text>
+<text x="94" y="795.00" text-anchor="end" font-family="Arial" font-size="13" font-weight="700" fill="#4b5563">5</text>
+<line x1="312.00" y1="90" x2="312.00" y2="790" stroke="#eef2f7" />
+<line x1="110" y1="650.00" x2="1120" y2="650.00" stroke="#eef2f7" />
+<text x="312.00" y="822" text-anchor="middle" font-family="Arial" font-size="13" font-weight="700" fill="#4b5563">7200</text>
+<text x="94" y="655.00" text-anchor="end" font-family="Arial" font-size="13" font-weight="700" fill="#4b5563">9</text>
+<line x1="514.00" y1="90" x2="514.00" y2="790" stroke="#eef2f7" />
+<line x1="110" y1="510.00" x2="1120" y2="510.00" stroke="#eef2f7" />
+<text x="514.00" y="822" text-anchor="middle" font-family="Arial" font-size="13" font-weight="700" fill="#4b5563">8400</text>
+<text x="94" y="515.00" text-anchor="end" font-family="Arial" font-size="13" font-weight="700" fill="#4b5563">13</text>
+<line x1="716.00" y1="90" x2="716.00" y2="790" stroke="#eef2f7" />
+<line x1="110" y1="370.00" x2="1120" y2="370.00" stroke="#eef2f7" />
+<text x="716.00" y="822" text-anchor="middle" font-family="Arial" font-size="13" font-weight="700" fill="#4b5563">9600</text>
+<text x="94" y="375.00" text-anchor="end" font-family="Arial" font-size="13" font-weight="700" fill="#4b5563">17</text>
+<line x1="918.00" y1="90" x2="918.00" y2="790" stroke="#eef2f7" />
+<line x1="110" y1="230.00" x2="1120" y2="230.00" stroke="#eef2f7" />
+<text x="918.00" y="822" text-anchor="middle" font-family="Arial" font-size="13" font-weight="700" fill="#4b5563">10800</text>
+<text x="94" y="235.00" text-anchor="end" font-family="Arial" font-size="13" font-weight="700" fill="#4b5563">21</text>
+<line x1="1120.00" y1="90" x2="1120.00" y2="790" stroke="#eef2f7" />
+<line x1="110" y1="90.00" x2="1120" y2="90.00" stroke="#eef2f7" />
+<text x="1120.00" y="822" text-anchor="middle" font-family="Arial" font-size="13" font-weight="700" fill="#4b5563">12000</text>
+<text x="94" y="95.00" text-anchor="end" font-family="Arial" font-size="13" font-weight="700" fill="#4b5563">25</text>
+<text x="615.00" y="866" text-anchor="middle" font-family="Arial" font-size="18" font-weight="700" fill="#111827">DAMAGE per 10 min.</text>
+<text x="38" y="440.00" text-anchor="middle" transform="rotate(-90 38 440.00)" font-family="Arial" font-size="18" font-weight="700" fill="#111827">KILLS per 10 min.</text>
+<circle cx="227.27" cy="651.75" r="7" fill="#FFBE17" fill-opacity="0.88" stroke="#ffffff" stroke-width="1.5"><title>Argon: (6696.65, 8.95)</title></circle>
+<text x="237.27" y="641.75" font-family="Arial" font-size="12" fill="#1f2937">Argon</text>
+<circle cx="303.11" cy="577.55" r="7" fill="#FFBE17" fill-opacity="0.88" stroke="#ffffff" stroke-width="1.5"><title>Jamelgong: (7147.18, 11.07)</title></circle>
+<text x="313.11" y="567.55" font-family="Arial" font-size="12" fill="#1f2937">Jamelgong</text>
+<circle cx="358.45" cy="714.75" r="7" fill="#FFBE17" fill-opacity="0.88" stroke="#ffffff" stroke-width="1.5"><title>Zesin: (7475.93, 7.15)</title></circle>
+<text x="368.45" y="704.75" font-family="Arial" font-size="12" fill="#1f2937">Zesin</text>
+<circle cx="461.20" cy="366.15" r="7" fill="#E11919" fill-opacity="0.88" stroke="#ffffff" stroke-width="1.5"><title>HeeSang: (8086.34, 17.11)</title></circle>
+<text x="471.20" y="356.15" font-family="Arial" font-size="12" fill="#1f2937">HeeSang</text>
+<circle cx="746.55" cy="393.10" r="7" fill="#E11919" fill-opacity="0.88" stroke="#ffffff" stroke-width="1.5"><title>LIP: (9781.47, 16.34)</title></circle>
+<text x="756.55" y="383.10" font-family="Arial" font-size="12" fill="#1f2937">LIP</text>
+<circle cx="657.96" cy="324.15" r="7" fill="#E11919" fill-opacity="0.88" stroke="#ffffff" stroke-width="1.5"><title>Stalk3r: (9255.21, 18.31)</title></circle>
+<text x="667.96" y="314.15" font-family="Arial" font-size="12" fill="#1f2937">Stalk3r</text>
+<circle cx="168.17" cy="683.95" r="7" fill="#1A1662" fill-opacity="0.88" stroke="#ffffff" stroke-width="1.5"><title>D0D0: (6345.55, 8.03)</title></circle>
+<text x="178.17" y="673.95" font-family="Arial" font-size="12" fill="#1f2937">D0D0</text>
+<circle cx="633.15" cy="679.40" r="7" fill="#1A1662" fill-opacity="0.88" stroke="#ffffff" stroke-width="1.5"><title>perr: (9107.82, 8.16)</title></circle>
+<text x="643.15" y="669.40" font-family="Arial" font-size="12" fill="#1f2937">perr</text>
+<circle cx="756.98" cy="428.80" r="7" fill="#E2E319" fill-opacity="0.88" stroke="#ffffff" stroke-width="1.5"><title>Kilo: (9843.44, 15.32)</title></circle>
+<text x="766.98" y="418.80" font-family="Arial" font-size="12" fill="#1f2937">Kilo</text>
+<circle cx="406.51" cy="485.50" r="7" fill="#E2E319" fill-opacity="0.88" stroke="#ffffff" stroke-width="1.5"><title>SP1NT: (7761.43, 13.70)</title></circle>
+<text x="416.51" y="475.50" font-family="Arial" font-size="12" fill="#1f2937">SP1NT</text>
+<circle cx="238.17" cy="456.10" r="7" fill="#501F64" fill-opacity="0.88" stroke="#ffffff" stroke-width="1.5"><title>D4RT: (6761.38, 14.54)</title></circle>
+<text x="248.17" y="446.10" font-family="Arial" font-size="12" fill="#1f2937">D4RT</text>
+<circle cx="589.27" cy="512.10" r="7" fill="#501F64" fill-opacity="0.88" stroke="#ffffff" stroke-width="1.5"><title>M1NUT2: (8847.12, 12.94)</title></circle>
+<text x="599.27" y="502.10" font-family="Arial" font-size="12" fill="#1f2937">M1NUT2</text>
+<circle cx="953.10" cy="232.45" r="7" fill="#E2012D" fill-opacity="0.88" stroke="#ffffff" stroke-width="1.5"><title>Proud: (11008.52, 20.93)</title></circle>
+<text x="963.10" y="222.45" font-family="Arial" font-size="12" fill="#1f2937">Proud</text>
+<circle cx="382.43" cy="318.20" r="7" fill="#E2012D" fill-opacity="0.88" stroke="#ffffff" stroke-width="1.5"><title>ZEST: (7618.38, 18.48)</title></circle>
+<text x="392.43" y="308.20" font-family="Arial" font-size="12" fill="#1f2937">ZEST</text>
+<circle cx="454.38" cy="277.25" r="7" fill="#02BD70" fill-opacity="0.88" stroke="#ffffff" stroke-width="1.5"><title>Checkmate: (8045.80, 19.65)</title></circle>
+<text x="464.38" y="267.25" font-family="Arial" font-size="12" fill="#1f2937">Checkmate</text>
+<circle cx="872.50" cy="181.35" r="7" fill="#02BD70" fill-opacity="0.88" stroke="#ffffff" stroke-width="1.5"><title>MER1T: (10529.68, 22.39)</title></circle>
+<text x="882.50" y="171.35" font-family="Arial" font-size="12" fill="#1f2937">MER1T</text>
+<circle cx="781.80" cy="351.80" r="7" fill="#828493" fill-opacity="0.88" stroke="#ffffff" stroke-width="1.5"><title>A1IEN: (9990.88, 17.52)</title></circle>
+<text x="791.80" y="341.80" font-family="Arial" font-size="12" fill="#1f2937">A1IEN</text>
+<circle cx="327.02" cy="415.85" r="7" fill="#828493" fill-opacity="0.88" stroke="#ffffff" stroke-width="1.5"><title>Becky: (7289.23, 15.69)</title></circle>
+<text x="337.02" y="405.85" font-family="Arial" font-size="12" fill="#1f2937">Becky</text>
+<circle cx="873.48" cy="382.60" r="7" fill="#828493" fill-opacity="0.88" stroke="#ffffff" stroke-width="1.5"><title>probe: (10535.50, 16.64)</title></circle>
+<text x="883.48" y="372.60" font-family="Arial" font-size="12" fill="#1f2937">probe</text>
+<circle cx="663.44" cy="265.70" r="7" fill="#CEFF00" fill-opacity="0.88" stroke="#ffffff" stroke-width="1.5"><title>knife: (9287.79, 19.98)</title></circle>
+<text x="673.44" y="255.70" font-family="Arial" font-size="12" fill="#1f2937">knife</text>
+<circle cx="546.63" cy="259.05" r="7" fill="#CEFF00" fill-opacity="0.88" stroke="#ffffff" stroke-width="1.5"><title>Proper: (8593.87, 20.17)</title></circle>
+<text x="556.63" y="249.05" font-family="Arial" font-size="12" fill="#1f2937">Proper</text>
+<text x="1144" y="102" font-family="Arial" font-size="18" font-weight="700" fill="#111827">Teams</text>
+<circle cx="1152" cy="125" r="6" fill="#FFBE17" />
+<text x="1166" y="130" font-family="Arial" font-size="13" fill="#374151">Cheeseburger (3)</text>
+<circle cx="1152" cy="151" r="6" fill="#E11919" />
+<text x="1166" y="156" font-family="Arial" font-size="13" fill="#374151">Crazy Raccoon (3)</text>
+<circle cx="1152" cy="177" r="6" fill="#1A1662" />
+<text x="1166" y="182" font-family="Arial" font-size="13" fill="#374151">New Era (2)</text>
+<circle cx="1152" cy="203" r="6" fill="#E2E319" />
+<text x="1166" y="208" font-family="Arial" font-size="13" fill="#374151">ONSIDE GAMING (2)</text>
+<circle cx="1152" cy="229" r="6" fill="#501F64" />
+<text x="1166" y="234" font-family="Arial" font-size="13" fill="#374151">Poker Face (2)</text>
+<circle cx="1152" cy="255" r="6" fill="#E2012D" />
+<text x="1166" y="260" font-family="Arial" font-size="13" fill="#374151">T1 (2)</text>
+<circle cx="1152" cy="281" r="6" fill="#02BD70" />
+<text x="1166" y="286" font-family="Arial" font-size="13" fill="#374151">Team Falcons (2)</text>
+<circle cx="1152" cy="307" r="6" fill="#828493" />
+<text x="1166" y="312" font-family="Arial" font-size="13" fill="#374151">ZAN Esports (3)</text>
+<circle cx="1152" cy="333" r="6" fill="#CEFF00" />
+<text x="1166" y="338" font-family="Arial" font-size="13" fill="#374151">ZETA DIVISION (2)</text>
+</svg>
